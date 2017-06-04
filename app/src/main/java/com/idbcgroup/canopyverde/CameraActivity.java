@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 public class CameraActivity extends AppCompatActivity {
     private Camera mCamera = null;
     private CameraView mCameraView = null;
-    private ImageButton imgClose;
+    private ImageButton imgBack;
     private ImageButton imgCapture;
 
     private String data;
@@ -23,7 +23,7 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        imgClose = (ImageButton)findViewById(R.id.imgClose);
+        imgBack = (ImageButton)findViewById(R.id.imgBack);
         imgCapture = (ImageButton)findViewById(R.id.imgCapture);
 
 //        data = getIntent().getExtras().getString("From");
@@ -58,13 +58,10 @@ public class CameraActivity extends AppCompatActivity {
 
         //btn to close the application
 
-        imgClose.setOnClickListener(new View.OnClickListener() {
+        imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //System.exit(0);
-                //super.onBackPressed();
                 finish();
-                //onBackPressed();
             }
         });
 

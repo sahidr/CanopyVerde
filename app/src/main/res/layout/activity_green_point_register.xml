@@ -44,7 +44,8 @@
         android:layout_marginBottom="16dp"
         android:text="@string/sign_up"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="yellowPointRegister"/>
 
     <EditText
         android:id="@+id/stemSize"

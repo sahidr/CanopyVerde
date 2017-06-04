@@ -50,7 +50,7 @@ public class UserProfile extends AppCompatActivity {
         glogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor preferences = getSharedPreferences("User_Auth", 0).edit().clear();
+                SharedPreferences.Editor preferences = getSharedPreferences("Session", 0).edit().clear();
                 preferences.apply();
                 Intent i = new Intent(UserProfile.this,MainActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

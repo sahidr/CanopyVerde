@@ -28,6 +28,13 @@
     </android.support.v7.widget.Toolbar>
 
 
+    <ImageView
+        android:id="@+id/confirm_address_map_custom_marker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@android:drawable/ic_menu_mylocation"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/camera"
         android:layout_width="wrap_content"
@@ -77,5 +84,26 @@
         app:srcCompat="@android:drawable/ic_menu_myplaces"
         android:layout_above="@+id/stats"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/ratio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ratio"
+        android:elevation="2dp"
+        android:layout_alignTop="@+id/stats"
+        android:layout_alignEnd="@+id/stats"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/greenIndex"
+        android:elevation="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/ratio"
+        android:layout_alignBottom="@+id/ratio"
+        android:layout_centerHorizontal="true"
+        android:text="@string/green_index" />
+
 
 </RelativeLayout>

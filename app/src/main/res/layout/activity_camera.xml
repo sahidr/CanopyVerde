@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.idbcgroup.canopyverde.MapsActivity">
+    tools:context="com.idbcgroup.canopyverde.CameraActivity">
 
     <FrameLayout
         android:id="@+id/camera_view"
@@ -11,14 +11,6 @@
         android:layout_height="match_parent">
 
     </FrameLayout>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imgClose"
-        android:layout_gravity="right|top"
-        android:background="@android:drawable/ic_menu_close_clear_cancel"
-        android:padding="20dp"/>
 
     <ImageButton
         android:id="@+id/imgCapture"
@@ -29,12 +21,12 @@
         android:padding="20dp"/>
 
     <ImageButton
-        android:id="@+id/imgRepeat"
+        android:id="@+id/imgBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|bottom"
         android:background="@android:drawable/ic_menu_revert"
-        android:padding="20dp"/>
+        android:padding="20dp" />
 
     <ImageButton
         android:id="@+id/imgAccept"

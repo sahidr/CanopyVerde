@@ -189,6 +189,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view){
         startActivity(new Intent(LoginActivity.this,MapsActivity.class));
+        SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
+        editor.putBoolean("logged",true);
+        editor.apply();
         finish();
     }
 
