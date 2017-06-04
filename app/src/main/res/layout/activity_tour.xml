@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+    tools:context="com.idbcgroup.canopyverde.TourActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#AA00AAFF"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </android.support.v4.view.ViewPager>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_gravity="bottom|center">
+
+        <Button
+            android:id="@+id/register"
+            android:text="@string/register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+        <Button
+            android:id="@+id/skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/skip"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" >
+
+            <ImageView
+                android:id="@+id/page0"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:srcCompat="@android:drawable/radiobutton_on_background"
+                android:layout_marginRight="42dp"
+                android:layout_marginEnd="42dp"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/page1"
+                android:layout_toStartOf="@+id/page1" />
+
+            <ImageView
+                android:id="@+id/page1"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:srcCompat="@android:drawable/radiobutton_off_background"
+                android:layout_marginRight="42dp"
+                android:layout_marginEnd="42dp"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/page2"
+                android:layout_toStartOf="@+id/page2" />
+
+            <ImageView
+                android:id="@+id/page2"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:srcCompat="@android:drawable/radiobutton_off_background"
+                android:layout_marginRight="42dp"
+                android:layout_marginEnd="42dp"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/page3"
+                android:layout_toStartOf="@+id/page3" />
+
+            <ImageView
+                android:id="@+id/page3"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:srcCompat="@android:drawable/radiobutton_off_background"
+                android:layout_marginRight="42dp"
+                android:layout_marginEnd="100dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

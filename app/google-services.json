@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "150741952438",
+    "firebase_url": "https://canopy-verde.firebaseio.com",
+    "project_id": "canopy-verde",
+    "storage_bucket": "canopy-verde.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:150741952438:android:a70c38c69986a31c",
+        "android_client_info": {
+          "package_name": "com.idbcgroup.canopyverde"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "150741952438-ijdsia0v5ogg3bshbhp6881vhe9aqe9s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.idbcgroup.canopyverde",
+            "certificate_hash": "66223ceca8c3500e8c738b77e00066068ca90b87"
+          }
+        },
+        {
+          "client_id": "150741952438-t52enrl5n6dskfd9dst85gj7kjc07kv4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLwKu9im7jeS9n5cP9MGw0yPBwKRg-rXg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "150741952438-t52enrl5n6dskfd9dst85gj7kjc07kv4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
