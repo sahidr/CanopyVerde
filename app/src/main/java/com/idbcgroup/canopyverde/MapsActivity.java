@@ -8,9 +8,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -22,6 +26,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
@@ -38,6 +43,66 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FloatingActionButton camera;
     private LatLng marker;
 
+    private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
+
+
+
+    /** Demonstrates customizing the info window and/or its contents. */
+    class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+
+        // These are both viewgroups containing an ImageView with id "badge" and two TextViews with id
+        // "title" and "snippet".
+        private final View mWindow;
+
+
+        CustomInfoWindowAdapter() {
+            mWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            render(marker, mWindow);
+            return mWindow;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            return null;
+        }
+
+        private void render(Marker marker, View view) {
+            int badge;
+
+            badge = android.R.drawable.star_big_on;
+
+            ((ImageView) view.findViewById(R.id.badge)).setImageResource(badge);
+
+            String title = marker.getTitle();
+            TextView titleUi = ((TextView) view.findViewById(R.id.title));
+            if (title != null) {
+                // Spannable string allows us to edit the formatting of the text.
+                SpannableString titleText = new SpannableString(title);
+                titleText.setSpan(new ForegroundColorSpan(Color.RED), 0, titleText.length(), 0);
+                titleUi.setText(titleText);
+            } else {
+                titleUi.setText("");
+            }
+
+            String snippet = marker.getSnippet();
+            TextView snippetUi = ((TextView) view.findViewById(R.id.snippet));
+            if (snippet != null && snippet.length() > 12) {
+                SpannableString snippetText = new SpannableString(snippet);
+                snippetText.setSpan(new ForegroundColorSpan(Color.MAGENTA), 0, 10, 0);
+                snippetText.setSpan(new ForegroundColorSpan(Color.BLUE), 12, snippet.length(), 0);
+                snippetUi.setText(snippetText);
+            } else {
+                snippetUi.setText("");
+            }
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +115,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         camera = (FloatingActionButton) findViewById(R.id.camera);
 
-        marker = new LatLng(10.4806, -66.9036);
 
         graph = (GraphView) findViewById(R.id.chart);
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
@@ -93,9 +157,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapStyleOptions style;
         style = MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle_treepedia);
         mMap.setMapStyle(style);
-        LatLng caracas = new LatLng(10.4806, -66.9036);
         mMap.setMinZoomPreference(12);
         mMap.setMaxZoomPreference(22);
+
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+
 /*
         mMap.addMarker(new MarkerOptions()
                 .position(caracas)
@@ -107,7 +173,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         m.title("Marker in Caracas");
         m.icon(BitmapDescriptorFactory.fromResource(android.R.drawable.btn_star_big_on));
 */
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(caracas));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS));
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -120,13 +186,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 marker = new LatLng(cameraPosition.target.latitude,cameraPosition.target.longitude);
 
-
                 pref_marker = getSharedPreferences("Marker", 0);
                 approved  = pref_marker.getBoolean("approved",false);
 
                 if (approved) {
                     mMap.addMarker(new MarkerOptions()
                             .position(marker)
+                            .snippet("new marker")
+                            .title("TREE")
                             .icon(BitmapDescriptorFactory.fromResource(android.R.drawable.btn_star_big_on)));
 
                     SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
