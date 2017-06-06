@@ -55,6 +55,8 @@
     <string name="off">Off</string>
     <string name="en">EN</string>
     <string name="es">ES</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
     <!--    User Profile    -->
     <string name="logout">Cerrar Sesión</string>
@@ -64,6 +66,10 @@
     <!--    Stats    -->
     <string name="green_index">%</string>
     <string name="ratio">árbol/m^2</string>
+
+
+    <!--    Red Points    -->
+    <string name="request">Solicitar</string>
 
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>

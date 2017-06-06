@@ -19,17 +19,31 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.idbcgroup.canopyverde",
-            "certificate_hash": "66223ceca8c3500e8c738b77e00066068ca90b87"
+            "certificate_hash": "80b062c636c80fba562bbfffdc0757b80ca5ecf9"
           }
         },
         {
           "client_id": "150741952438-t52enrl5n6dskfd9dst85gj7kjc07kv4.apps.googleusercontent.com",
           "client_type": 3
+        },
+        {
+          "client_id": "150741952438-3n80ue0vce82voe23t0qmfcciar8tkg6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.idbcgroup.canopyverde",
+            "certificate_hash": "66223ceca8c3500e8c738b77e00066068ca90b87"
+          }
         }
       ],
       "api_key": [
         {
           "current_key": "AIzaSyDLwKu9im7jeS9n5cP9MGw0yPBwKRg-rXg"
+        },
+        {
+          "current_key": "AIzaSyC5hXy1qf57vSBREt6w8e9IQURnNVDbiao"
+        },
+        {
+          "current_key": "AIzaSyABQIZXoJo_pnBfjMQT_ifeIg_UHPBxRFU"
         }
       ],
       "services": {

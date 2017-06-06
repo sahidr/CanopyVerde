@@ -56,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         CustomInfoWindowAdapter() {
-            mWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+            mWindow = getLayoutInflater().inflate(R.layout.red_points_dialog, null);
 
         }
 
@@ -77,7 +77,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             badge = android.R.drawable.star_big_on;
 
             ((ImageView) view.findViewById(R.id.badge)).setImageResource(badge);
-
+            Button seed = ((Button) view.findViewById(R.id.request));
+            seed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MapsActivity.this,"New Tree request",Toast.LENGTH_SHORT).show();
+                }
+            });
             String title = marker.getTitle();
             TextView titleUi = ((TextView) view.findViewById(R.id.title));
             if (title != null) {
