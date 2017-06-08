@@ -38,7 +38,7 @@ public class TourActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private Button skip;
+    //private Button skip;
     private ImageView page0;
     private ImageView page1;
     private ImageView page2;
@@ -57,7 +57,7 @@ public class TourActivity extends AppCompatActivity {
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        skip = (Button) findViewById(R.id.skip);
+        //skip = (Button) findViewById(R.id.skip);
         page0 = (ImageView) findViewById(R.id.page0);
         page1 = (ImageView) findViewById(R.id.page1);
         page2 = (ImageView) findViewById(R.id.page2);
@@ -68,6 +68,7 @@ public class TourActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -82,19 +83,22 @@ public class TourActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
-                        mViewPager.setBackgroundColor(0xA000AAFF);
+
                         break;
                     case 1:
-                        mViewPager.setBackgroundColor(0XA000FFAA);
+//                        mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
+                        //mViewPager.setBackgroundColor(0XA000FFAA);
                         break;
                     case 2:
-                        mViewPager.setBackgroundColor(0xA0FFFF00);
+//                        mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
+                        //mViewPager.setBackgroundColor(0xA0FFFF00);
                         break;
                     case 3:
-                        mViewPager.setBackgroundColor(0xA0FF0000);
+//                        mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
+                        //mViewPager.setBackgroundColor(0xA0FF0000);
                         break;
                 }
-                skip.setText(position == 3 ? getString(R.string.start): getString(R.string.skip));
+             //   skip.setText(position == 3 ? getString(R.string.start): getString(R.string.skip));
 
             }
 
@@ -113,7 +117,7 @@ public class TourActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+/*
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,7 +128,7 @@ public class TourActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+*/
     }
 
     void updateSharedPreferences(){
@@ -177,8 +181,8 @@ public class TourActivity extends AppCompatActivity {
 
         private ImageView img;
 
-        private Integer[] tour_imgs = {R.drawable.graphic, R.drawable.map, R.drawable.tree, android.R.drawable.btn_star_big_on};
-
+        //private Integer[] tour_imgs = {R.drawable.graphic, R.drawable.map, R.drawable.tree, android.R.drawable.btn_star_big_on};
+        private Integer[] tour_imgs = {R.drawable.forrest, R.drawable.forrest, R.drawable.forrest, R.drawable.forrest};
         public PlaceholderFragment() {
         }
 

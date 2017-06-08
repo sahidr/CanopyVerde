@@ -3,5 +3,21 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorDanger">#af1000</color><color name="colorCustom">#8a1aabff</color><color name="colorTransparent">#b4f4f4f4</color>
+    <color name="colorDanger">#af1000</color>
+    <color name="colorCustom">#8a1aabff</color>
+    <color name="colorTransparent">#00ffffff</color>
+    <color name="colorCanopy">#127e42</color>
+    <color name="colorCanopyDark">#0c542c</color>
+    <color name="colorGray">#9f2d2d2d</color>
+    <color name="colorCanopyLight">#ffffff</color>
+    <color name="black_overlay">#561e1e1e</color>
+
+
+    <!-- Green -->
+    <color name="green_temp">#23A96E</color>
+    <color name="green_dark">#159204</color>
+    <color name="bright_green">#02D8B0</color>
+    <color name="button_green">#10a54a</color>
+
+
 </resources>

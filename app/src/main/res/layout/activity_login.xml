@@ -39,8 +39,13 @@
 
     <Button
         android:id="@+id/signin"
+        android:background="@drawable/button_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.ButtonBar"
+        android:theme="@style/NavyBtn"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:layout_below="@+id/rpwd"
         android:layout_marginTop="23dp"
         android:layout_toEndOf="@+id/logo"
