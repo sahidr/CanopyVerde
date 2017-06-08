@@ -7,6 +7,7 @@
     <string name="title_activity_tour">TourActivity</string>
     <string name="skip">Saltar</string>
     <string name="sign_up">Registro</string>
+    <string name="title_tour">Tour Canopy 01</string>
     <string name="welcome">Bienvenido a Canopy Verde</string>
     <string name="start">Comenzar</string>
     <string name="desc1">Description 1</string>
@@ -14,6 +15,8 @@
     <string name="desc3">Final description START</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_user_profile">User Profile</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incidi-\n
+        dunt ut labore et dolore</string>
 
     <!--    Login    -->
     <string name="login">LOGIN</string>
@@ -66,7 +69,6 @@
     <!--    Stats    -->
     <string name="green_index">%</string>
     <string name="ratio">árbol/m^2</string>
-
 
     <!--    Red Points    -->
     <string name="request">Solicitar</string>

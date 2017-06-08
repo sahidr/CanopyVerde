@@ -22,6 +22,7 @@
 
     <style name="SplashTheme" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">@color/colorTransparent</item>
         <item name="colorPrimary">@color/colorCanopyDark</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
@@ -51,7 +52,7 @@
         <item name="android:textColorPrimary">@color/colorCanopyLight</item>
         <item name="colorPrimary">@color/colorCanopy</item>
         <item name="colorAccent">@color/colorCanopy</item>
-        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@color/colorCanopyDark</item>
     </style>
 
 </resources>

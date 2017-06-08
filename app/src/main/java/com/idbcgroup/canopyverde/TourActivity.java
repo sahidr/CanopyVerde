@@ -22,6 +22,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.joooonho.SelectableRoundedImageView;
+import com.squareup.picasso.Picasso;
+
 public class TourActivity extends AppCompatActivity {
 
     /**
@@ -180,11 +183,11 @@ public class TourActivity extends AppCompatActivity {
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         private ImageView img;
+        //private SelectableRoundedImageView img;
 
         //private Integer[] tour_imgs = {R.drawable.graphic, R.drawable.map, R.drawable.tree, android.R.drawable.btn_star_big_on};
-        private Integer[] tour_imgs = {R.drawable.forrest, R.drawable.forrest, R.drawable.forrest, R.drawable.forrest};
-        public PlaceholderFragment() {
-        }
+        private Integer[] tour_imgs = {R.drawable.forrest, R.drawable.tour, R.drawable.forrest, R.drawable.tour};
+        public PlaceholderFragment() {}
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -207,7 +210,7 @@ public class TourActivity extends AppCompatActivity {
             Integer i = getArguments().getInt(ARG_SECTION_NUMBER) - 1;
             switch (i){
                 case 0:
-                    description.setText(getString(R.string.welcome));
+                    description.setText(getString(R.string.lorem));
                     break;
                 case 1:
                     description.setText(getString(R.string.desc1));
@@ -224,6 +227,7 @@ public class TourActivity extends AppCompatActivity {
             //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
             img = (ImageView) rootView.findViewById(R.id.app_img);
+            //img.setImageResource(tour_imgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
             img.setBackgroundResource(tour_imgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
 

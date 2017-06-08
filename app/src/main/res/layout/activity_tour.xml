@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:fitsSystemWindows="true"
     android:background="@color/colorGray"
     android:theme="@style/Theme.AppCompat.Light.NoActionBar"
@@ -63,13 +63,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
-        android:layout_marginBottom="14dp"
         android:background="@color/colorTransparent"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:textColor="@color/tw__solid_white"
         android:text="@string/sign_up"
+        android:textSize="18sp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_toStartOf="@+id/imageView" />
 
     <ImageView
         android:id="@+id/imageView"
