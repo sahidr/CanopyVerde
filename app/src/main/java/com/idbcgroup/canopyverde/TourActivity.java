@@ -1,7 +1,9 @@
 package com.idbcgroup.canopyverde;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +27,9 @@ import android.widget.TextView;
 
 import com.joooonho.SelectableRoundedImageView;
 import com.squareup.picasso.Picasso;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TourActivity extends AppCompatActivity {
 
@@ -53,6 +59,11 @@ public class TourActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/TitilliumWeb-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
 
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -67,6 +78,9 @@ public class TourActivity extends AppCompatActivity {
         page3 = (ImageView) findViewById(R.id.page3);
         dots = new ImageView[]{page0, page1, page2,page3};
         register = (Button) findViewById(R.id.register);
+
+        //Typeface typeface = new Typeface.createFromAssets(getAssets(),"TitilliumWeb-Regular.ttf");
+
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -204,6 +218,13 @@ public class TourActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
+            CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                    .setDefaultFontPath("fonts/TitilliumWeb-Regular.ttf")
+                    .setFontAttrId(R.attr.fontPath)
+                    .build()
+            );
+
             View rootView = inflater.inflate(R.layout.fragment_tour, container, false);
 
             TextView description = (TextView) rootView.findViewById(R.id.description);
@@ -233,6 +254,7 @@ public class TourActivity extends AppCompatActivity {
 
             return rootView;
         }
+
     }
 
     /**
@@ -273,4 +295,10 @@ public class TourActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 }

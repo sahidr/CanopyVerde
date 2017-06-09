@@ -15,8 +15,8 @@
     <string name="desc3">Final description START</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_user_profile">User Profile</string>
-    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incidi-\n
-        dunt ut labore et dolore</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inci-\n
+        didunt ut labore et dolore</string>
 
     <!--    Login    -->
     <string name="login">LOGIN</string>

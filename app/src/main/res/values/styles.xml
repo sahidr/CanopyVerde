@@ -20,12 +20,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="SplashTheme" parent="AppTheme.NoActionBar">
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:statusBarColor">@color/colorTransparent</item>
-        <item name="colorPrimary">@color/colorCanopyDark</item>
+        <item name="colorPrimary">@color/colorCanopy</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
+        <item name="android:textViewStyle">@style/New.Widget.TextView</item>
+        <item name="android:buttonStyle">@style/New.Widget.Button</item>
         <item name="android:textColorPrimary">@color/colorCanopyLight</item>
     </style>
 
@@ -53,6 +56,33 @@
         <item name="colorPrimary">@color/colorCanopy</item>
         <item name="colorAccent">@color/colorCanopy</item>
         <item name="colorPrimaryDark">@color/colorCanopyDark</item>
+        <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
+        <item name="android:textViewStyle">@style/New.Widget.TextView</item>
+        <item name="android:buttonStyle">@style/New.Widget.Button</item>
+        <item name="android:editTextStyle">@style/New.Widget.EditText</item>
+    </style>
+
+    <style name="TextAppearance.FontPath" parent="android:TextAppearance">
+        <item name="fontPath">fonts/TitilliumWeb-Regular.ttf</item>
+        <item name="android:textColor">#FF555555</item>
+    </style>
+
+    <style name="TextViewCustomFont">
+        <item name="fontPath">fonts/TitilliumWeb-Regular.ttf</item>
+    </style>
+
+    <style name="New.Widget"/>
+
+    <style name="New.Widget.TextView" parent="android:Widget.TextView">
+        <item name="fontPath">fonts/TitilliumWeb-Regular.ttf</item>
+    </style>
+
+    <style name="New.Widget.Button" parent="Base.TextAppearance.AppCompat.Widget.Button">
+        <item name="fontPath">fonts/TitilliumWeb-Regular.ttf</item>
+    </style>
+
+    <style name="New.Widget.EditText" parent="Widget.AppCompat.EditText">
+        <item name="fontPath">fonts/TitilliumWeb-Regular.ttf</item>
     </style>
 
 </resources>

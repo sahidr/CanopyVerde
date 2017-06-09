@@ -12,12 +12,12 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
-        android:layout_width="320dp"
-        android:layout_height="420dp"
+        android:layout_width="310dp"
+        android:layout_height="424dp"
         android:background="@drawable/tour_card"
         android:elevation="5dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="31dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 
@@ -33,26 +33,29 @@
 
         <ImageView
             android:id="@+id/page0"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginEnd="5dp"
             app:srcCompat="@android:drawable/radiobutton_on_background" />
 
         <ImageView
             android:id="@+id/page1"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginEnd="5dp"
             app:srcCompat="@android:drawable/radiobutton_off_background" />
 
         <ImageView
             android:id="@+id/page2"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginEnd="5dp"
             app:srcCompat="@android:drawable/radiobutton_off_background" />
 
         <ImageView
             android:id="@+id/page3"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             app:srcCompat="@android:drawable/radiobutton_off_background" />
 
     </LinearLayout>
@@ -69,7 +72,8 @@
         android:text="@string/sign_up"
         android:textSize="18sp"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/imageView" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -77,9 +81,9 @@
         android:layout_height="wrap_content"
         android:rotation="180"
         app:srcCompat="?attr/actionModeCloseDrawable"
-        android:layout_alignTop="@+id/register"
-        android:layout_toEndOf="@+id/linearLayout3"
-        android:layout_marginTop="12dp" />
+        android:layout_alignBottom="@+id/register"
+        android:layout_toEndOf="@+id/register"
+        android:layout_marginBottom="11dp" />
 
 
 </RelativeLayout>

@@ -77,8 +77,7 @@
             android:name=".TourActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_tour"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
             android:configChanges="orientation"
