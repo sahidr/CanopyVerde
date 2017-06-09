@@ -4,61 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorCanopyLight"
     tools:context="com.idbcgroup.canopyverde.RegisterActivity">
 
-    <ImageButton
-        android:id="@+id/back"
-        android:layout_width="35dp"
-        android:layout_height="36dp"
-        android:background="?attr/homeAsUpIndicator" />
-
-    <TextView
-        android:id="@+id/social"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="@string/or"
-        android:layout_alignTop="@+id/signup"
-        android:layout_centerHorizontal="true" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="11"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        tools:layout_editor_absoluteX="73dp"
-        tools:layout_editor_absoluteY="232dp"
-        android:layout_below="@+id/city"
-        android:layout_alignLeft="@+id/city"
-        android:layout_alignStart="@+id/city" />
-    <EditText
-        android:id="@+id/confirm_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="11"
-        android:hint="@string/confirm_password"
-        android:inputType="textPassword"
-        android:layout_below="@+id/password"
-        android:layout_centerHorizontal="true" />
     <TextView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/register"
+        android:text="@string/logo"
         android:textSize="35sp"
-        android:layout_alignBottom="@+id/load"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp" />
 
     <ProgressBar
         android:id="@+id/load"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:background="@drawable/first_edit_text"
+        android:hint="@string/username"
+        android:inputType="text"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/fullName"
+        android:background="@drawable/edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/full_name"
+        android:inputType="textPersonName"
+        android:layout_below="@+id/username"
+        android:layout_alignStart="@+id/username" />
+
+    <EditText
+        android:id="@+id/email"
+        android:background="@drawable/edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:layout_below="@+id/fullName"
+        android:layout_alignStart="@+id/fullName" />
+
+    <EditText
+        android:id="@+id/password"
+        style="@style/Widget.AppCompat.AutoCompleteTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        tools:layout_editor_absoluteX="73dp"
+        tools:layout_editor_absoluteY="232dp"
+        android:layout_below="@+id/email"
+        android:layout_alignStart="@+id/username" />
+
+    <EditText
+        android:id="@+id/country"
+        android:background="@drawable/edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/country"
+        android:layout_below="@+id/password"
+        android:layout_alignStart="@+id/password" />
+    <!--Spinner
+        android:id="@+id/country"
+        android:background="@drawable/edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/country_arrays"
+        android:prompt="@string/country_prompt"
+        android:layout_below="@+id/password"
+        android:layout_alignStart="@+id/password" /-->
+
+    <EditText
+        android:id="@+id/city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:background="@drawable/last_edit_text"
+        android:inputType="textPersonName"
+        android:hint="@string/city"
+        android:layout_below="@+id/country"
+        android:layout_alignStart="@+id/country" />
 
     <Button
         android:id="@+id/signup"
@@ -66,92 +111,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sign_up"
-        android:layout_below="@+id/confirm_password"
-        android:layout_centerHorizontal="true" />
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textColor="@color/colorCanopyLight"
+        android:background="@drawable/button"
+        android:layout_marginBottom="21dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/city"
+        android:layout_alignEnd="@+id/city" />
 
-    <EditText
-        android:id="@+id/usernameDisplay"
+    <ImageButton
+        android:id="@+id/showPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="11"
-        android:hint="@string/username"
-        android:inputType="phone"
-        android:layout_below="@+id/name"
-        android:layout_alignLeft="@+id/name"
-        android:layout_alignStart="@+id/name" />
-
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="11"
-        android:hint="@string/full_name"
-        android:inputType="textPersonName"
-        android:layout_marginTop="12dp"
-        android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true" />
-
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="11"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:layout_below="@+id/usernameDisplay"
-        android:layout_alignLeft="@+id/usernameDisplay"
-        android:layout_alignStart="@+id/usernameDisplay" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/googleSignIn"
-        android:layout_width="100dp"
-        android:layout_height="35dp"
-        android:layout_below="@+id/social"
-        android:layout_alignLeft="@+id/confirm_password"
-        android:layout_alignStart="@+id/confirm_password"
-        android:layout_alignRight="@+id/confirm_password"
-        android:layout_alignEnd="@+id/confirm_password" />
-
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/facebookSignIn"
-        android:layout_width="100dp"
-        android:layout_height="35dp"
-        android:layout_below="@+id/googleSignIn"
-        android:layout_alignLeft="@+id/googleSignIn"
-        android:layout_alignStart="@+id/googleSignIn"
-        android:layout_alignRight="@+id/googleSignIn"
-        android:layout_alignEnd="@+id/googleSignIn" />
-
-    <com.twitter.sdk.android.core.identity.TwitterLoginButton
-        android:id="@+id/twitterSignIn"
-        android:layout_width="100dp"
-        android:layout_height="35dp"
-        android:layout_below="@+id/facebookSignIn"
-        android:layout_alignLeft="@+id/facebookSignIn"
-        android:layout_alignStart="@+id/facebookSignIn"
-        android:layout_alignRight="@+id/facebookSignIn"
-        android:layout_alignEnd="@+id/facebookSignIn" />
-
-    <EditText
-        android:id="@+id/country"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/email"
-        android:layout_alignStart="@+id/email"
+        android:background="@android:drawable/ic_menu_view"
         android:layout_below="@+id/email"
-        android:ems="11"
-        android:inputType="textPersonName"
-        android:hint="@string/country" />
-
-    <EditText
-        android:id="@+id/city"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="11"
-        android:inputType="textPersonName"
-        android:hint="@string/city"
-        android:layout_below="@+id/country"
-        android:layout_alignLeft="@+id/country"
-        android:layout_alignStart="@+id/country" />
-
+        android:layout_alignEnd="@+id/password"
+        android:layout_marginTop="12dp" />
 </RelativeLayout>

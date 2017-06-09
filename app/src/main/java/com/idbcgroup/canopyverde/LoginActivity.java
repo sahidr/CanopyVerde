@@ -1,5 +1,6 @@
 package com.idbcgroup.canopyverde;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -43,6 +44,9 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.Locale;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -69,7 +73,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/TitilliumWeb-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
         load = (ProgressBar) findViewById(R.id.load);
         mAuth = FirebaseAuth.getInstance();
 
@@ -165,7 +173,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
@@ -184,7 +191,6 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-                        // ...
                     }
                 });
     }
@@ -203,4 +209,8 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 }

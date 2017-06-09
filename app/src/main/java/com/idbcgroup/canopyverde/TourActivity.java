@@ -164,28 +164,6 @@ public class TourActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tour, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -201,9 +179,9 @@ public class TourActivity extends AppCompatActivity {
 
         //private Integer[] tour_imgs = {R.drawable.graphic, R.drawable.map, R.drawable.tree, android.R.drawable.btn_star_big_on};
         private Integer[] tour_imgs = {R.drawable.forrest, R.drawable.tour, R.drawable.forrest, R.drawable.tour};
-        public PlaceholderFragment() {}
 
-        /**
+
+             /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
@@ -280,20 +258,6 @@ public class TourActivity extends AppCompatActivity {
             return 4;
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-                case 3:
-                    return "SECTION 4";
-            }
-            return null;
-        }
     }
 
     @Override
