@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001; //9001;
     private GoogleApiClient mGoogleApiClient;
 
-    private SignInButton googleBtn;
+    private Button googleBtn;
 
     // Firebase
 
@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         };
         // ...
 
-        googleBtn = (SignInButton) findViewById(R.id.googleSignIn);
+        googleBtn = (Button) findViewById(R.id.googleSignIn);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -209,6 +209,10 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    public void restore(View view){
+        startActivity(new Intent(LoginActivity.this,PasswordRestoreActivity.class));
+        finish();
+    }
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));

@@ -90,13 +90,15 @@
     <string name="title_activity_user_profile2">UserProfile2</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="large_text">"Material is the metaphor.\n\n"</string>
-
+    <string name="facebook">Sign in with Facebook</string>
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="country_prompt">Choose a country</string>
-    <string-array name="country_arrays">
+
+    <string-array name="country_array">
+        <item>País</item>
         <item>Malaysia</item>
         <item>United States</item>
         <item>Indonesia</item>
@@ -107,5 +109,10 @@
         <item>India</item>
     </string-array>
 
+    <string-array name="city_array">
+    <item>Ciudad</item>
+    </string-array>
 
+    <string name="google">Sign in with Google</string>
+    <string name="google_plus">Sign in with Google+</string>
 </resources>

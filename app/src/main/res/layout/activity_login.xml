@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:textSize="35sp"
         android:text="@string/login"
-        android:layout_below="@+id/load"
+        android:layout_marginTop="31dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
     <ProgressBar
@@ -33,7 +34,7 @@
         android:background="@drawable/first_edit_text"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="22dp"
         android:layout_below="@+id/logo"
         android:layout_alignStart="@+id/password" />
 
@@ -72,38 +73,72 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/restore"
+        android:onClick="restore"
         android:layout_marginTop="17dp"
         android:layout_below="@+id/signin"
         android:layout_centerHorizontal="true" />
 
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/googleSignIn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/signin"
-        android:layout_below="@+id/facebookSignIn"
-        android:layout_alignEnd="@+id/signin" />
-
-    <com.facebook.login.widget.LoginButton
+    <Button
         android:id="@+id/facebookSignIn"
+        android:text="@string/facebook"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
         android:layout_width="wrap_content"
-        style="@style/FacebookLoginButton"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:background="@drawable/facebook_custom_button"
+        android:layout_marginTop="36dp"
         android:layout_below="@+id/rpwd"
-        android:layout_alignStart="@+id/googleSignIn"
-        android:layout_alignEnd="@+id/googleSignIn" />
+        android:layout_alignStart="@+id/signin" />
+
+
+    <ImageView
+        android:id="@+id/fb_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/googleSignIn"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/register"
+        android:background="@drawable/fb_icon"
+        android:elevation="2dp"/>
+
+
+    <Button
+        android:id="@+id/googleSignIn"
+        android:text="@string/google"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textColor="@color/common_google_signin_btn_text_light_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/google_custom_button"
+        android:layout_marginTop="13dp"
+        android:layout_below="@+id/facebookSignIn"
+        android:layout_alignStart="@+id/facebookSignIn" />
+
+    <ImageView
+        android:id="@+id/g_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/g_icon"
+        android:elevation="2dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="10dp"
+        android:layout_alignBottom="@+id/googleSignIn"
+        android:layout_alignStart="@+id/fb_icon" />
 
     <TextView
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="26dp"
+        android:layout_marginBottom="21dp"
         android:onClick="register"
-        android:text="@string/new_member" />
+        android:text="@string/new_member"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
 
 
 </RelativeLayout>
