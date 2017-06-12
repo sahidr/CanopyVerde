@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    tools:context="com.idbcgroup.canopyverde.UserProfileGeneralFragment">
+
+
+    <ImageView
+        android:id="@+id/profileRow"
+        android:layout_width="43dp"
+        android:layout_height="40dp"
+        app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/fullNameDisplayRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="47dp"
+        android:text="@string/full_name"
+        android:layout_alignBottom="@+id/profileRow"
+        android:layout_toEndOf="@+id/profileRow" />
+
+    <ImageView
+        android:id="@+id/emailRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        app:srcCompat="@android:drawable/ic_dialog_email"
+        android:layout_below="@+id/profileRow"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/fullNameDisplayRow" />
+
+    <TextView
+        android:id="@+id/emailDisplayRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/example"
+        android:layout_alignBottom="@+id/emailRow"
+        android:layout_alignStart="@+id/fullNameDisplayRow" />
+
+    <ImageView
+        android:id="@+id/passwordRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:srcCompat="@android:drawable/ic_lock_idle_lock"
+        android:layout_below="@+id/emailRow"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/emailRow" />
+
+    <TextView
+        android:id="@+id/passwordDisplayRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="************"
+        android:layout_above="@+id/countryRow"
+        android:layout_alignStart="@+id/emailDisplayRow" />
+
+    <ImageView
+        android:id="@+id/countryRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:srcCompat="@android:drawable/ic_menu_send"
+        android:layout_below="@+id/passwordRow"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/passwordRow" />
+
+    <TextView
+        android:id="@+id/countryDisplayRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/country"
+        android:layout_above="@+id/cityRow"
+        android:layout_alignStart="@+id/passwordDisplayRow" />
+
+    <ImageView
+        android:id="@+id/cityRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        app:srcCompat="@android:drawable/ic_menu_search"
+        android:layout_below="@+id/countryRow"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/countryRow" />
+
+    <TextView
+        android:id="@+id/cityDisplayRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cityRow"
+        android:layout_alignStart="@+id/countryDisplayRow"
+        android:text="@string/city" />
+
+</RelativeLayout>

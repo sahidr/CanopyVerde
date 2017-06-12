@@ -14,7 +14,7 @@
     <string name="desc2">Description 2</string>
     <string name="desc3">Final description START</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_user_profile">User Profile</string>
+    <string name="title_activity_user_profile1">User Profile</string>
     <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inci-\n
         didunt ut labore et dolore</string>
 
@@ -67,6 +67,13 @@
     <string name="logout">Cerrar Sesión</string>
     <string name="badge">Nombre del Logro</string>
     <string name="points">Puntos</string>
+    <string name="general">General</string>
+    <string name="report">Reportes</string>
+
+    <!--    User Profile General   -->
+
+    <!--    User Profile Report   -->
+    <string name="date">12\nMAR 2017</string>
 
     <!--    Stats    -->
     <string name="green_index">%</string>
@@ -110,9 +117,14 @@
     </string-array>
 
     <string-array name="city_array">
-    <item>Ciudad</item>
+        <item>Ciudad</item>
     </string-array>
 
     <string name="google">Sign in with Google</string>
     <string name="google_plus">Sign in with Google+</string>
+    <string name="title_activity_user_profile">UserProfileActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

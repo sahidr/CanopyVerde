@@ -77,21 +77,21 @@ public class EditProfile extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         load.setVisibility(View.VISIBLE);
                         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
                         final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                        currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                SharedPreferences.Editor preferences = getSharedPreferences("Session", 0).edit().clear();
-                                preferences.apply();
-                                FirebaseAuth.getInstance().signOut();
-                                startActivity(new Intent(EditProfile.this, MainActivity.class)
-                                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                                finish();
-                                load.setVisibility(View.INVISIBLE);
-                            }
-                        });
+
+                        if (currentUser != null) {
+                            currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    FirebaseAuth.getInstance().signOut();
+                                    deleteAccount();
+                                }
+                            });
+
+                        } else {
+                            deleteAccount();
+                        }
 
                     }
                 });
@@ -107,9 +107,19 @@ public class EditProfile extends AppCompatActivity {
 
             }
         });
-
-
     }
 
+    public void deleteAccount (){
+        SharedPreferences.Editor session_preferences = getSharedPreferences("Session", 0).edit().clear();
+        session_preferences.apply();
+        SharedPreferences.Editor tour_preferences = getSharedPreferences("Tour", 0).edit().clear();
+        tour_preferences.apply();
+        startActivity(new Intent(EditProfile.this, MainActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        finish();
+        load.setVisibility(View.INVISIBLE);
+    }
 
 }

@@ -38,9 +38,9 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
-    <style name="CanopyVerde" parent="Theme.AppCompat.Light.NoActionBar" >
-        <item name="android:navigationBarColor">@color/colorGray</item>
-        <item name="android:statusBarColor">@color/colorGray</item>
+    <style name="CanopyVerde" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:navigationBarColor">@color/colorCanopyDark</item>
+        <item name="android:statusBarColor">@color/colorCanopyDark</item>
         <item name="android:colorForeground">@android:color/white</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="colorPrimary">@color/colorCanopy</item>
@@ -60,5 +60,9 @@
     <style name="TextAppearance.FontPath" parent="android:TextAppearance">
         <item name="fontPath">fonts/TitilliumWeb-Regular.ttf</item>
     </style>
+
+    <style name="CanopyVerde.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="CanopyVerde.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

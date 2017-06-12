@@ -27,8 +27,8 @@
         android:theme="@style/CanopyVerde">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -94,12 +94,6 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".UserProfile"
-            android:configChanges="orientation"
-            android:label="@string/title_activity_user_profile"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".CameraActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
@@ -111,7 +105,10 @@
             android:name=".GreenPointRegisterActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".UserProfileActivity"
+            android:label="@string/title_activity_user_profile"
+            android:theme="@style/CanopyVerde"></activity>
     </application>
 
 </manifest>

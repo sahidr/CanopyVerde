@@ -42,10 +42,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Boolean approved;
     private FloatingActionButton camera;
     private LatLng marker;
-
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
-
-
 
     /** Demonstrates customizing the info window and/or its contents. */
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
@@ -54,10 +51,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // "title" and "snippet".
         private final View mWindow;
 
-
         CustomInfoWindowAdapter() {
             mWindow = getLayoutInflater().inflate(R.layout.red_points_dialog, null);
-
         }
 
         @Override
@@ -108,7 +103,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,11 +112,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         camera = (FloatingActionButton) findViewById(R.id.camera);
-
-
         graph = (GraphView) findViewById(R.id.chart);
+
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
@@ -131,9 +123,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 new DataPoint(4, 6)
         });
         graph.addSeries(series);
-
     }
-
 
     /**
      * Manipulates the map once available.
@@ -167,7 +157,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMaxZoomPreference(22);
 
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-
 /*
         mMap.addMarker(new MarkerOptions()
                 .position(caracas)
@@ -185,10 +174,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
 
-
                 //String latitude = new String(cameraPosition.target.latitude).toString();
                 //ouble longitude = cameraPosition.target.longitude;
-
 
                 marker = new LatLng(cameraPosition.target.latitude,cameraPosition.target.longitude);
 
@@ -206,13 +193,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     editor1.putBoolean("approved", false);
                     editor1.apply();
                 }
-
                 //Toast.makeText(MapsActivity.this,marker.toString(),Toast.LENGTH_SHORT).show();
-
             }
         });
-
-
     }
 
     public void currentLocation(View view){
@@ -226,8 +209,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void profileView(View view){
-        startActivity(new Intent(MapsActivity.this, UserProfile.class));
+        startActivity(new Intent(MapsActivity.this, UserProfileActivity.class));
     }
-
-
 }
