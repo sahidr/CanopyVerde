@@ -17,22 +17,22 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
 
     public static class ReportViewHolder extends RecyclerView.ViewHolder {
         // Campos respectivos de un item
-        public ImageView status;
+        //public ImageView status;
         public TextView treeType;
         public TextView location;
         public TextView date;
 
         public ReportViewHolder(View v) {
             super(v);
-            status = (ImageView) v.findViewById(R.id.colorPoint);
+            //status = (ImageView) v.findViewById(R.id.colorPoint);
             treeType = (TextView) v.findViewById(R.id.treeTypeDisplay);
             location = (TextView) v.findViewById(R.id.locationDisplay);
             date = (TextView) v.findViewById(R.id.dateDisplay);
         }
     }
 
-    public ReportAdapter(List<Report> reportsList) {
-        this.reportList = reportsList;
+    public ReportAdapter(List<Report> reportList) {
+        this.reportList = reportList;
     }
 
     @Override
@@ -45,10 +45,10 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     @Override
     public void onBindViewHolder(ReportViewHolder holder, int position) {
         Report report = reportList.get(position);
-        holder.status.setImageResource(android.R.drawable.presence_online);
+        //holder.status.setImageResource(android.R.drawable.presence_online);
         holder.treeType.setText(report.getTreeType());
         holder.location.setText(report.getLocation());
-        holder.date.setText(report.getDate().toString());
+        holder.date.setText(report.getDate());
     }
 
     @Override

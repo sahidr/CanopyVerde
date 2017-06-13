@@ -4,20 +4,21 @@ import java.util.Date;
 
 public class Report {
 
-    private int status;
+    //private int status;
     private String treeType;
     private String location;
-    private Date date;
+    private String date;
 
     public Report(){}
 
-    public Report( int status, String treeType, String location, Date date) {
-        this.status = status;
+    public Report( /*int status,*/
+            String treeType, String location, String date) {
+        //this.status = status;
         this.treeType = treeType;
         this.location = location;
         this.date = date;
     }
-
+/*
     public int getStatus (){
         return status;
     }
@@ -25,7 +26,7 @@ public class Report {
     public void setStatus(int status){
         this.status = status;
     }
-
+*/
     public String getTreeType (){
         return treeType;
     }
@@ -42,11 +43,11 @@ public class Report {
         this.location = location;
     }
 
-    public Date getDate (){
+    public String getDate (){
         return date;
     }
 
-    public void setDate(Date date){
+    public void setDate(String date){
         this.date = date;
     }
 }
