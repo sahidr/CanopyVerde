@@ -7,15 +7,16 @@
 
     tools:context="com.idbcgroup.canopyverde.RegisterActivity">
 
-    <TextView
+    <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/logo"
-        android:textSize="35sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp" />
+        android:layout_height="65dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="19dp"
+        android:background="@drawable/logo_gris"
+        android:layout_alignStart="@+id/username"
+        android:layout_marginStart="19dp"
+        android:layout_alignEnd="@+id/username" />
 
     <ProgressBar
         android:id="@+id/load"
@@ -73,24 +74,12 @@
 
     <ImageButton
         android:id="@+id/showPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/ic_menu_view"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ojo"
+        android:layout_marginTop="13dp"
         android:layout_below="@+id/email"
-        android:layout_marginEnd="10dp"
-        android:layout_alignEnd="@+id/password"
-        android:layout_marginTop="12dp" />
-
-    <!--EditText
-        android:id="@+id/country"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="@string/country"
-        android:layout_below="@+id/password"
-        android:layout_alignStart="@+id/password" /-->
+        android:layout_alignEnd="@+id/logo" />
 
     <Spinner
         android:id="@+id/country"
@@ -105,27 +94,13 @@
         android:layout_alignStart="@+id/email" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:id="@+id/drop"
-        android:src="@drawable/drop"
-        android:layout_alignEnd="@+id/password"
-        android:layout_toEndOf="@+id/logo"
+        android:src="@drawable/seleccionar"
         android:layout_above="@+id/city"
-        android:layout_below="@+id/password" />
-
-
-    <!--EditText
-        android:id="@+id/city"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-
-        android:inputType="textPersonName"
-        android:hint="@string/city"
-        android:layout_below="@+id/country"
-        android:layout_alignEnd="@+id/drop" /-->
-
+        android:layout_alignStart="@+id/showPassword"
+        android:layout_marginBottom="13dp" />
 
     <Spinner
         android:id="@+id/city"
@@ -139,27 +114,25 @@
         android:layout_alignEnd="@+id/email" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:id="@+id/drop_2"
-        android:src="@drawable/drop"
-        android:layout_alignEnd="@+id/password"
-        android:layout_toEndOf="@+id/logo"
+        android:src="@drawable/seleccionar"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/country"
-        android:layout_alignBottom="@+id/city" />
+        android:layout_alignEnd="@+id/drop" />
 
     <Button
         android:id="@+id/signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="68dp"
+        android:background="@drawable/btn_ppal"
         android:text="@string/sign_up"
-        android:background="@drawable/button"
         android:textAllCaps="false"
-        android:textSize="16sp"
         android:textColor="@color/colorCanopyLight"
-        android:layout_marginBottom="21dp"
+        android:textSize="18sp"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/email"
-        android:layout_alignEnd="@+id/email" />
+        android:layout_alignStart="@+id/city"
+        android:layout_marginBottom="8dp" />
 
 </RelativeLayout>

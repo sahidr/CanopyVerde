@@ -79,13 +79,10 @@ public class TourActivity extends AppCompatActivity {
         dots = new ImageView[]{page0, page1, page2,page3};
         register = (Button) findViewById(R.id.register);
 
-        //Typeface typeface = new Typeface.createFromAssets(getAssets(),"TitilliumWeb-Regular.ttf");
-
-
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
+        //  mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -95,28 +92,7 @@ public class TourActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-
                 updateIndicators(position);
-
-                switch (position) {
-                    case 0:
-
-                        break;
-                    case 1:
-//                        mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
-                        //mViewPager.setBackgroundColor(0XA000FFAA);
-                        break;
-                    case 2:
-//                        mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
-                        //mViewPager.setBackgroundColor(0xA0FFFF00);
-                        break;
-                    case 3:
-//                        mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
-                        //mViewPager.setBackgroundColor(0xA0FF0000);
-                        break;
-                }
-             //   skip.setText(position == 3 ? getString(R.string.start): getString(R.string.skip));
-
             }
 
             @Override
@@ -134,18 +110,6 @@ public class TourActivity extends AppCompatActivity {
                 finish();
             }
         });
-/*
-        skip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateSharedPreferences();
-                Intent i = new Intent(TourActivity.this, LoginActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                finish();
-            }
-        });
-*/
     }
 
     void updateSharedPreferences(){
@@ -163,7 +127,6 @@ public class TourActivity extends AppCompatActivity {
         }
     }
 
-
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -174,14 +137,12 @@ public class TourActivity extends AppCompatActivity {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        private ImageView img;
+        //private ImageView img;
         //private SelectableRoundedImageView img;
-
         //private Integer[] tour_imgs = {R.drawable.graphic, R.drawable.map, R.drawable.tree, android.R.drawable.btn_star_big_on};
-        private Integer[] tour_imgs = {R.drawable.forrest, R.drawable.tour, R.drawable.forrest, R.drawable.tour};
+        //private Integer[] tour_imgs = {R.drawable.forrest, R.drawable.tour, R.drawable.forrest, R.drawable.tour};
 
-
-             /**
+        /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
@@ -225,20 +186,14 @@ public class TourActivity extends AppCompatActivity {
             }
             //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
-            img = (ImageView) rootView.findViewById(R.id.app_img);
+            //img = (ImageView) rootView.findViewById(R.id.app_img);
             //img.setImageResource(tour_imgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-            img.setBackgroundResource(tour_imgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-
-
+           //img.setBackgroundResource(tour_imgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
             return rootView;
         }
 
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -251,13 +206,10 @@ public class TourActivity extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position + 1);
         }
-
         @Override
         public int getCount() {
-            // Show 3 total pages.
             return 4;
         }
-
     }
 
     @Override

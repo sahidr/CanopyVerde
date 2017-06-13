@@ -39,8 +39,8 @@
     </style>
 
     <style name="CanopyVerde" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:navigationBarColor">@color/colorCanopyDark</item>
-        <item name="android:statusBarColor">@color/colorCanopyDark</item>
+        <item name="android:navigationBarColor">@color/colorCanopy</item>
+        <item name="android:statusBarColor">@color/colorCanopy</item>
         <item name="android:colorForeground">@android:color/white</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="colorPrimary">@color/colorCanopy</item>
@@ -48,17 +48,24 @@
         <item name="colorPrimaryDark">@color/colorCanopyDark</item>
         <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
         <item name="android:colorBackground">@android:color/white</item>
+        <item name="android:textColorHint">@color/black_overlay</item>
         <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
+        <item name="android:tabWidgetStyle">@style/CustomTabWidget</item>
     </style>
 
     <style name="spinnerItemStyle">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">?android:textColorHint</item>
+        <item name="android:textColor">@color/black_overlay</item>
         <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
     </style>
 
     <style name="TextAppearance.FontPath" parent="android:TextAppearance">
         <item name="fontPath">fonts/TitilliumWeb-Regular.ttf</item>
+        <item name="android:textColor">@color/black_overlay</item>
+    </style>
+
+    <style name="CustomTabWidget" parent="@android:style/Widget.TabWidget">
+        <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
     </style>
 
     <style name="CanopyVerde.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

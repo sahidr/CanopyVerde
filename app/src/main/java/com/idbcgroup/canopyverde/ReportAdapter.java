@@ -1,6 +1,9 @@
 package com.idbcgroup.canopyverde;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +51,12 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         //holder.status.setImageResource(android.R.drawable.presence_online);
         holder.treeType.setText(report.getTreeType());
         holder.location.setText(report.getLocation());
-        holder.date.setText(report.getDate());
+        String s= report.getDate();
+        SpannableString ss1=  new SpannableString(s);
+        ss1.setSpan(new RelativeSizeSpan(2f), 0,2, 0); // set size
+        holder.date.setText(ss1);
+        //holder.date.setText(report.getDate());
+
     }
 
     @Override

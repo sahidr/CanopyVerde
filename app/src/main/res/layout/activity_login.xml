@@ -6,16 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.idbcgroup.canopyverde.LoginActivity">
 
-
-    <TextView
+    <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="35sp"
-        android:text="@string/login"
-        android:layout_marginTop="31dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="65dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="19dp"
+        android:background="@drawable/logo_gris"
+        android:layout_alignStart="@+id/email"
+        android:layout_marginStart="19dp"
+        android:layout_alignEnd="@+id/email" />
+
 
     <ProgressBar
         android:id="@+id/load"
@@ -34,7 +35,7 @@
         android:background="@drawable/first_edit_text"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/logo"
         android:layout_alignStart="@+id/password" />
 
@@ -54,14 +55,14 @@
     <Button
         android:id="@+id/signin"
         style="@style/Base.Widget.AppCompat.Button.Colored"
-        android:background="@drawable/button"
+        android:background="@drawable/btn_ppal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="68dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:textAllCaps="false"
         android:textColor="@color/colorCanopyLight"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:onClick="login"
         android:text="@string/start_login"
         android:layout_below="@+id/password"
@@ -74,7 +75,7 @@
         android:layout_height="wrap_content"
         android:text="@string/restore"
         android:onClick="restore"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/signin"
         android:layout_centerHorizontal="true" />
 
@@ -88,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/facebook_custom_button"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="33dp"
         android:layout_below="@+id/rpwd"
         android:layout_alignStart="@+id/signin" />
 
@@ -114,7 +115,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/google_custom_button"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="12dp"
         android:layout_below="@+id/facebookSignIn"
         android:layout_alignStart="@+id/facebookSignIn" />
 
@@ -133,7 +134,7 @@
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="21dp"
+        android:layout_marginBottom="16dp"
         android:onClick="register"
         android:text="@string/new_member"
         android:layout_alignParentBottom="true"

@@ -6,11 +6,11 @@
     <color name="colorDanger">#af1000</color>
     <color name="colorCustom">#8a1aabff</color>
     <color name="colorTransparent">#00ffffff</color>
-    <color name="colorCanopy">#127e42</color>
+    <color name="colorCanopy">#127E42</color>
     <color name="colorCanopyDark">#0c542c</color>
     <color name="colorGray">#9f2d2d2d</color>
     <color name="colorCanopyLight">#ffffff</color>
-    <color name="black_overlay">#561e1e1e</color>
+    <color name="black_overlay">#b2b2b2</color>
     <color name="black">#000</color>
 
     <!-- Green -->
@@ -19,4 +19,9 @@
     <color name="bright_green">#02D8B0</color>
     <color name="button_green">#10a54a</color>
 
+    <color name="yellow">#FCAB53</color>
+    <color name="pink">#E98C99</color>
+
+
 </resources>
+

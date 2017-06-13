@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class UserProfileReportFragment extends Fragment {
 
     private List reportList = new ArrayList();
@@ -26,7 +29,6 @@ public class UserProfileReportFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View reportView = inflater.inflate(R.layout.fragment_user_profile_report, container, false);
-
         recyclerView = (RecyclerView) reportView.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -41,21 +43,22 @@ public class UserProfileReportFragment extends Fragment {
     }
 
     private void prepareReportData() {
-        Report report = new Report("Roble", "Av. Yaracuy", "12 MAR 2017");
+        Report report = new Report("Roble", "Av. Yaracuy", "12\nMAR 2017");
         reportList.add(report);
 
-        report = new Report("Icoa", "Calle 4", "13 APR 2017");
+        report = new Report("Icoa", "Calle 4", "13\nAPR 2017");
         reportList.add(report);
 
-        report = new Report("Araguaney", "Av. Ara", "14 MAY 2017");
+        report = new Report("Araguaney", "Av. Ara", "14\nMAY 2017");
         reportList.add(report);
 
-        report = new Report("Caobo", "Av. 3", "15 JUN 2017");
+        report = new Report("Caobo", "Av. 3", "15\nJUN 2017");
         reportList.add(report);
 
-        report = new Report("Samán", "Av. Saman", "16 JUL 2017");
+        report = new Report("Samán", "Av. Saman", "16\nJUL 2017");
         reportList.add(report);
 
         mAdapter.notifyDataSetChanged();
     }
+
 }
