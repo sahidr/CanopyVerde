@@ -81,6 +81,7 @@ public class TourActivity extends AppCompatActivity {
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
+        //mViewPager.setBackground(getDrawable(R.drawable.bg_tour));
         mViewPager.setAdapter(mSectionsPagerAdapter);
         //  mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -92,7 +93,11 @@ public class TourActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                updateIndicators(position);
+                for (int i = 0; i < dots.length; i++) {
+                    dots[i].setImageResource(
+                            i == position ? R.drawable.dot_active : R.drawable.dot_inactive
+                    );
+                }
             }
 
             @Override
@@ -101,31 +106,8 @@ public class TourActivity extends AppCompatActivity {
             }
         });
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateSharedPreferences();
-                startActivity(new Intent(TourActivity.this, RegisterActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                finish();
-            }
-        });
     }
 
-    void updateSharedPreferences(){
-        SharedPreferences.Editor editor = getSharedPreferences("Tour", 0).edit();
-        editor.putBoolean("visited", true);
-        editor.apply();
-    }
-
-    void updateIndicators(int position) {
-        for (int i = 0; i < dots.length; i++) {
-            dots[i].setImageResource(
-                    i == position ? android.R.drawable.radiobutton_on_background :
-                            android.R.drawable.radiobutton_off_background
-            );
-        }
-    }
 
     /**
      * A placeholder fragment containing a simple view.
@@ -138,12 +120,11 @@ public class TourActivity extends AppCompatActivity {
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         private ImageView img;
+        private TextView title;
         private TextView description;
-        //private SelectableRoundedImageView img;
-        //private Integer[] tour_imgs = {R.drawable.graphic, R.drawable.map_circle, R.drawable.tree, android.R.drawable.btn_star_big_on};
-        //private Integer[] tour_imgs = {R.drawable.forrest, R.drawable.tour_01, R.drawable.forrest, R.drawable.tour_01};
-        private Integer[] tour_imgs = {R.drawable.tour_01, R.drawable.tour_02, R.drawable.tour_03, R.drawable.tour_04};
-        private Integer[] tour_desc = {R.string.lorem, R.string.desc1, R.string.desc2,R.string.desc3};
+        private Integer[] tour_imgs = {R.drawable.tour_01, R.drawable.tour_01, R.drawable.tour_01, R.drawable.tour_01};
+        private Integer[] tour_titles = {R.string.title_tour_1, R.string.title_tour_2, R.string.title_tour_3,R.string.title_tour_4};
+        private Integer[] tour_desc = {R.string.lorem, R.string.lorem, R.string.lorem,R.string.lorem};
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -168,10 +149,15 @@ public class TourActivity extends AppCompatActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_tour, container, false);
 
-            description = (TextView) rootView.findViewById(R.id.description);
-            description.setText(getString(tour_desc[getArguments().getInt(ARG_SECTION_NUMBER) - 1]));
+            Integer argSectionNumber = getArguments().getInt(ARG_SECTION_NUMBER) - 1;
+
             img = (ImageView) rootView.findViewById(R.id.app_img);
-            img.setBackgroundResource(tour_imgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+            img.setBackgroundResource(tour_imgs[argSectionNumber]);
+            title = (TextView) rootView.findViewById(R.id.titleTour);
+            title.setText(getString(tour_titles[argSectionNumber]));
+            description = (TextView) rootView.findViewById(R.id.description);
+            description.setText(getString(tour_desc[argSectionNumber]));
+
             return rootView;
         }
 
@@ -193,6 +179,15 @@ public class TourActivity extends AppCompatActivity {
         public int getCount() {
             return 4;
         }
+    }
+
+    public void toRegister(View view){
+        SharedPreferences.Editor editor = getSharedPreferences("Tour", 0).edit();
+        editor.putBoolean("visited", true);
+        editor.apply();
+        startActivity(new Intent(TourActivity.this, RegisterActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        finish();
     }
 
     @Override

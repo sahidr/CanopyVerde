@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@drawable/bg_tour"
     tools:context="com.idbcgroup.canopyverde.TourActivity">
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/indicators"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/register"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="17dp">
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="92dp">
 
         <ImageView
             android:id="@+id/page0"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="12dp"
+            android:layout_height="8dp"
             android:layout_marginEnd="5dp"
-            app:srcCompat="@android:drawable/radiobutton_on_background" />
+            app:srcCompat="@drawable/dot_active" />
 
         <ImageView
             android:id="@+id/page1"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="12dp"
+            android:layout_height="8dp"
             android:layout_marginEnd="5dp"
-            app:srcCompat="@android:drawable/radiobutton_off_background" />
+            app:srcCompat="@drawable/dot_inactive" />
 
         <ImageView
             android:id="@+id/page2"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="12dp"
+            android:layout_height="8dp"
             android:layout_marginEnd="5dp"
-            app:srcCompat="@android:drawable/radiobutton_off_background" />
+            app:srcCompat="@drawable/dot_inactive" />
 
         <ImageView
             android:id="@+id/page3"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            app:srcCompat="@android:drawable/radiobutton_off_background" />
-
+            android:layout_width="12dp"
+            android:layout_height="8dp"
+            app:srcCompat="@drawable/dot_inactive" />
     </LinearLayout>
 
 
@@ -52,33 +58,24 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="19dp"
         android:background="@color/colorTransparent"
+        android:onClick="toRegister"
         android:text="@string/register"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_marginEnd="15dp"
+        android:layout_gravity="center_horizontal|bottom"/>
 
     <ImageView
         android:id="@+id/next"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_alignBottom="@+id/register"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="-5dp"
         android:layout_toEndOf="@+id/register"
-        app:srcCompat="@drawable/seguir" />
+        app:srcCompat="@drawable/seguir"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="85dp"/>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/linearLayout3" />
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

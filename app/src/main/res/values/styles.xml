@@ -22,6 +22,7 @@
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
@@ -35,11 +36,10 @@
         <item name="colorAccent">@color/colorCanopy</item>
         <item name="colorPrimaryDark">@color/colorCanopyDark</item>
         <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/fontColor</item>
         <item name="android:colorBackground">@android:color/white</item>
         <item name="android:textColorHint">@color/black_overlay</item>
         <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
-        <item name="android:tabWidgetStyle">@style/CustomTabWidget</item>
     </style>
 
     <style name="spinnerItemStyle">
@@ -50,10 +50,6 @@
 
     <style name="TextAppearance.FontPath" parent="android:TextAppearance">
         <item name="fontPath">fonts/TitilliumWeb-Regular.ttf</item>
-    </style>
-
-    <style name="CustomTabWidget" parent="@android:style/Widget.TabWidget">
-        <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
     </style>
 
     <style name="CanopyVerde.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

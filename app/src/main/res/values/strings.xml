@@ -7,7 +7,10 @@
     <string name="title_activity_tour">TourActivity</string>
     <string name="skip">Saltar</string>
     <string name="sign_up">Registrar</string>
-    <string name="title_tour">Tour Canopy 01</string>
+    <string name="title_tour_1">Tour Canopy 01</string>
+    <string name="title_tour_2">Tour Canopy 02</string>
+    <string name="title_tour_3">Tour Canopy 03</string>
+    <string name="title_tour_4">Tour Canopy 04</string>
     <string name="welcome">Bienvenido a Canopy Verde</string>
     <string name="start">Comenzar</string>
     <string name="desc1">Description 1</string>
@@ -104,7 +107,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="country_prompt">Choose a country</string>
-
+    <string name="city_prompt">Choose a city</string>
     <string-array name="country_array">
         <item>País</item>
         <item>Malaysia</item>
@@ -120,6 +123,7 @@
     <string-array name="city_array">
         <item>Ciudad</item>
     </string-array>
+
 
     <string name="google">Sign in with Google</string>
     <string name="google_plus">Sign in with Google+</string>
