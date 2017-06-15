@@ -20,7 +20,7 @@
         android:id="@+id/fullNameDisplayRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/full_name"
+        android:text="@string/u_name"
         android:layout_marginBottom="5dp"
         android:layout_above="@+id/emailRow"
         android:layout_alignStart="@+id/emailDisplayRow" />
@@ -38,7 +38,7 @@
         android:id="@+id/emailDisplayRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/example"
+        android:text="@string/u_email"
         android:layout_marginBottom="5dp"
         android:layout_alignBottom="@+id/emailRow"
         android:layout_alignStart="@+id/passwordDisplayRow" />
@@ -75,7 +75,7 @@
         android:id="@+id/countryDisplayRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/country"
+        android:text="@string/u_country"
         android:layout_marginBottom="5dp"
         android:layout_alignBottom="@+id/countryRow"
         android:layout_alignStart="@+id/passwordDisplayRow" />
@@ -96,6 +96,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/cityRow"
         android:layout_alignStart="@+id/countryDisplayRow"
-        android:text="@string/city" />
+        android:text="@string/u_city" />
 
 </RelativeLayout>

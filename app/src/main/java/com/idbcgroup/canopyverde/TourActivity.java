@@ -137,11 +137,13 @@ public class TourActivity extends AppCompatActivity {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        //private ImageView img;
+        private ImageView img;
+        private TextView description;
         //private SelectableRoundedImageView img;
-        //private Integer[] tour_imgs = {R.drawable.graphic, R.drawable.map, R.drawable.tree, android.R.drawable.btn_star_big_on};
-        //private Integer[] tour_imgs = {R.drawable.forrest, R.drawable.tour, R.drawable.forrest, R.drawable.tour};
-
+        //private Integer[] tour_imgs = {R.drawable.graphic, R.drawable.map_circle, R.drawable.tree, android.R.drawable.btn_star_big_on};
+        //private Integer[] tour_imgs = {R.drawable.forrest, R.drawable.tour_01, R.drawable.forrest, R.drawable.tour_01};
+        private Integer[] tour_imgs = {R.drawable.tour_01, R.drawable.tour_02, R.drawable.tour_03, R.drawable.tour_04};
+        private Integer[] tour_desc = {R.string.lorem, R.string.desc1, R.string.desc2,R.string.desc3};
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -166,29 +168,10 @@ public class TourActivity extends AppCompatActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_tour, container, false);
 
-            TextView description = (TextView) rootView.findViewById(R.id.description);
-            Integer i = getArguments().getInt(ARG_SECTION_NUMBER) - 1;
-            switch (i){
-                case 0:
-                    description.setText(getString(R.string.lorem));
-                    break;
-                case 1:
-                    description.setText(getString(R.string.desc1));
-                    break;
-                case 2:
-                    description.setText(getString(R.string.desc2));
-                    break;
-                case 3:
-                    description.setText(getString(R.string.desc3));
-                    break;
-                default:
-                    break;
-            }
-            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-
-            //img = (ImageView) rootView.findViewById(R.id.app_img);
-            //img.setImageResource(tour_imgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-           //img.setBackgroundResource(tour_imgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+            description = (TextView) rootView.findViewById(R.id.description);
+            description.setText(getString(tour_desc[getArguments().getInt(ARG_SECTION_NUMBER) - 1]));
+            img = (ImageView) rootView.findViewById(R.id.app_img);
+            img.setBackgroundResource(tour_imgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
             return rootView;
         }
 

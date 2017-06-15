@@ -36,8 +36,8 @@ public class RegisterActivity extends AppCompatActivity {
         );
 
         register = (Button) findViewById(R.id.signup);
-        showPassword = (ImageButton) findViewById(R.id.showPassword);
-        password = (EditText) findViewById(R.id.password);
+        //showPassword = (ImageButton) findViewById(R.id.showPassword);
+  //      password = (EditText) findViewById(R.id.password);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+/*
         showPassword.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
 

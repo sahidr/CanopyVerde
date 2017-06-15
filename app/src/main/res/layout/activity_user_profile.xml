@@ -8,53 +8,61 @@
     android:fitsSystemWindows="true"
     tools:context="com.idbcgroup.canopyverde.UserProfileActivity">
 
+
     <RelativeLayout
-        android:id="@+id/userContent"
-        android:background="@drawable/bg_tour"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="290dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme" >
-
-        </android.support.v7.widget.Toolbar>
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/actionBarTheme">
 
         <ImageButton
             android:id="@+id/map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/toolbar1"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/map"
             android:onClick="backToMap"
-            app:srcCompat="@android:drawable/ic_menu_mapmode" />
+            android:layout_marginStart="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
 
-        <Button
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="145dp"
+            android:layout_height="40dp"
+            android:background="@drawable/logo_blanco"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageButton
             android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/map"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/logout"
             android:onClick="logout"
-            android:text="@string/logout" />
+            android:layout_marginEnd="10dp"
+            android:layout_alignTop="@+id/map"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/userContent"
+        android:background="@drawable/fondo_profile"
+        android:layout_width="match_parent"
+        android:layout_height="239dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentStart="true">
+
 
         <ImageButton
             android:id="@+id/edit"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
-            android:layout_below="@+id/toolbar1"
             android:layout_marginEnd="5dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/editar"
@@ -64,20 +72,19 @@
             android:id="@+id/profilepic"
             android:layout_width="82dp"
             android:layout_height="82dp"
-            android:layout_below="@+id/toolbar1"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/map" />
+            android:src="@drawable/map_circle" />
 
         <TextView
             android:id="@+id/fullNameDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="23sp"
+            android:textSize="25sp"
             android:textColor="@android:color/white"
-            android:text="@string/full_name"
+            android:text="@string/u_name"
             android:layout_marginTop="2dp"
             android:layout_below="@+id/profilepic"
             android:layout_centerHorizontal="true" />
@@ -86,9 +93,9 @@
             android:id="@+id/usernameDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/username"
+            android:text="@string/u_user"
+            android:layout_marginTop="2dp"
             android:textColor="@android:color/white"
-            android:layout_marginTop="3dp"
             android:layout_below="@+id/fullNameDisplay"
             android:layout_centerHorizontal="true" />
 
@@ -96,7 +103,8 @@
             android:id="@+id/emailDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/example"
+            android:text="@string/u_email"
+            android:layout_marginTop="2dp"
             android:textColor="@android:color/white"
             android:layout_below="@+id/usernameDisplay"
             android:layout_centerHorizontal="true" />
@@ -106,28 +114,19 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             app:srcCompat="@drawable/puntos"
+            android:layout_marginStart="5dp"
             android:layout_below="@+id/emailDisplay"
-            android:layout_alignStart="@+id/fullNameDisplay" />
-
-        <TextView
-            android:id="@+id/gamePoints"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2.544"
-            android:textColor="@color/yellow"
-            android:layout_marginRight="5dp"
-            android:layout_alignBottom="@+id/badgeImg"
-            android:layout_toStartOf="@+id/badgeName" />
+            android:layout_alignStart="@+id/emailDisplay" />
 
         <TextView
             android:id="@+id/badgeName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/badge"
+            android:layout_marginStart="8dp"
             android:textColor="@color/yellow"
-            android:layout_alignBaseline="@+id/gamePoints"
-            android:layout_alignBottom="@+id/gamePoints"
-            android:layout_alignEnd="@+id/fullNameDisplay" />
+            android:layout_alignBottom="@+id/badgeImg"
+            android:layout_toEndOf="@+id/badgeImg" />
 
     </RelativeLayout>
 
@@ -154,7 +153,6 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/tabs" />
-
     </RelativeLayout>
 
 </RelativeLayout>

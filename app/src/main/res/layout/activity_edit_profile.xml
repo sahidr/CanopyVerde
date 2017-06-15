@@ -23,7 +23,7 @@
         android:layout_gravity="center"
         android:background="@drawable/circle"
         android:scaleType="centerCrop"
-        android:src="@drawable/map"
+        android:src="@drawable/map_circle"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp" />

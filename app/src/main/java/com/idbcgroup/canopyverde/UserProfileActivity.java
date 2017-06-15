@@ -10,7 +10,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
+import android.widget.TextView;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -24,6 +27,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private TextView badge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,12 @@ public class UserProfileActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+
+        badge = (TextView) findViewById(R.id.badgeName);
+        String points = getResources().getString(R.string.badge, 2544);
+        CharSequence styledText = Html.fromHtml(points);
+        badge.setText(styledText);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());

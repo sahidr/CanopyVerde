@@ -13,6 +13,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GraphView graph;
     private SharedPreferences pref_marker;
     private Boolean approved;
-    private FloatingActionButton camera;
+    //private ImageButton camera;
     private LatLng marker;
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
 
@@ -107,12 +108,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the SupportMapFragment and get notified when the map_circle is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        camera = (FloatingActionButton) findViewById(R.id.camera);
+        //camera = (ImageButton) findViewById(R.id.locator);
         graph = (GraphView) findViewById(R.id.chart);
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
@@ -126,8 +127,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
+     * Manipulates the map_circle once available.
+     * This callback is triggered when the map_circle is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
      * we just add a marker near Sydney, Australia.
      * If Google Play services is not installed on the device, the user will be prompted to install
@@ -208,7 +209,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(new Intent(MapsActivity.this, CameraActivity.class));
     }
 
-    public void profileView(View view){
+    public void profileView (View view){
         startActivity(new Intent(MapsActivity.this, UserProfileActivity.class));
     }
 }

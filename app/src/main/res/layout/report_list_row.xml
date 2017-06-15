@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:focusable="true"
-    android:padding="10dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingBottom="5dp"
     android:background="?android:attr/selectableItemBackground"
     tools:context="com.idbcgroup.canopyverde.UserProfileReportFragment">
 
@@ -49,7 +51,6 @@
 
     <TextView
         android:id="@+id/dateDisplay"
-        android:layout_marginTop="1dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"

@@ -15,7 +15,8 @@
     <string name="desc3">Final description START</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_user_profile1">User Profile</string>
-    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor inci-\n
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur\n
+        adipiscing elit, sed do eiusmod tempor inci-\n
         didunt ut labore et dolore</string>
 
     <!--    Login    -->
@@ -65,7 +66,7 @@
 
     <!--    User Profile    -->
     <string name="logout">Cerrar Sesión</string>
-    <string name="badge"><u>Nombre del Logro</u></string>
+    <string name="badge">&lt;u>%1$d Tree Master&lt;/u></string>
     <string name="points">Puntos</string>
     <string name="general">General</string>
     <string name="report">Reportes</string>
@@ -123,6 +124,15 @@
     <string name="google">Sign in with Google</string>
     <string name="google_plus">Sign in with Google+</string>
     <string name="title_activity_user_profile">UserProfileActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- User Example -->
+    
+    <string name="u_name">Juan Antonio Lopez</string>
+    <string name="u_user">\@juan.lopez88</string>
+    <string name="u_email">juan.lopez88@gmail.com</string>
+    <string name="u_country">Venezuela</string>
+    <string name="u_city">Caracas</string>
+    <string name="u_bagde">Tree Master</string>
+
 
 </resources>
