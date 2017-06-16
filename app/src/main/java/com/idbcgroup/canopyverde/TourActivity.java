@@ -47,13 +47,11 @@ public class TourActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    //private Button skip;
     private ImageView page0;
     private ImageView page1;
     private ImageView page2;
     private ImageView page3;
     private ImageView[] dots;
-    private Button register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +75,6 @@ public class TourActivity extends AppCompatActivity {
         page2 = (ImageView) findViewById(R.id.page2);
         page3 = (ImageView) findViewById(R.id.page3);
         dots = new ImageView[]{page0, page1, page2,page3};
-        register = (Button) findViewById(R.id.register);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -105,9 +102,7 @@ public class TourActivity extends AppCompatActivity {
 
             }
         });
-
     }
-
 
     /**
      * A placeholder fragment containing a simple view.
@@ -160,7 +155,6 @@ public class TourActivity extends AppCompatActivity {
 
             return rootView;
         }
-
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

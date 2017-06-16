@@ -1,13 +1,18 @@
 package com.idbcgroup.canopyverde;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
@@ -41,9 +46,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GraphView graph;
     private SharedPreferences pref_marker;
     private Boolean approved;
-    //private ImageButton camera;
+    MapStyleOptions style;
     private LatLng marker;
+    Context context;
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
+    LatLng l1 = new LatLng(10.492037, -66.827096);
+    LatLng l2 = new LatLng(10.492330, -66.827681);
+    LatLng l3 = new LatLng(10.488365, -66.825681);
+    LatLng l4 = new LatLng(10.488530, -66.825873);
+    LatLng l5 = new LatLng(10.490110, -66.827370);
+    LatLng l6 = new LatLng(10.491841, -66.826925);
+    LatLng l7 = new LatLng(10.484345, -66.826400);
+    LatLng[] l = {l1,l2,l3,l4,l5,l6,l7};
+
 
     /** Demonstrates customizing the info window and/or its contents. */
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
@@ -52,8 +67,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // "title" and "snippet".
         private final View mWindow;
 
+
         CustomInfoWindowAdapter() {
-            mWindow = getLayoutInflater().inflate(R.layout.red_points_dialog, null);
+            mWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+
         }
 
         @Override
@@ -70,16 +87,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         private void render(Marker marker, View view) {
             int badge;
 
-            badge = android.R.drawable.star_big_on;
+            //badge = android.R.drawable.star_big_on;
 
-            ((ImageView) view.findViewById(R.id.badge)).setImageResource(badge);
-            Button seed = ((Button) view.findViewById(R.id.request));
-            seed.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(MapsActivity.this,"New Tree request",Toast.LENGTH_SHORT).show();
-                }
-            });
+            //((ImageView) view.findViewById(R.id.badge)).setImageResource(badge);
+
             String title = marker.getTitle();
             TextView titleUi = ((TextView) view.findViewById(R.id.title));
             if (title != null) {
@@ -108,6 +119,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        context = this;
+
         // Obtain the SupportMapFragment and get notified when the map_circle is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -138,6 +152,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        style = MapStyleOptions.loadRawResourceStyle(this, R.raw.canopy_style_map);
+        mMap.setMapStyle(style);
+
+        for (int i = 0; i < l.length; i++) {
+            mMap.addMarker(new MarkerOptions()
+                    .position(l[i])
+                    .title("Marker in Caracas")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.p_verde)));
+        }
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -151,58 +174,76 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        MapStyleOptions style;
-        style = MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle_treepedia);
-        mMap.setMapStyle(style);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMinZoomPreference(12);
         mMap.setMaxZoomPreference(22);
-
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-/*
-        mMap.addMarker(new MarkerOptions()
-                .position(caracas)
-                .title("Marker in Caracas")
-                .icon(BitmapDescriptorFactory.fromResource(android.R.drawable.btn_star_big_on)));
-
-        MarkerOptions m = new MarkerOptions();
-        m.anchor(0.5f, 0.5f);
-        m.title("Marker in Caracas");
-        m.icon(BitmapDescriptorFactory.fromResource(android.R.drawable.btn_star_big_on));
-*/
         mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS));
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-
-                //String latitude = new String(cameraPosition.target.latitude).toString();
-                //ouble longitude = cameraPosition.target.longitude;
-
                 marker = new LatLng(cameraPosition.target.latitude,cameraPosition.target.longitude);
 
                 pref_marker = getSharedPreferences("Marker", 0);
                 approved  = pref_marker.getBoolean("approved",false);
 
                 if (approved) {
-                    mMap.addMarker(new MarkerOptions()
-                            .position(marker)
-                            .snippet("new marker")
-                            .title("TREE")
-                            .icon(BitmapDescriptorFactory.fromResource(android.R.drawable.btn_star_big_on)));
+                mMap.addMarker(new MarkerOptions()
+                        .position(marker)
+                        .snippet("new marker")
+                        .title("TREE")
+                        .flat(true)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.p_amarillo)));
 
-                    SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
-                    editor1.putBoolean("approved", false);
-                    editor1.apply();
+                SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
+                editor1.putBoolean("approved", false);
+                editor1.apply();
                 }
-                //Toast.makeText(MapsActivity.this,marker.toString(),Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void currentLocation(View view){
-        LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
-        mMap.animateCamera(cameraUpdate);
+        LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            // notify user
+            AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+            dialog.setTitle(context.getResources().getString(R.string.gps_network_not_enabled));
+            dialog.setMessage(context.getResources().getString(R.string.enable_location));
+            dialog.setPositiveButton(context.getResources().getString(R.string.open_location_settings), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+
+                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    context.startActivity(myIntent);
+                    //get gps
+                }
+            });
+            dialog.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    // TODO Auto-generated method stub
+                }
+            });
+            dialog.show();
+        } else {
+            LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude());
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
+            mMap.animateCamera(cameraUpdate);
+        }
     }
 
     public void cameraView(View view){

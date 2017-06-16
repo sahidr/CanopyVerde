@@ -137,6 +137,9 @@
     <string name="u_country">Venezuela</string>
     <string name="u_city">Caracas</string>
     <string name="u_bagde">Tree Master</string>
+    <string name="gps_network_not_enabled">Ubicación Desactivada</string>
+    <string name="enable_location">\nVerifica que la ubicación del GPS está activada</string>
+    <string name="open_location_settings">Configuración del GPS</string>
 
 
 </resources>

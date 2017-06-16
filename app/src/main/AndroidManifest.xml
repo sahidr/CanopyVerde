@@ -105,6 +105,7 @@
         <activity
             android:name=".UserProfileActivity"
             android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_user_profile" />
     </application>
 
