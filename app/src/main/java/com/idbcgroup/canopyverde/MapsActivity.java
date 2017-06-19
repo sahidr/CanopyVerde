@@ -61,7 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     /** Demonstrates customizing the info window and/or its contents. */
-    class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+    private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         // These are both viewgroups containing an ImageView with id "badge" and two TextViews with id
         // "title" and "snippet".
@@ -70,7 +70,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         CustomInfoWindowAdapter() {
             mWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
-
         }
 
         @Override
@@ -85,19 +84,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         private void render(Marker marker, View view) {
-            int badge;
+
+            //TextView ubicacion = (TextView) view.findViewById(R.id.sLocation);
+            //ubicacion.setText("Nueva Ubicación\nde dos lineas");
+
+            /*
+            //int badge;
 
             //badge = android.R.drawable.star_big_on;
 
-            //((ImageView) view.findViewById(R.id.badge)).setImageResource(badge);
+            ((ImageView) view.findViewById(R.id.badge)).setImageResource(R.drawable.araguaney);
 
             String title = marker.getTitle();
             TextView titleUi = ((TextView) view.findViewById(R.id.title));
             if (title != null) {
                 // Spannable string allows us to edit the formatting of the text.
-                SpannableString titleText = new SpannableString(title);
-                titleText.setSpan(new ForegroundColorSpan(Color.RED), 0, titleText.length(), 0);
-                titleUi.setText(titleText);
+                //SpannableString titleText = new SpannableString(title);
+                //titleText.setSpan(new ForegroundColorSpan(Color.RED), 0, titleText.length(), 0);
+                //titleUi.setText(titleText);
             } else {
                 titleUi.setText("");
             }
@@ -105,13 +109,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String snippet = marker.getSnippet();
             TextView snippetUi = ((TextView) view.findViewById(R.id.snippet));
             if (snippet != null && snippet.length() > 12) {
-                SpannableString snippetText = new SpannableString(snippet);
-                snippetText.setSpan(new ForegroundColorSpan(Color.MAGENTA), 0, 10, 0);
-                snippetText.setSpan(new ForegroundColorSpan(Color.BLUE), 12, snippet.length(), 0);
-                snippetUi.setText(snippetText);
+                //SpannableString snippetText = new SpannableString(snippet);
+                //snippetText.setSpan(new ForegroundColorSpan(Color.MAGENTA), 0, 10, 0);
+                //snippetText.setSpan(new ForegroundColorSpan(Color.BLUE), 12, snippet.length(), 0);
+                //snippetUi.setText(snippetText);
             } else {
                 snippetUi.setText("");
             }
+            */
         }
     }
 
@@ -158,7 +163,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for (int i = 0; i < l.length; i++) {
             mMap.addMarker(new MarkerOptions()
                     .position(l[i])
-                    .title("Marker in Caracas")
+                    .title("@username")
+                    .snippet(getString(R.string.snippet))
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.p_verde)));
         }
 

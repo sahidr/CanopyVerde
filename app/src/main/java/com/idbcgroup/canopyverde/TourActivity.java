@@ -179,7 +179,7 @@ public class TourActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = getSharedPreferences("Tour", 0).edit();
         editor.putBoolean("visited", true);
         editor.apply();
-        startActivity(new Intent(TourActivity.this, RegisterActivity.class)
+        startActivity(new Intent(TourActivity.this, LoginActivity.class) // To Register
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         finish();
     }

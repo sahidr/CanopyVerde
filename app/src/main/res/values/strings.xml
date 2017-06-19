@@ -140,6 +140,8 @@
     <string name="gps_network_not_enabled">Ubicación Desactivada</string>
     <string name="enable_location">\nVerifica que la ubicación del GPS está activada</string>
     <string name="open_location_settings">Configuración del GPS</string>
+    <string name="snippet">Fecha: 22/12/17\nTipo: Araguaney\nTamaño: Mediano\nStatus: Verified</string>
+    <string name="s_ubication">Av. Principal de\nlos Cortijos</string>
 
 
 </resources>

@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +23,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private Button register;
-    private ImageButton showPassword;
-    private EditText password;
     private Spinner country, city;
 
     @Override
@@ -35,40 +35,9 @@ public class RegisterActivity extends AppCompatActivity {
                 .build()
         );
 
-        register = (Button) findViewById(R.id.signup);
-        //showPassword = (ImageButton) findViewById(R.id.showPassword);
-  //      password = (EditText) findViewById(R.id.password);
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                finish();
-            }
-        });
-/*
-        showPassword.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
+        country = (Spinner) findViewById(R.id.country);
 
-                switch ( event.getAction() ) {
-                    case MotionEvent.ACTION_DOWN:
-                        password.setInputType(InputType.TYPE_CLASS_TEXT);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        break;
-                }
-                return true;
-            }
-        });
-/*
-
-        addItemsOncity();
-        addListenerOnButton();
-        addListenerOnSpinnerItemSelection();
-*/
     }
 
     @Override
@@ -76,34 +45,13 @@ public class RegisterActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-/*
-    public void addItemsOncity() {
-
-        city = (Spinner) findViewById(R.id.city);
-        List<String> list = new ArrayList<String>();
-        list.add("list 1");
-        list.add("list 2");
-        list.add("list 3");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        city.setAdapter(dataAdapter);
-    }
-
-    public void addListenerOnSpinnerItemSelection() {
-        country = (Spinner) findViewById(R.id.country);
-        country.setOnItemSelectedListener(new CustomOnItemSelectedListener());
-    }
-
-    // get the selected dropdown list value
-    public void addListenerOnButton() {
-
-        country = (Spinner) findViewById(R.id.country);
-        city = (Spinner) findViewById(R.id.city);
+    public void toLogin(View view){
+        Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+        finish();
 
     }
-
-*/
 
 
 }
