@@ -11,6 +11,7 @@
     <color name="colorGray">#9f2d2d2d</color>
     <color name="colorCanopyLight">#ffffff</color>
     <color name="black_overlay">#b2b2b2</color>
+    <color name="colorLine">#dedede</color>
     <color name="black">#000</color>
 
     <!-- Green -->

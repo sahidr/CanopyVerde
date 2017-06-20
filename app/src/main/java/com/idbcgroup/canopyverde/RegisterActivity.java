@@ -27,7 +27,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private EditText fullname, username, email;
     private Spinner country, city;
+    private boolean verified,fullname_field,username_field,email_field,country_field,city_field;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +41,12 @@ public class RegisterActivity extends AppCompatActivity {
                 .build()
         );
 
+        fullname = (EditText) findViewById(R.id.fullName);
+        username = (EditText) findViewById(R.id.username);
+        email = (EditText) findViewById(R.id.email);
         country = (Spinner) findViewById(R.id.country);
         city = (Spinner) findViewById(R.id.city);
+
 
 /*
         ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(RegisterActivity.this,
@@ -83,7 +89,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     @Override
@@ -93,10 +98,44 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void toLogin(View view){
 
-        Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
-        finish();
+        String fullname_text,username_text,email_text;
+
+        fullname_text = fullname.getText().toString();
+        username_text = username.getText().toString();
+        email_text = email.getText().toString();
+
+        fullname_field = fullname_text.length() != 0;
+        username_field = username_text.length() != 0;
+        email_field = email_text.length() != 0
+                && android.util.Patterns.EMAIL_ADDRESS.matcher(email_text).matches();
+
+        country_field = !country.getSelectedItem().toString().equals("País");
+        city_field = !city.getSelectedItem().toString().equals("Ciudad");
+
+        verified = verifyFields(fullname_field,username_field,email_field,country_field,city_field);
+
+        if (verified) {
+            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+            finish();
+        } else {
+            Toast.makeText(getBaseContext(),"Fields must be filled",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public boolean verifyFields(boolean fullname_field, boolean username_field, boolean email_field, boolean country_field, boolean city_field){
+        if(!fullname_field)
+            fullname.setError( "Full name is required!" );
+        if(!username_field)
+            username.setError( "Username is required!" );
+        if(!email_field)
+            email.setError( "Valid Email is required!" );
+        //if(!country_field)
+            // Toast.makeText(getBaseContext(),"Choose a Country",Toast.LENGTH_SHORT).show();
+        //if(!city_field)
+            //Toast.makeText(getBaseContext(),"Choose a City",Toast.LENGTH_SHORT).show();
+        return (fullname_field && username_field && email_field && country_field && city_field);
     }
 
 

@@ -85,9 +85,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         private void render(Marker marker, View view) {
 
-            //TextView ubicacion = (TextView) view.findViewById(R.id.sLocation);
-            //ubicacion.setText("Nueva Ubicación\nde dos lineas");
+            TextView date = (TextView) view.findViewById(R.id.p_date);
+            TextView type = (TextView) view.findViewById(R.id.p_type);
+            TextView size = (TextView) view.findViewById(R.id.p_size);
+            TextView status = (TextView) view.findViewById(R.id.p_status);
+            // TextView location = (TextView) view.findViewById(R.id.location);
 
+            date.setText("22/12/17");
+            type.setText("Araguaney");
+            size.setText("Mediano");
+            status.setText("Verificado");
             /*
             //int badge;
 
@@ -180,6 +187,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMinZoomPreference(12);
         mMap.setMaxZoomPreference(22);
@@ -246,9 +254,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             });
             dialog.show();
         } else {
-            LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
-            mMap.animateCamera(cameraUpdate);
+            try {
+                LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
+                mMap.animateCamera(cameraUpdate);
+            } catch (Exception e){}
         }
     }
 

@@ -69,15 +69,10 @@
 
     <!--    User Profile    -->
     <string name="logout">Cerrar Sesión</string>
-    <string name="badge">&lt;u>%1$d Tree Master&lt;/u></string>
+    <string name="badge">&lt;u>%1$d %2$s&lt;/u></string>
     <string name="points">Puntos</string>
     <string name="general">General</string>
     <string name="report">Reportes</string>
-
-    <!--    User Profile General   -->
-
-    <!--    User Profile Report   -->
-    <string name="date">12\nMAR 2017</string>
 
     <!--    Stats    -->
     <string name="green_index">%</string>
@@ -85,6 +80,27 @@
 
     <!--    Red Points    -->
     <string name="request">Solicitar</string>
+
+    <!-- Map -->
+    <string name="date">Fecha: </string>
+    <string name="type">Tipo: </string>
+    <string name="size">Tamaño: </string>
+    <string name="status">Estado: </string>
+
+    <!-- User Example -->
+
+    <string name="u_name">Juan Antonio Lopez</string>
+    <string name="u_user">\@juan.lopez88</string>
+    <string name="u_email">juan.lopez88@gmail.com</string>
+    <string name="u_country">Venezuela</string>
+    <string name="u_city">Caracas</string>
+    <string name="u_bagde">Tree Master</string>
+    <string name="gps_network_not_enabled">Ubicación Desactivada</string>
+    <string name="enable_location">\nVerifica que la ubicación del GPS está activada</string>
+    <string name="open_location_settings">Configuración del GPS</string>
+    <string name="snippet">Fecha: 22/12/17\nTipo: Araguaney\nTamaño: Mediano\nStatus: Verified</string>
+    <string name="s_ubication">Av. Principal de\nlos Cortijos</string>
+
 
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
@@ -112,20 +128,6 @@
     <string name="google">Sign in with Google</string>
     <string name="google_plus">Sign in with Google+</string>
     <string name="title_activity_user_profile">UserProfileActivity</string>
-
-    <!-- User Example -->
-    
-    <string name="u_name">Juan Antonio Lopez</string>
-    <string name="u_user">\@juan.lopez88</string>
-    <string name="u_email">juan.lopez88@gmail.com</string>
-    <string name="u_country">Venezuela</string>
-    <string name="u_city">Caracas</string>
-    <string name="u_bagde">Tree Master</string>
-    <string name="gps_network_not_enabled">Ubicación Desactivada</string>
-    <string name="enable_location">\nVerifica que la ubicación del GPS está activada</string>
-    <string name="open_location_settings">Configuración del GPS</string>
-    <string name="snippet">Fecha: 22/12/17\nTipo: Araguaney\nTamaño: Mediano\nStatus: Verified</string>
-    <string name="s_ubication">Av. Principal de\nlos Cortijos</string>
 
 
 </resources>

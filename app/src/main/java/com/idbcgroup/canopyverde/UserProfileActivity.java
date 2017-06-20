@@ -44,7 +44,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
 
         badge = (TextView) findViewById(R.id.badgeName);
-        String points = getResources().getString(R.string.badge, 2544);
+        String points = getResources().getString(R.string.badge, 2544, getString(R.string.u_bagde));
         CharSequence styledText = Html.fromHtml(points);
         badge.setText(styledText);
 

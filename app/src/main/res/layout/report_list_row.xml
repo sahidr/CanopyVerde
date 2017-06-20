@@ -23,7 +23,6 @@
         android:id="@+id/treeTypeDisplay"
         android:layout_width="wrap_content"
         android:textSize="18sp"
-        android:text="Roble"
         android:textColor="@android:color/black"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -42,7 +41,6 @@
         android:id="@+id/locationDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Av. Yaracuy"
         android:textColor="@color/black_overlay"
         android:textSize="14sp"
         android:layout_alignBaseline="@+id/treeTypeDisplay"
@@ -54,7 +52,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="@string/date"
         android:textColor="@color/black"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="11dp" />

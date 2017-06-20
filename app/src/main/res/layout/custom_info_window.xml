@@ -3,86 +3,166 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/custom_info_window"
     android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/badge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/araguaney"
-        android:layout_marginEnd="10dp"
-        android:adjustViewBounds="true"/>
-
     <RelativeLayout
+        android:id="@+id/infoWindow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+        android:background="@drawable/custom_info_window"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/badge"
-        android:id="@+id/relativeLayout"
-        android:layout_alignBottom="@+id/badge">
+        android:layout_alignParentStart="true">
 
         <ImageView
-            android:id="@+id/profile"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/circle"
+            android:id="@+id/treePic"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/araguaney"
+            android:adjustViewBounds="true"
+            android:layout_marginEnd="10dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-        <ImageView
-            android:id="@+id/profile1"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/profile"
+            android:layout_alignParentStart="true"
+            android:layout_alignBottom="@+id/content" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:id="@+id/content"
+            android:layout_toEndOf="@id/treePic">
 
-        <TextView
-            android:id="@+id/title_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="\@aperezm"
-            android:layout_marginBottom="10dp"
-            android:layout_above="@+id/snippet"
-            android:layout_alignEnd="@+id/snippet" />
+            <ImageView
+                android:id="@+id/profile"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/circle"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
+            <ImageView
+                android:id="@+id/profile1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/profile"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
 
-        <TextView
-            android:id="@+id/snippet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="4"
-            android:text="@string/snippet"
-            android:textColor="#ff7f7f7f"
-            android:textSize="14dp"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/profile"
-            android:layout_alignParentStart="true" />
+            <TextView
+                android:id="@+id/user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\@pperezp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_alignBottom="@+id/profile"
+                android:layout_toEndOf="@+id/profile" />
 
-        <ImageView
-            android:id="@+id/pinImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/ciudad_pin"
-            android:layout_alignTop="@+id/sLocation"
-            android:layout_alignParentStart="true" />
+            <!--TextView
+                android:id="@+id/snippet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="4"
+                android:text="@string/snippet"
+                android:textColor="#ff7f7f7f"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:layout_below="@+id/profile"
+                android:layout_alignParentStart="true" /-->
 
-        <TextView
-            android:id="@+id/sLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="2"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/black_overlay"
-            android:text="@string/s_ubication"
-            android:layout_below="@+id/snippet"
-            android:layout_toEndOf="@+id/pinImage" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="5dp"
+                android:layout_below="@+id/profile"
+                android:layout_alignParentStart="true"
+                android:id="@+id/date"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/type"
+                android:layout_marginEnd="5dp"
+                android:layout_below="@id/date"
+                android:id="@+id/type"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/size"
+                android:layout_marginEnd="5dp"
+                android:layout_below="@id/type"
+                android:id="@+id/size"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status"
+                android:layout_marginEnd="5dp"
+                android:layout_below="@id/size"
+                android:id="@+id/status"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/p_date"
+                android:layout_alignBaseline="@+id/date"
+                android:layout_alignBottom="@+id/date"
+                android:layout_toEndOf="@+id/date" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/p_type"
+                android:layout_below="@+id/date"
+                android:layout_toEndOf="@+id/type" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/p_size"
+                android:layout_below="@+id/p_type"
+                android:layout_toEndOf="@+id/size" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/p_status"
+                android:textColor="@color/colorCanopy"
+                android:layout_alignBaseline="@+id/status"
+                android:layout_alignBottom="@+id/status"
+                android:layout_toEndOf="@+id/status" />
+
+            <ImageView
+                android:id="@+id/pinImage"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/ciudad_pin"
+                android:layout_alignTop="@+id/location"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="2"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/black_overlay"
+                android:text="@string/s_ubication"
+                android:layout_below="@+id/status"
+                android:layout_toEndOf="@+id/pinImage" />
+        </RelativeLayout>
+
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/triangle"
+        android:layout_width="40dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/infoWindow"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/triangle"/>
 
 </RelativeLayout>
