@@ -108,22 +108,6 @@
 
     <string name="country_prompt">Choose a country</string>
     <string name="city_prompt">Choose a city</string>
-    <string-array name="country_array">
-        <item>País</item>
-        <item>Malaysia</item>
-        <item>United States</item>
-        <item>Indonesia</item>
-        <item>France</item>
-        <item>Italy</item>
-        <item>Singapore</item>
-        <item>New Zealand</item>
-        <item>India</item>
-    </string-array>
-
-    <string-array name="city_array">
-        <item>Ciudad</item>
-    </string-array>
-
 
     <string name="google">Sign in with Google</string>
     <string name="google_plus">Sign in with Google+</string>
