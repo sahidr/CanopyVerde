@@ -8,14 +8,6 @@
             <corners android:radius="2dp" />
         </shape>
     </item>
-    <item android:state_focused="true">
-        <shape android:shape="rectangle"  >
-            <corners android:radius="2dp" />
-            <solid android:color="@color/black_overlay"/>
-            <size android:width="300dp" />
-            <padding android:top="18dp" android:bottom="18dp" android:left="20dp" android:right="18dp"/>
-        </shape>
-    </item>
 
     <item>
         <shape android:shape="rectangle">

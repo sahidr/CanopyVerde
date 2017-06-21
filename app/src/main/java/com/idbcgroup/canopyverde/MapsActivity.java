@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.LocationManager;
+import android.media.Image;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -46,10 +48,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GraphView graph;
     private SharedPreferences pref_marker;
     private Boolean approved;
-    MapStyleOptions style;
+    private MapStyleOptions style;
     private LatLng marker;
-    Context context;
+    private Context context;
+    private Bitmap m_tree, m_user;
+    private String m_date,m_type,m_size, m_status, m_username, m_location;
+
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
+
     LatLng l1 = new LatLng(10.492037, -66.827096);
     LatLng l2 = new LatLng(10.492330, -66.827681);
     LatLng l3 = new LatLng(10.488365, -66.825681);
@@ -85,16 +91,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         private void render(Marker marker, View view) {
 
+            m_date = "22/12/17";
+            m_type = "Araguaney";
+            m_size = "Mediano";
+            m_status = "Verificado";
+
+
+            // ImageView tree = (ImageView) view.findViewById(R.id.treePic);
+            // ImageView profile = (ImageView) view.findViewById(R.id.profile);
+            // TextView username = (TextView) view.findViewById(R.id.user);
             TextView date = (TextView) view.findViewById(R.id.p_date);
             TextView type = (TextView) view.findViewById(R.id.p_type);
             TextView size = (TextView) view.findViewById(R.id.p_size);
             TextView status = (TextView) view.findViewById(R.id.p_status);
             // TextView location = (TextView) view.findViewById(R.id.location);
 
-            date.setText("22/12/17");
-            type.setText("Araguaney");
-            size.setText("Mediano");
-            status.setText("Verificado");
+            date.setText(m_date);
+            type.setText(m_type);
+            size.setText(m_size);
+
+            if (m_status.equals(getString(R.string.verified))){
+                status.setTextColor(getResources().getColor(R.color.colorCanopy));
+            } else {
+                status.setTextColor(getResources().getColor(R.color.yellow));
+            }
+            status.setText(m_status);
+
             /*
             //int badge;
 
@@ -176,7 +198,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -192,7 +214,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMinZoomPreference(12);
         mMap.setMaxZoomPreference(22);
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -249,7 +271,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    // TODO Auto-generated method stub
+
                 }
             });
             dialog.show();

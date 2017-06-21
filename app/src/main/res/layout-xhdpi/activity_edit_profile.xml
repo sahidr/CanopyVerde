@@ -16,13 +16,14 @@
         android:elevation="2dp"
         android:visibility="invisible"/>
 
-    <ImageButton
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/editpic"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:background="@drawable/circle"
         android:scaleType="centerCrop"
+        android:onClick="editProfilePicture"
         android:src="@drawable/map_circle"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -146,6 +147,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/delete_account"
+        android:onClick="deleteAccount"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:textSize="12sp"

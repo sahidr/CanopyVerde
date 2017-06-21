@@ -42,6 +42,12 @@
     <string name="country">País</string>
     <string name="city">Ciudad</string>
 
+    <!--    Validations -->
+    <string name="fullname_valid">Nombre completo requerido</string>
+    <string name="username_valid">Nombre de usuario requerido</string>
+    <string name="email_valid">Correo válido requerido</string>
+    <string name="password_valid">Contraseña mayor a 8 caracteres</string>
+
     <!--    Restore Password    -->
     <string name="restore">Recuperar Contraseña</string>
     <string name="restore_msg">Introduzca el correo asociado a su cuenta</string>
@@ -81,14 +87,15 @@
     <!--    Red Points    -->
     <string name="request">Solicitar</string>
 
-    <!-- Map -->
+    <!--    Map     -->
     <string name="date">Fecha: </string>
     <string name="type">Tipo: </string>
     <string name="size">Tamaño: </string>
     <string name="status">Estado: </string>
+    <string name="verified">Verificado</string>
+    <string name="not_verified">Sin Verificar</string>
 
     <!-- User Example -->
-
     <string name="u_name">Juan Antonio Lopez</string>
     <string name="u_user">\@juan.lopez88</string>
     <string name="u_email">juan.lopez88@gmail.com</string>
@@ -100,7 +107,6 @@
     <string name="open_location_settings">Configuración del GPS</string>
     <string name="snippet">Fecha: 22/12/17\nTipo: Araguaney\nTamaño: Mediano\nStatus: Verified</string>
     <string name="s_ubication">Av. Principal de\nlos Cortijos</string>
-
 
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>

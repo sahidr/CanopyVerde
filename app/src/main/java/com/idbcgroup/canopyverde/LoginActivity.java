@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -39,11 +40,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class LoginActivity extends AppCompatActivity {
 
     // Normal Sign In
-
-    private Button signin;
-    private Button signup;
+    private EditText email,password;
+    private boolean email_field, password_field;
     private ProgressBar load;
-
+    private boolean verified;
     // Google Sign in
 
     private static final String TAG = "SignInActivity";
@@ -66,6 +66,9 @@ public class LoginActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+
+        email = (EditText) findViewById(R.id.email);
+        password = (EditText) findViewById(R.id.password);
         load = (ProgressBar) findViewById(R.id.load);
         mAuth = FirebaseAuth.getInstance();
 
@@ -80,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.apply();
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                        load.setVisibility(View.INVISIBLE);
+                    load.setVisibility(View.INVISIBLE);
                     Intent i = new Intent(LoginActivity.this,MapsActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
@@ -181,15 +184,33 @@ public class LoginActivity extends AppCompatActivity {
 
     public void register(View view){
         startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
-        finish();
+        //finish();
     }
 
     public void login(View view){
-        startActivity(new Intent(LoginActivity.this,MapsActivity.class));
-        SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
-        editor.putBoolean("logged",true);
-        editor.apply();
-        finish();
+
+        load.setVisibility(View.VISIBLE);
+        String email_text,password_text;
+
+        email_text = email.getText().toString();
+        password_text = password.getText().toString();
+
+        email_field = email_text.length() != 0
+                && android.util.Patterns.EMAIL_ADDRESS.matcher(email_text).matches();
+
+        password_field = password_text.length() >= 8;
+        verified = verifyFields(email_field, password_field);
+
+        if (verified) {
+            startActivity(new Intent(LoginActivity.this,MapsActivity.class));
+            SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
+            editor.putBoolean("logged",true);
+            editor.apply();
+            finish();
+        } else {
+            load.setVisibility(View.INVISIBLE);
+            //Toast.makeText(getBaseContext(),"Fields must be filled",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void restore(View view){
@@ -199,5 +220,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    public boolean verifyFields(boolean email_field, boolean password_field){
+        if(!email_field)
+            email.setError(getString(R.string.email_valid));
+        if(!password_field)
+            password.setError(getString(R.string.password_valid));
+        //if(!country_field)
+        // Toast.makeText(getBaseContext(),"Choose a Country",Toast.LENGTH_SHORT).show();
+        //if(!city_field)
+        //Toast.makeText(getBaseContext(),"Choose a City",Toast.LENGTH_SHORT).show();
+        return (email_field);
     }
 }
