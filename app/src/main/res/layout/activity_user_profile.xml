@@ -142,7 +142,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            app:tabIndicatorHeight="5dp"
+            app:tabIndicatorHeight="3dp"
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextColor="@android:color/white" />
 

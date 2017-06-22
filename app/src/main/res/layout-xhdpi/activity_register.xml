@@ -107,12 +107,11 @@
     <Spinner
         android:id="@+id/country"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignEnd="@+id/email"
         android:layout_below="@+id/password"
         android:spinnerMode="dropdown"
         android:entries="@array/country_array"
-        style="@style/spinnerItemStyle"
         android:background="@drawable/field"
         android:layout_alignStart="@+id/email"
         />

@@ -13,19 +13,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class EditProfile extends AppCompatActivity {
 
@@ -33,7 +27,6 @@ public class EditProfile extends AppCompatActivity {
     private static final int REQUEST_CAMERA = 0;
     private CircleImageView editPic;
     private Button save;
-    private Button delete;
     private ProgressBar load;
 
     @Override
@@ -41,9 +34,7 @@ public class EditProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        editPic = (CircleImageView) findViewById(R.id.editpic);
         save = (Button) findViewById(R.id.save);
-        delete = (Button) findViewById(R.id.deleteAccount);
         load = (ProgressBar) findViewById(R.id.load);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +42,6 @@ public class EditProfile extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
     private void galleryIntent() {
@@ -151,4 +141,5 @@ public class EditProfile extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 }

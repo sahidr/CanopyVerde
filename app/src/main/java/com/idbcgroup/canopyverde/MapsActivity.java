@@ -227,7 +227,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (approved) {
                 mMap.addMarker(new MarkerOptions()
                         .position(marker)
-                        .snippet("new marker")
+                        .snippet(getString(R.string.not_verified))
                         .title("TREE")
                         .flat(true)
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.p_amarillo)));
