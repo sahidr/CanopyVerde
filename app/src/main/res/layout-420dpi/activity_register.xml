@@ -63,26 +63,6 @@
         android:layout_below="@+id/fullName"
         android:layout_alignStart="@+id/fullName" />
 
-    <!--EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="12"
-        android:background="@drawable/field"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:layout_below="@+id/email"
-        android:layout_alignStart="@+id/username"/>
-
-    <ImageButton
-        android:id="@+id/showPassword"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/ojo"
-        android:layout_marginTop="13dp"
-        android:layout_below="@+id/email"
-        android:layout_alignEnd="@+id/logo" /-->
-
     <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="70dp"
@@ -111,7 +91,7 @@
         android:id="@+id/country"
         android:padding="22dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_alignEnd="@+id/email"
         android:layout_below="@+id/password"
         android:spinnerMode="dropdown"
@@ -134,7 +114,7 @@
         android:id="@+id/city"
         android:background="@drawable/last_field"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:entries="@array/city_array"
         android:spinnerMode="dropdown"
         android:layout_below="@+id/country"

@@ -2,23 +2,11 @@
 <resources>
     <string-array name="country_array">
         <item>País</item>
-        <item>Venezuela</item>
-        <item>Malaysia</item>
-        <item>United States</item>
-        <item>Indonesia</item>
-        <item>France</item>
-        <item>Italy</item>
-        <item>Singapore</item>
-        <item>New Zealand</item>
-        <item>India</item>
+
     </string-array>
 
     <string-array name="city_array">
         <item>Ciudad</item>
-        <item>Caracas</item>
-        <item>Lima</item>
-        <item>Quito</item>
-        <item>Madrid</item>
-        <item>Nueva Delhi</item>
+
     </string-array>
 </resources>

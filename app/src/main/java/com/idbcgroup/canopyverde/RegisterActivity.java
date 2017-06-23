@@ -2,42 +2,27 @@ package com.idbcgroup.canopyverde;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -48,9 +33,9 @@ public class RegisterActivity extends AppCompatActivity {
     private Spinner country, city;
     private boolean verified,fullname_field,username_field,email_field, password_field,
             country_field,city_field;
-
-    //private ArrayList<String> countries;
-
+    ArrayList<String> countryList = new ArrayList<String>();
+    ArrayList<String> citiesList = new ArrayList<String>();
+    JSONObject countriesAndCities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,53 +54,10 @@ public class RegisterActivity extends AppCompatActivity {
         country = (Spinner) findViewById(R.id.country);
         city = (Spinner) findViewById(R.id.city);
 
-
         GetData json = new GetData();
-
         json.execute();
-/*
-        ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(RegisterActivity.this,
-                android.R.layout.simple_list_item_1, countries); //getResources().getStringArray(R.array.country_array)
-
-        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        country.setAdapter(countryAdapter);
-*/
-
-        country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                if (position!=0){
-                    ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.fontColor));
-                    // Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+" Selected", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-        city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                if (position!=0){
-                    ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.fontColor));
-                    // Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+" Selected", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
     }
-
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -160,59 +102,176 @@ public class RegisterActivity extends AppCompatActivity {
             username.setError(getString(R.string.username_valid));
         if(!email_field)
             email.setError(getString(R.string.email_valid));
-        if(!password_field)
-            password.setError(getString(R.string.password_valid));
+        //if(!password_field)
+        //    password.setError(getString(R.string.password_valid));
         //if(!country_field)
-            // Toast.makeText(getBaseContext(),"Choose a Country",Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getBaseContext(),"Choose a Country",Toast.LENGTH_SHORT).show();
         //if(!city_field)
-            //Toast.makeText(getBaseContext(),"Choose a City",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getBaseContext(),"Choose a City",Toast.LENGTH_SHORT).show();
         return (fullname_field && username_field && email_field && password_field && country_field
                 && city_field);
     }
 
-    public class GetData extends AsyncTask <Void, Void, ArrayList<String>> {
+    /////////
+
+
+    private class GetData extends AsyncTask <Void, Void, ArrayList<String>> {
 
         URLConnection country_city;
 
         @Override
         protected ArrayList<String> doInBackground(Void... params) {
-            ArrayList<String> listItems = new ArrayList<String>();
 
             try {
-                URL countriesToCities = new URL(
+                URL countries_to_cities = new URL(
                         "https://raw.githubusercontent.com/David-Haim/CountriesToCitiesJSON/master/countriesToCities.json");
-                country_city= countriesToCities.openConnection();
+                country_city= countries_to_cities.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(
                         country_city.getInputStream()));
-
                 String line;
                 while ((line = in.readLine()) != null) {
 
-                    JSONObject countriesAndCities = new JSONObject(line);
+                    countriesAndCities = new JSONObject(line);
+
+                    System.out.println(countriesAndCities);
+
                     JSONArray countries = countriesAndCities.names();
 
+                    System.out.println(countries);
+
                     for (int i = 0; i < countries.length(); i++) {
-                        String jsonObject = countries.get(i).toString();
-                        listItems.add(jsonObject);
+                        String country = countries.get(i).toString();
+                        countryList.add(country);
                     }
                 }
+
             } catch (IOException | JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            return listItems;
+            return countryList;
         }
 
         @Override
         protected void onPostExecute(ArrayList<String> result) {
 
             ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(RegisterActivity.this,
-                    android.R.layout.simple_list_item_1, result);
-
+                    R.layout.spinner_item, result);
             countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             country.setAdapter(countryAdapter);
-        }
 
+            country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    try {
+
+                        JSONArray cities = countriesAndCities.getJSONArray(countryList.get(position));
+                        citiesList.clear();
+
+                        System.out.println(cities);
+                        for (int i = 0; i < cities.length(); i++) {
+                            String city = cities.get(i).toString();
+                            citiesList.add(city);
+                        }
+
+                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+                                R.layout.spinner_item, citiesList);
+
+                        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        city.setAdapter(cityAdapter);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
     }
 
+
+    ///////////////////////////////
+
+    /*
+
+    private class GetData extends AsyncTask <Void, Void, ArrayList<String>> {
+
+        URLConnection country_city;
+
+        @Override
+        protected ArrayList<String> doInBackground(Void... params) {
+
+            InputStream inputStream = getResources().openRawResource(R.raw.countries_to_cities);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            int ctr;
+            try {
+                ctr = inputStream.read();
+                while (ctr != -1) {
+                    byteArrayOutputStream.write(ctr);
+                    ctr = inputStream.read();
+                }
+                inputStream.close();
+                countriesAndCities = new JSONObject(byteArrayOutputStream.toString());
+                JSONArray countries = countriesAndCities.names();
+                for (int i = 0; i < countries.length(); i++) {
+                    String country = countries.get(i).toString();
+                    countryList.add(country);
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            return countryList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> result) {
+
+            ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+                    R.layout.spinner_item, result);
+            countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            country.setAdapter(countryAdapter);
+
+            country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    try {
+
+                        JSONArray cities = countriesAndCities.getJSONArray(countryList.get(position));
+
+                        if (!citiesList.isEmpty()) citiesList.clear();
+
+                        System.out.println(cities);
+                        for (int i = 0; i < cities.length(); i++) {
+                            String city = cities.get(i).toString();
+                            citiesList.add(city);
+                        }
+
+                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+                                R.layout.spinner_item, citiesList);
+
+                        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        city.setAdapter(cityAdapter);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+    }*/
 }

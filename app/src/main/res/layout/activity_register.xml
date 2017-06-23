@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context="com.idbcgroup.canopyverde.RegisterActivity">
 
     <ImageView
@@ -61,26 +60,6 @@
         android:layout_below="@+id/fullName"
         android:layout_alignStart="@+id/fullName" />
 
-    <!--EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:background="@drawable/field"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:layout_below="@+id/email"
-        android:layout_alignStart="@+id/username"/>
-
-    <ImageButton
-        android:id="@+id/showPassword"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/ojo"
-        android:layout_marginTop="13dp"
-        android:layout_below="@+id/email"
-        android:layout_alignEnd="@+id/logo" /-->
-
     <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="60dp"
@@ -107,15 +86,14 @@
     <Spinner
         android:id="@+id/country"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignEnd="@+id/email"
         android:layout_below="@+id/password"
         android:spinnerMode="dropdown"
         android:entries="@array/country_array"
         style="@style/spinnerItemStyle"
         android:background="@drawable/field"
-        android:layout_alignStart="@+id/email"
-        />
+        android:layout_alignStart="@+id/email" />
 
     <ImageView
         android:layout_width="30dp"
@@ -130,7 +108,7 @@
         android:id="@+id/city"
         android:background="@drawable/last_field"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:entries="@array/city_array"
         android:spinnerMode="dropdown"
         android:layout_below="@+id/country"
@@ -159,7 +137,5 @@
         android:layout_marginBottom="15dp"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/city" />
-
-
 
 </RelativeLayout>
