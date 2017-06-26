@@ -46,7 +46,7 @@ public class UserProfileReportFragment extends Fragment {
 
         Report report;
 
-        report = new Report(2,"Samán", "Av. Saman", "16\nJUL 2017");
+        report = new Report(2,"Samán", "Av. Saman", "26\nJUN 2017");
         reportList.add(report);
 
         report = new Report(2,"Caobo", "Av. 3", "15\nJUN 2017");

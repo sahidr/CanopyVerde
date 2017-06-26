@@ -39,8 +39,17 @@
         <item name="android:colorBackground">@android:color/white</item>
         <item name="android:textColorHint">@color/black_overlay</item>
         <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
+        <!--item name="android:dropDownListViewStyle">@style/MyDropDownListView</item>
+        <item name="android:spinnerDropDownItemStyle">@style/MySpinnerDropDownItem</item-->
     </style>
 
+    <!--style name="MyDropDownListView" parent="android:style/Widget.Holo.ListView.DropDown">
+        <item name="android:listSelector">@drawable/dropdown_list</item>
+    </style>
+    <style name="MySpinnerDropDownItem" parent="android:style/Widget.DropDownItem.Spinner">
+        <item name="android:background">@drawable/dropdown_list</item>
+        <item name="android:checkMark">@null</item>
+    </style-->
     <style name="spinnerItemStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/black_overlay</item>

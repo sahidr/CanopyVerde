@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,7 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     /////////
 
-
+/*
     private class GetData extends AsyncTask <Void, Void, ArrayList<String>> {
 
         URLConnection country_city;
@@ -162,7 +163,10 @@ public class RegisterActivity extends AppCompatActivity {
             country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                    if (position!=0){
+                        ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.fontColor));
+                        // Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+" Selected", Toast.LENGTH_SHORT).show();
+                    }
                     try {
 
                         JSONArray cities = countriesAndCities.getJSONArray(countryList.get(position));
@@ -179,6 +183,21 @@ public class RegisterActivity extends AppCompatActivity {
 
                         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         city.setAdapter(cityAdapter);
+
+                        city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                if (position!=0){
+                                    ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.fontColor));
+                                    // Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+" Selected", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -198,7 +217,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     ///////////////////////////////
 
-    /*
+   */
 
     private class GetData extends AsyncTask <Void, Void, ArrayList<String>> {
 
@@ -243,7 +262,12 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                     try {
+                        if (position!=0){
+                            ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.fontColor));
+                            //parent.setBackgroundColor(getResources().getColor(R.color.fontColor));
 
+                            // Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+" Selected", Toast.LENGTH_SHORT).show();
+                        }
                         JSONArray cities = countriesAndCities.getJSONArray(countryList.get(position));
 
                         if (!citiesList.isEmpty()) citiesList.clear();
@@ -259,7 +283,20 @@ public class RegisterActivity extends AppCompatActivity {
 
                         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         city.setAdapter(cityAdapter);
+                        city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                if (!parent.getItemAtPosition(position).toString().equals("Ciudad")){
+                                    ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.fontColor));
+                                    // Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+" Selected", Toast.LENGTH_SHORT).show();
+                                }
+                            }
 
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -273,5 +310,5 @@ public class RegisterActivity extends AppCompatActivity {
             });
 
         }
-    }*/
+    }
 }
