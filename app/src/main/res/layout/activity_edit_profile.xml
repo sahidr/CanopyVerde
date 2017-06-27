@@ -16,7 +16,7 @@
         android:elevation="2dp"
         android:visibility="invisible"/>
 
-    <ImageButton
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/editpic"
         android:layout_width="100dp"
         android:layout_height="100dp"

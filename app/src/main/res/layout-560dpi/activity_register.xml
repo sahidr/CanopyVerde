@@ -9,12 +9,12 @@
     <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
-        android:layout_height="68dp"
+        android:layout_height="70dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="19dp"
+        android:layout_marginEnd="23dp"
         android:background="@drawable/logo_gris"
         android:layout_alignStart="@+id/username"
-        android:layout_marginStart="19dp"
+        android:layout_marginStart="23dp"
         android:layout_alignEnd="@+id/username" />
 
     <ProgressBar
@@ -28,16 +28,18 @@
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="12"
         android:background="@drawable/first_field"
         android:hint="@string/username"
         android:inputType="text"
         android:padding="22dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="26dp"
         android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="38dp"
+        android:layout_marginEnd="38dp"/>
 
     <EditText
         android:id="@+id/fullName"
@@ -49,7 +51,8 @@
         android:hint="@string/full_name"
         android:inputType="textPersonName"
         android:layout_below="@+id/username"
-        android:layout_alignStart="@+id/username" />
+        android:layout_alignStart="@+id/username"
+        android:layout_alignEnd="@+id/username" />
 
     <EditText
         android:id="@+id/email"
@@ -61,7 +64,8 @@
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:layout_below="@+id/fullName"
-        android:layout_alignStart="@+id/fullName" />
+        android:layout_alignStart="@+id/fullName"
+        android:layout_alignEnd="@+id/fullName" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
@@ -91,7 +95,7 @@
         android:id="@+id/country"
         android:padding="22dp"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:layout_alignEnd="@+id/email"
         android:layout_below="@+id/password"
         android:spinnerMode="dropdown"
@@ -114,7 +118,7 @@
         android:id="@+id/city"
         android:background="@drawable/last_field"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:entries="@array/city_array"
         android:spinnerMode="dropdown"
         android:layout_below="@+id/country"
