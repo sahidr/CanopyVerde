@@ -119,6 +119,7 @@
 
     <!--    Facebook    -->
     <string name="facebook_app_id">1453933398031719</string>
+    <string name="facebook_app_id_test">328566677556016</string>
     <string name="fb_login_protocol_scheme">fb1453933398031719</string>
     <string name="title_activity_user_profile2">UserProfile2</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>

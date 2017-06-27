@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -134,6 +135,7 @@ public class UserProfileActivity extends AppCompatActivity {
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
         FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
         finish();
     }
     @Override

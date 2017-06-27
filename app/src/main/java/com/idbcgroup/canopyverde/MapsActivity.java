@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.media.Image;
 import android.provider.Settings;
@@ -185,16 +186,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        int point_height = 50;
+        int point_width = 50;
+
         mMap = googleMap;
         style = MapStyleOptions.loadRawResourceStyle(this, R.raw.canopy_style_map);
         mMap.setMapStyle(style);
+
+        BitmapDrawable green_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_verde);
+        Bitmap green_point_scaled = Bitmap.createScaledBitmap(green_point.getBitmap(), point_width, point_height, false);
 
         for (int i = 0; i < l.length; i++) {
             mMap.addMarker(new MarkerOptions()
                     .position(l[i])
                     .title("@username")
                     .snippet(getString(R.string.snippet))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.p_verde)));
+                    .icon(BitmapDescriptorFactory.fromBitmap(green_point_scaled))
+                     );
         }
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
