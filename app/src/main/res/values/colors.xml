@@ -8,7 +8,7 @@
     <color name="colorTransparent">#00ffffff</color>
     <color name="colorCanopy">#127E42</color>
     <color name="colorCanopyDark">#0c542c</color>
-    <color name="colorGray">#9f2d2d2d</color>
+    <color name="colorGray">#797979</color>
     <color name="colorCanopyLight">#ffffff</color>
     <color name="black_overlay">#b2b2b2</color>
     <color name="colorLine">#dedede</color>
@@ -26,6 +26,8 @@
     <color name="bar">#40a3a3a3</color>
     <color name="fontColor">#365166</color>
 
+    <color name="treepediaBrown">#1b0a00</color>
+    <color name="treepediaGreen">#5bdf3c</color>
 
 </resources>
 

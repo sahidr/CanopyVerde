@@ -298,7 +298,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void restore(View view){
         startActivity(new Intent(LoginActivity.this,PasswordRestoreActivity.class));
-        finish();
     }
 
     public boolean verifyFields(boolean email_field, boolean password_field){

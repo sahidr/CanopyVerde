@@ -7,92 +7,167 @@
     tools:context="com.idbcgroup.canopyverde.GreenPointRegisterActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/entry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/new_entry"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/colorCanopy"
+        android:textSize="30sp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="Green Point Register" />
+        android:layout_marginTop="40dp" />
+
+    <ProgressBar
+        android:id="@+id/load"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="12"
+        android:background="@drawable/first_field"
+        android:hint="@string/location"
+        android:inputType="text"
+        android:padding="23dp"
+        android:layout_marginTop="35dp"
+        android:layout_below="@+id/entry"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"/>
 
     <ImageView
-        android:id="@+id/greenpoint"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="21dp"
-        app:srcCompat="@android:drawable/screen_background_dark_transparent"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/locationPoint"
+        android:layout_marginTop="17dp"
+        android:src="@drawable/ciudad_pin"
+        android:layout_alignTop="@+id/location"
+        android:layout_alignStart="@+id/drop" />
 
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:textSize="18sp"
-        android:text="@string/location"
-        android:layout_below="@+id/greenpoint"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="@string/sign_up"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="yellowPointRegister"/>
-
-    <EditText
-        android:id="@+id/stemSize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/stem_size"
-        android:inputType="number"
-        android:layout_below="@+id/canopySize"
-        android:layout_alignLeft="@+id/canopySize"
-        android:layout_alignStart="@+id/canopySize"
-        android:layout_alignRight="@+id/canopySize"
-        android:layout_alignEnd="@+id/canopySize" />
-
-    <EditText
-        android:id="@+id/height"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/stemSize"
-        android:layout_alignRight="@+id/stemSize"
-        android:layout_below="@+id/stemSize"
-        android:ems="10"
-        android:hint="@string/height"
-        android:inputType="number"
-        android:layout_alignLeft="@+id/stemSize"
-        android:layout_alignStart="@+id/stemSize" />
-
-    <AutoCompleteTextView
-        android:id="@+id/treeType"
-        android:hint="@string/tree_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/height"
-        android:layout_alignLeft="@+id/height"
-        android:layout_alignRight="@+id/height"
-        android:layout_alignStart="@+id/height"
-        android:layout_below="@+id/height" />
-
-    <EditText
+    <Spinner
         android:id="@+id/canopySize"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:hint="@string/canopy"
-        android:ems="10"
-        android:inputType="number"
+        android:layout_height="68dp"
+        android:entries="@array/canopy_array"
+        android:layout_alignEnd="@+id/location"
         android:layout_below="@+id/location"
-        android:layout_centerHorizontal="true" />
+        android:spinnerMode="dropdown"
+        android:background="@drawable/field"
+        android:layout_alignStart="@+id/location" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/drop"
+        android:src="@drawable/seleccionar"
+        android:layout_below="@+id/location"
+        android:layout_alignEnd="@+id/canopySize"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="14dp" />
+
+    <Spinner
+        android:id="@+id/stemSize"
+        android:background="@drawable/field"
+        android:layout_width="wrap_content"
+        android:entries="@array/stem_array"
+        android:layout_height="68dp"
+        android:spinnerMode="dropdown"
+        android:layout_below="@+id/canopySize"
+        android:layout_alignStart="@+id/location"
+        android:layout_alignEnd="@+id/location" />
+
+    <ImageView
+        android:id="@+id/drop_2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/seleccionar"
+        android:layout_below="@+id/canopySize"
+        android:layout_alignStart="@+id/drop" />
+
+    <Spinner
+        android:id="@+id/height"
+        android:layout_width="wrap_content"
+        android:layout_height="68dp"
+        android:entries="@array/height_array"
+        android:layout_alignEnd="@+id/location"
+        android:layout_below="@+id/stemSize"
+        android:spinnerMode="dropdown"
+        android:background="@drawable/field"
+        android:layout_alignStart="@+id/location" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/drop_3"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/seleccionar"
+        android:layout_below="@+id/stemSize"
+        android:layout_alignStart="@+id/drop_4" />
+
+    <Spinner
+        android:id="@+id/treeType"
+        android:background="@drawable/field"
+        android:layout_width="wrap_content"
+        android:entries="@array/type_array"
+        android:layout_height="68dp"
+        android:spinnerMode="dropdown"
+        android:layout_below="@+id/height"
+        android:layout_alignStart="@+id/location"
+        android:layout_alignEnd="@+id/location" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/drop_4"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/seleccionar"
+        android:layout_below="@+id/height"
+        android:layout_alignStart="@+id/drop" />
+
+    <TextView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="68dp"
+        android:padding="22dp"
+        style="@style/spinnerItemStyle"
+        android:background="@drawable/last_field"
+        android:hint="@string/image"
+        android:text="@string/image"
+        android:layout_below="@+id/treeType"
+        android:layout_alignStart="@+id/treeType"
+        android:layout_alignEnd="@+id/treeType" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/view"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/ojo_big"
+        android:layout_below="@+id/treeType"
+        android:layout_alignStart="@+id/drop" />
+
+    <Button
+        android:id="@+id/yellowPointRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="68dp"
+        android:background="@drawable/btn_ppal"
+        android:text="@string/sign_up"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:onClick="yellowPointRegister"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/image"
+        android:layout_alignStart="@+id/image" />
 
 </RelativeLayout>

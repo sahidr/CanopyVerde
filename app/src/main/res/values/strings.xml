@@ -36,6 +36,7 @@
 
     <!--    SignUp    -->
     <string name="full_name">Nombre Completo</string>
+    <string name="new_password">Nueva Contraseña</string>
     <string name="confirm_password">Confirmar Contraseña</string>
     <string name="social_sign_up">Regístrate con tus Redes Sociales</string>
     <string name="register">Registro</string>
@@ -55,11 +56,13 @@
     <string name="send">Enviar</string>
 
     <!--    Green Points Register    -->
+    <string name="new_entry">Nueva Entrada</string>
     <string name="location">Ubicación</string>
     <string name="canopy">Tamaño de la copa</string>
     <string name="stem_size">Tamaño del tronco</string>
     <string name="height">Altura</string>
     <string name="tree_type">Tipo de árbol</string>
+    <string name="image">Imagen</string>
 
     <!--    Edit Profile    -->
     <string name="save">Guardar</string>
@@ -81,8 +84,11 @@
     <string name="report">Reportes</string>
 
     <!--    Stats    -->
-    <string name="green_index">%</string>
-    <string name="ratio">árbol/m^2</string>
+    <string name="green_view_index">Green View Index</string>
+    <string name="population_density">Population Density</string>
+    <string name="percent">%</string>
+    <string name="city_example">Caracas</string>
+    <string name="density">/km^2</string>
 
     <!--    Red Points    -->
     <string name="request">Solicitar</string>

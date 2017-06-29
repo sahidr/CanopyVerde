@@ -2,11 +2,25 @@
 <resources>
     <string-array name="country_array">
         <item>País</item>
-
     </string-array>
 
     <string-array name="city_array">
         <item>Ciudad</item>
+    </string-array>
 
+    <string-array name="canopy_array">
+        <item>Tamaño de Copa</item>
+    </string-array>
+
+    <string-array name="stem_array">
+        <item>Tamaño de Tronco</item>
+    </string-array>
+
+    <string-array name="height_array">
+        <item>Altura Aproximada</item>
+    </string-array>
+
+    <string-array name="type_array">
+        <item>Tipo de Árbol</item>
     </string-array>
 </resources>

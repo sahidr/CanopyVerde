@@ -113,7 +113,6 @@
         android:layout_above="@+id/googleSignIn"
         android:layout_toStartOf="@+id/register" />
 
-
     <Button
         android:id="@+id/googleSignIn"
         android:text="@string/google"

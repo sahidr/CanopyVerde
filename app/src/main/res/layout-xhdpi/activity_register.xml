@@ -91,7 +91,6 @@
         android:layout_alignEnd="@+id/email"
         android:layout_below="@+id/password"
         android:spinnerMode="dropdown"
-        style="@style/spinnerItemStyle"
         android:background="@drawable/field"
         android:layout_alignStart="@+id/email"
         />
