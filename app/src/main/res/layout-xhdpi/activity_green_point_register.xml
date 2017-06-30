@@ -28,14 +28,14 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <EditText
+    <TextView
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
+        style="@style/spinnerItemStyle"
         android:background="@drawable/first_field"
         android:hint="@string/location"
-        android:inputType="text"
+        android:textColor="@color/black_overlay"
         android:layout_marginTop="28dp"
         android:layout_below="@+id/entry"
         android:layout_centerHorizontal="true" />
@@ -137,7 +137,6 @@
         style="@style/spinnerItemStyle"
         android:background="@drawable/last_field"
         android:hint="@string/image"
-        android:text="@string/image"
         android:layout_below="@+id/treeType"
         android:layout_alignStart="@+id/treeType" />
 

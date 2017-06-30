@@ -78,7 +78,7 @@
 
     <!--    User Profile    -->
     <string name="logout">Cerrar Sesión</string>
-    <string name="badge">&lt;u>%1$d %2$s&lt;/u></string>
+    <string name="badge">&lt;u>%1$s %2$s&lt;/u></string>
     <string name="points">Puntos</string>
     <string name="general">General</string>
     <string name="report">Reportes</string>
@@ -86,9 +86,9 @@
     <!--    Stats    -->
     <string name="green_view_index">Green View Index</string>
     <string name="population_density">Population Density</string>
-    <string name="percent">%</string>
+    <string name="percent">%1$s</string>
     <string name="city_example">Caracas</string>
-    <string name="density">/km^2</string>
+    <string name="density">%1$s/km^2</string>
 
     <!--    Red Points    -->
     <string name="request">Solicitar</string>

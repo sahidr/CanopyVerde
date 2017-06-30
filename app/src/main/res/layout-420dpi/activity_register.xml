@@ -138,16 +138,16 @@
         android:id="@+id/signup"
         android:layout_width="300dp"
         android:layout_height="68dp"
+        android:layout_alignEnd="@+id/city"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/city"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/btn_ppal"
+        android:onClick="userRegister"
         android:text="@string/sign_up"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:onClick="toLogin"
-        android:layout_marginBottom="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/city"
-        android:layout_alignEnd="@+id/city" />
+        android:textSize="18sp" />
 
 
 

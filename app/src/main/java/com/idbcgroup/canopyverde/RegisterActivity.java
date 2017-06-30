@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public void toLogin(View view){
+    public void userRegister(View view){
 
         String fullname_text,username_text,email_text,password_text;
 
@@ -91,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         } else {
-            Toast.makeText(getBaseContext(),"Fields must be filled",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getBaseContext(),"Fields must be filled",Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -6,26 +6,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
-import android.media.Image;
 import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,16 +27,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
+import java.text.NumberFormat;
+import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowCloseListener,
+        GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
-    private GraphView graph;
     private SharedPreferences pref_marker;
     private Boolean approved;
     private MapStyleOptions style;
@@ -54,6 +42,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Context context;
     private Bitmap m_tree, m_user;
     private String m_date,m_type,m_size, m_status, m_username, m_location;
+    private int point_height = 50;
+    private int point_width = 50;
+    private TextView greenIndex;
+    private TextView populationDensity;
+    private RelativeLayout stats;
 
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
 
@@ -65,6 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng l6 = new LatLng(10.491841, -66.826925);
     LatLng l7 = new LatLng(10.484345, -66.826400);
     LatLng[] l = {l1,l2,l3,l4,l5,l6,l7};
+
 
 
     /** Demonstrates customizing the info window and/or its contents. */
@@ -92,11 +86,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         private void render(Marker marker, View view) {
 
+
             m_date = "22/12/17";
             m_type = "Araguaney";
             m_size = "Mediano";
-            m_status = "Verificado";
-
+            m_status = marker.getSnippet(); //"Verificado";
 
             // ImageView tree = (ImageView) view.findViewById(R.id.treePic);
             // ImageView profile = (ImageView) view.findViewById(R.id.profile);
@@ -160,6 +154,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US); //Italian
+        formatter.setMaximumFractionDigits(1);
+
+        stats = (RelativeLayout) findViewById(R.id.stats);
+
+        greenIndex = (TextView) findViewById(R.id.greenViewIndexPercent);
+        String percent = getResources().getString(R.string.percent, formatter.format(18.2));
+        greenIndex.setText(percent+"%");
+
+        populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
+        String density = getResources().getString(R.string.density, formatter.format(5344));
+        populationDensity.setText(density);
+
     }
 
     /**
@@ -173,12 +180,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        int point_height = 50;
-        int point_width = 50;
 
         mMap = googleMap;
         style = MapStyleOptions.loadRawResourceStyle(this, R.raw.canopy_style_map);
         mMap.setMapStyle(style);
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnInfoWindowCloseListener(this);
 
         BitmapDrawable green_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_verde);
         Bitmap green_point_scaled = Bitmap.createScaledBitmap(green_point.getBitmap(), point_width, point_height, false);
@@ -187,7 +195,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(new MarkerOptions()
                     .position(l[i])
                     .title("@username")
-                    .snippet(getString(R.string.snippet))
+                    .snippet(getString(R.string.verified))
                     .icon(BitmapDescriptorFactory.fromBitmap(green_point_scaled))
                      );
         }
@@ -214,6 +222,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
+
+                BitmapDrawable yellow_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_amarillo);
+                Bitmap yellow_point_scaled = Bitmap.createScaledBitmap(yellow_point.getBitmap(), point_width, point_height, false);
+
                 marker = new LatLng(cameraPosition.target.latitude,cameraPosition.target.longitude);
 
                 pref_marker = getSharedPreferences("Marker", 0);
@@ -224,8 +236,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .position(marker)
                         .snippet(getString(R.string.not_verified))
                         .title("TREE")
-                        .flat(true)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.p_amarillo)));
+                        .icon(BitmapDescriptorFactory.fromBitmap(yellow_point_scaled)));
 
                 SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
                 editor1.putBoolean("approved", false);
@@ -233,6 +244,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+    }
+
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        stats.setVisibility(View.INVISIBLE);
+        return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //stats.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onInfoWindowClose(Marker marker) {
+        stats.setVisibility(View.VISIBLE);
     }
 
     public void currentLocation(View view){

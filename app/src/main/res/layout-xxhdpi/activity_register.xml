@@ -134,7 +134,7 @@
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:onClick="toLogin"
+        android:onClick="userRegister"
         android:layout_marginBottom="15dp"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/city" />

@@ -19,6 +19,9 @@ import android.widget.TextView;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -43,9 +46,10 @@ public class UserProfileActivity extends AppCompatActivity {
                 .build()
         );
 
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ITALIAN);
 
         badge = (TextView) findViewById(R.id.badgeName);
-        String points = getResources().getString(R.string.badge, 2544, getString(R.string.u_bagde));
+        String points = getResources().getString(R.string.badge, formatter.format(2544), getString(R.string.u_bagde));
         CharSequence styledText = Html.fromHtml(points);
         badge.setText(styledText);
 

@@ -50,6 +50,7 @@
         <item name="android:background">@drawable/dropdown_list</item>
         <item name="android:checkMark">@null</item>
     </style-->
+
     <style name="spinnerItemStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/black_overlay</item>

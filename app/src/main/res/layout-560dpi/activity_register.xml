@@ -143,7 +143,7 @@
         android:layout_alignStart="@+id/city"
         android:layout_marginBottom="20dp"
         android:background="@drawable/btn_ppal"
-        android:onClick="toLogin"
+        android:onClick="userRegister"
         android:text="@string/sign_up"
         android:textAllCaps="false"
         android:textColor="@android:color/white"

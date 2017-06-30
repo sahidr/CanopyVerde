@@ -27,14 +27,13 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <EditText
+    <TextView
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="12"
         android:background="@drawable/first_field"
         android:hint="@string/location"
-        android:inputType="text"
+        style="@style/spinnerItemStyle"
         android:padding="22dp"
         android:layout_marginTop="35dp"
         android:layout_below="@+id/entry"
@@ -141,7 +140,7 @@
         android:padding="22dp"
         style="@style/spinnerItemStyle"
         android:background="@drawable/last_field"
-        android:text="@string/image"
+        android:hint="@string/image"
         android:layout_below="@+id/treeType"
         android:layout_alignStart="@+id/treeType"
         android:layout_alignEnd="@+id/treeType" />
