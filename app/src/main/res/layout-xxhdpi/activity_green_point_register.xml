@@ -29,15 +29,29 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/location"
+        android:id="@+id/location_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/spinnerItemStyle"
         android:background="@drawable/first_field"
-        android:hint="@string/location"
         android:layout_marginTop="28dp"
         android:layout_below="@+id/entry"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/location_example"
+        android:ellipsize="end"
+        android:lines="1"
+        android:maxWidth="200dp"
+        style="@style/spinnerItemStyle"
+        android:layout_marginStart="23dp"
+        android:layout_alignBaseline="@+id/location_holder"
+        android:layout_alignBottom="@+id/location_holder"
+        android:layout_alignStart="@+id/location_holder"
+        android:layout_toStartOf="@+id/drop" />
 
     <ImageView
         android:layout_width="30dp"
@@ -45,7 +59,7 @@
         android:id="@+id/locationPoint"
         android:layout_marginTop="13dp"
         android:src="@drawable/ciudad_pin"
-        android:layout_alignTop="@+id/location"
+        android:layout_alignTop="@+id/location_holder"
         android:layout_alignStart="@+id/drop" />
 
     <Spinner
@@ -53,11 +67,11 @@
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:entries="@array/canopy_array"
-        android:layout_alignEnd="@+id/location"
-        android:layout_below="@+id/location"
+        android:layout_alignEnd="@+id/location_holder"
+        android:layout_below="@+id/location_holder"
         android:spinnerMode="dropdown"
         android:background="@drawable/field"
-        android:layout_alignStart="@+id/location" />
+        android:layout_alignStart="@+id/location_holder" />
 
     <ImageView
         android:layout_width="30dp"
@@ -77,8 +91,8 @@
         android:layout_height="60dp"
         android:spinnerMode="dropdown"
         android:layout_below="@+id/canopySize"
-        android:layout_alignStart="@+id/location"
-        android:layout_alignEnd="@+id/location" />
+        android:layout_alignStart="@+id/location_holder"
+        android:layout_alignEnd="@+id/location_holder" />
 
     <ImageView
         android:id="@+id/drop_2"
@@ -94,11 +108,11 @@
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:entries="@array/height_array"
-        android:layout_alignEnd="@+id/location"
+        android:layout_alignEnd="@+id/location_holder"
         android:layout_below="@+id/stemSize"
         android:spinnerMode="dropdown"
         android:background="@drawable/field"
-        android:layout_alignStart="@+id/location" />
+        android:layout_alignStart="@+id/location_holder" />
 
     <ImageView
         android:layout_width="30dp"
@@ -117,8 +131,8 @@
         android:layout_height="60dp"
         android:spinnerMode="dropdown"
         android:layout_below="@+id/height"
-        android:layout_alignStart="@+id/location"
-        android:layout_alignEnd="@+id/location" />
+        android:layout_alignStart="@+id/location_holder"
+        android:layout_alignEnd="@+id/location_holder" />
 
     <ImageView
         android:layout_width="30dp"

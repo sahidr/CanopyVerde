@@ -60,7 +60,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng[] l = {l1,l2,l3,l4,l5,l6,l7};
 
 
-
     /** Demonstrates customizing the info window and/or its contents. */
     private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -159,12 +158,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         stats = (RelativeLayout) findViewById(R.id.stats);
 
+        float green_index = (float) 100.001;
+        float pop_density = (float) 100000;
         greenIndex = (TextView) findViewById(R.id.greenViewIndexPercent);
-        String percent = getResources().getString(R.string.percent, formatter.format(18.2));
+        String percent = getResources().getString(R.string.percent, formatter.format(green_index));
         greenIndex.setText(percent+"%");
 
         populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
-        String density = getResources().getString(R.string.density, formatter.format(5344));
+        String density = getResources().getString(R.string.density, formatter.format(pop_density));
         populationDensity.setText(density);
 
     }

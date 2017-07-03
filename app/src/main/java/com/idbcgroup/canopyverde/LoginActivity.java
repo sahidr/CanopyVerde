@@ -71,6 +71,12 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+
+    //User Data
+
+   // Bundle userAccount = new Bundle();
+    //GoogleSignInAccount account;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,10 +104,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-
+/*
                     SharedPreferences.Editor editor = getSharedPreferences("Tour", 0).edit();
                     editor.putBoolean("visited", true);
-                    editor.apply();
+                    editor.apply();*/
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     load.setVisibility(View.INVISIBLE);
@@ -198,20 +204,22 @@ public class LoginActivity extends AppCompatActivity {
 
     // Google Handler
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+                            SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
+                            editor.putBoolean("logged",true);
+                            editor.apply();
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -234,6 +242,22 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+                assert account != null;
+                String personName = account.getDisplayName();
+                String personGivenName = account.getGivenName();
+                String personFamilyName = account.getFamilyName();
+                String personEmail = account.getEmail();
+                String personId = account.getId();
+                Uri personPhoto = account.getPhotoUrl();
+
+                SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
+                editor.putBoolean("logged",true);
+                editor.putString("name",personName);
+                editor.putString("email",personEmail);
+                editor.putString("id",personId);
+                editor.putString("photo", String.valueOf(personPhoto));
+                editor.apply();
+
             } else {
                 // Google Sign In failed, update UI appropriately
             }
@@ -284,7 +308,11 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(LoginActivity.this,MapsActivity.class));
             SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
             editor.putBoolean("logged",true);
+            editor.putString("name","Sahid Reyes");
+            editor.putString("email",email_text);
+            editor.putString("username","sahid_r");
             editor.apply();
+
             finish();
         } else {
             load.setVisibility(View.INVISIBLE);

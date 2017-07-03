@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/first_field"
-        android:hint="@string/location"
+
         android:padding="23dp"
         style="@style/spinnerItemStyle"
         android:layout_marginTop="35dp"
@@ -41,6 +41,22 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="42dp"
         android:layout_marginEnd="42dp"/>
+
+    <TextView
+        android:id="@+id/slocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/location_example"
+        android:ellipsize="end"
+        android:lines="1"
+        android:maxWidth="200dp"
+        style="@style/spinnerItemStyle"
+        android:layout_marginStart="23dp"
+        android:layout_alignBaseline="@+id/location"
+        android:layout_alignBottom="@+id/location"
+        android:layout_alignStart="@+id/location"
+        android:layout_toStartOf="@+id/drop"
+        android:layout_alignEnd="@+id/entry" />
 
     <ImageView
         android:layout_width="30dp"

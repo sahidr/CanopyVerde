@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
@@ -18,10 +19,12 @@ import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -35,6 +38,10 @@ public class UserProfileActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager mViewPager;
     private TextView badge;
+    private CircleImageView profilePic;
+    private TextView profileFullname, profileEmail, profileUsername;
+    private Context context;
+    private SharedPreferences pref_session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +52,46 @@ public class UserProfileActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
-
+        context = this;
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ITALIAN);
 
+        profilePic= (CircleImageView) findViewById(R.id.profilepic);
+        profileFullname = (TextView) findViewById(R.id.fullNameDisplay);
+        profileEmail = (TextView) findViewById(R.id.emailDisplay);
+        profileUsername = (TextView) findViewById(R.id.usernameDisplay);
         badge = (TextView) findViewById(R.id.badgeName);
-        String points = getResources().getString(R.string.badge, formatter.format(2544), getString(R.string.u_bagde));
+
+        // User
+
+        pref_session = getSharedPreferences("Session", 0);
+
+        String name = pref_session.getString("name",null);
+        String email = pref_session.getString("email",null);
+        String username = pref_session.getString("username",null);
+        String profilepic = pref_session.getString("photo",null);
+
+        if (profilepic!=null) {
+            Uri photo = Uri.parse(profilepic);
+            Picasso.with(context).load(photo).into(profilePic);
+        }
+
+        if (username==null){
+            String[] emailParts = email.split("@");
+            String user =  emailParts[0];
+            profileUsername.setText("@"+user);
+        } else {
+            profileUsername.setText("@"+username);
+        }
+
+        profileFullname.setText(name);
+        profileEmail.setText(email);
+
+        float gamepoints = 2544;
+        String points = getResources().getString(R.string.badge, formatter.format(gamepoints), getString(R.string.u_bagde));
         CharSequence styledText = Html.fromHtml(points);
         badge.setText(styledText);
+
+        //Tabs
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -60,6 +100,7 @@ public class UserProfileActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);

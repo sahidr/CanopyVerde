@@ -81,17 +81,15 @@
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
-
     <RelativeLayout
         android:id="@+id/stats"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="80dp"
         android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
         android:background="@drawable/stat_bar"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_below="@+id/toolbar"
-        android:layout_toStartOf="@+id/locator">
+        android:layout_below="@+id/toolbar">
 
         <TextView
             android:id="@+id/city"
@@ -120,10 +118,11 @@
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_marginTop="2dp"
-            android:layout_marginStart="25dp"
+            android:layout_marginStart="55dp"
             android:background="@drawable/circle_statbar"
             android:layout_alignTop="@+id/greenViewIndex"
-            android:layout_toEndOf="@+id/greenViewIndex" />
+            android:layout_toEndOf="@+id/greenViewIndex"
+            android:layout_marginEnd="5dp"/>
 
         <TextView
             android:id="@+id/greenViewIndexPercent"

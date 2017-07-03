@@ -63,6 +63,7 @@
     <string name="height">Altura</string>
     <string name="tree_type">Tipo de árbol</string>
     <string name="image">Imagen</string>
+    <string name="location_example">Av. Principal de los Cortijos, Caracas, Venezuela</string>
 
     <!--    Edit Profile    -->
     <string name="save">Guardar</string>

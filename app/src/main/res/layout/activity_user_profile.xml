@@ -69,23 +69,14 @@
             android:background="@drawable/editar"
             android:onClick="editProfile" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilepic"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:background="@drawable/circle" />
-
-        <ImageView
-            android:id="@+id/profilepic1"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/profile" />
+            android:background="@drawable/btn_locate"/>
 
         <TextView
             android:id="@+id/fullNameDisplay"
@@ -103,7 +94,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/u_user"
-            android:layout_marginTop="2dp"
             android:textColor="@android:color/white"
             android:layout_below="@+id/fullNameDisplay"
             android:layout_centerHorizontal="true" />
@@ -118,23 +108,31 @@
             android:layout_below="@+id/usernameDisplay"
             android:layout_centerHorizontal="true" />
 
-        <ImageView
-            android:id="@+id/badgeImg"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            app:srcCompat="@drawable/puntos"
-            android:layout_marginStart="5dp"
-            android:layout_below="@+id/emailDisplay"
-            android:layout_alignStart="@+id/emailDisplay" />
 
-        <TextView
-            android:id="@+id/badgeName"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/badge"
-            android:textColor="@color/yellow"
-            android:layout_alignBottom="@+id/badgeImg"
-            android:layout_alignStart="@+id/usernameDisplay" />
+            android:layout_below="@+id/emailDisplay"
+            android:layout_marginTop="2dp"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/badgeImg"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="5dp"
+                app:srcCompat="@drawable/puntos"
+                android:layout_marginEnd="10dp"/>
+
+            <TextView
+                android:id="@+id/badgeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/badge"
+                android:textColor="@color/yellow" />
+
+
+        </LinearLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
