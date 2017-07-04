@@ -1,5 +1,7 @@
 package com.idbcgroup.canopyverde;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -250,7 +252,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        stats.setVisibility(View.INVISIBLE);
+        //stats.setVisibility(View.INVISIBLE);
+        stats.animate().alpha(0.0f);
         return false;
     }
 
@@ -261,7 +264,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClose(Marker marker) {
-        stats.setVisibility(View.VISIBLE);
+        //stats.setVisibility(View.VISIBLE);
+        stats.animate().alpha(1f);
     }
 
     public void currentLocation(View view){

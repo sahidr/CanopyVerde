@@ -39,6 +39,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
+
+import java.util.Arrays;
 import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -71,12 +73,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-
-    //User Data
-
-   // Bundle userAccount = new Bundle();
-    //GoogleSignInAccount account;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +89,8 @@ public class LoginActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.password);
         load = (ProgressBar) findViewById(R.id.load);
         loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions(Arrays.asList(
+                "public_profile", "email", "user_birthday", "user_friends"));
         fb = (Button) findViewById(R.id.facebookSignIn);
 
         //Firebase
@@ -104,10 +102,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-/*
-                    SharedPreferences.Editor editor = getSharedPreferences("Tour", 0).edit();
-                    editor.putBoolean("visited", true);
-                    editor.apply();*/
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     load.setVisibility(View.INVISIBLE);
@@ -195,7 +189,21 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                        } else {
+                            String personId =task.getResult().getUser().getUid();
+                            String personName=task.getResult().getUser().getDisplayName();
+                            String personEmail=task.getResult().getUser().getEmail();
+                            Uri personPhoto =task.getResult().getUser().getPhotoUrl();
+
+                            SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
+                            editor.putBoolean("logged",true);
+                            editor.putString("name",personName);
+                            editor.putString("email",personEmail);
+                            editor.putString("id",personId);
+                            editor.putString("photo", String.valueOf(personPhoto));
+                            editor.apply();
                         }
+
 
                         // ...
                     }
@@ -217,9 +225,6 @@ public class LoginActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
-                            editor.putBoolean("logged",true);
-                            editor.apply();
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -244,8 +249,6 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
                 assert account != null;
                 String personName = account.getDisplayName();
-                String personGivenName = account.getGivenName();
-                String personFamilyName = account.getFamilyName();
                 String personEmail = account.getEmail();
                 String personId = account.getId();
                 Uri personPhoto = account.getPhotoUrl();
@@ -262,6 +265,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In failed, update UI appropriately
             }
         } else {
+            // Facebook Sign In
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -287,7 +291,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void register(View view){
         startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
-        //finish();
     }
 
     public void login(View view){
