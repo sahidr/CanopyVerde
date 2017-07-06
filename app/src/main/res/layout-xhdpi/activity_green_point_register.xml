@@ -158,6 +158,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/view"
+        android:onClick="imageView"
         android:layout_marginTop="15dp"
         android:src="@drawable/ojo_big"
         android:layout_below="@+id/treeType"
@@ -177,5 +178,11 @@
         android:layout_alignParentBottom="true"
         android:layout_alignEnd="@+id/image"
         android:layout_alignStart="@+id/image" />
+
+    <ImageView
+        android:id="@+id/expanded_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
 
 </RelativeLayout>

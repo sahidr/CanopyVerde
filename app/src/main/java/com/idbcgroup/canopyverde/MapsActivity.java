@@ -2,6 +2,7 @@ package com.idbcgroup.canopyverde;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -29,6 +31,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.ByteArrayOutputStream;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -59,7 +63,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng l5 = new LatLng(10.490110, -66.827370);
     LatLng l6 = new LatLng(10.491841, -66.826925);
     LatLng l7 = new LatLng(10.484345, -66.826400);
-    LatLng[] l = {l1,l2,l3,l4,l5,l6,l7};
+    LatLng l8 = new LatLng(10.475043, -66.954308);
+    LatLng[] l = {l1,l2,l3,l4,l5,l6,l7,l8};
 
 
     /** Demonstrates customizing the info window and/or its contents. */
@@ -222,31 +227,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
 
+        MarkerOptions m = new MarkerOptions();
+        m.anchor(0.5f, 0.5f);
+
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
 
+
+                SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
                 BitmapDrawable yellow_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_amarillo);
                 Bitmap yellow_point_scaled = Bitmap.createScaledBitmap(yellow_point.getBitmap(), point_width, point_height, false);
+                //editor1.putBoolean("approved", false);
+                editor1.putLong( "lat", Double.doubleToRawLongBits( cameraPosition.target.latitude));
+                editor1.putLong( "long", Double.doubleToRawLongBits(cameraPosition.target.longitude ));
+                editor1.apply();
 
-                marker = new LatLng(cameraPosition.target.latitude,cameraPosition.target.longitude);
+                //marker = new LatLng(cameraPosition.target.latitude,cameraPosition.target.longitude);
 
                 pref_marker = getSharedPreferences("Marker", 0);
+
                 approved  = pref_marker.getBoolean("approved",false);
 
                 if (approved) {
-                mMap.addMarker(new MarkerOptions()
-                        .position(marker)
-                        .snippet(getString(R.string.not_verified))
-                        .title("TREE")
-                        .icon(BitmapDescriptorFactory.fromBitmap(yellow_point_scaled)));
+                    double lat = Double.longBitsToDouble( pref_marker.getLong( "lat", -1 ));
+                    double lon = Double.longBitsToDouble( pref_marker.getLong( "long", -1 ));
+                    LatLng latLng = new LatLng( lat,lon);
 
-                SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
-                editor1.putBoolean("approved", false);
-                editor1.apply();
+                    mMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .snippet(getString(R.string.not_verified))
+                            .title("TREE")
+                            .icon(BitmapDescriptorFactory.fromBitmap(yellow_point_scaled)));
+
+                    //SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
+
+                    editor1.putBoolean("approved", false);
+                    editor1.apply();
                 }
+
             }
         });
+
     }
 
 
@@ -275,9 +297,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {}
-
-        try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         } catch(Exception ex) {}
 
@@ -313,7 +332,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void cameraView(View view){
-        startActivity(new Intent(MapsActivity.this, CameraActivity.class));
+        //startActivity(new Intent (MapsActivity.this, CameraActivity.class));
+       cameraIntent();
+
+    }
+    private void cameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent,0);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 0)
+                onCaptureImageResult(data);
+        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Intent i = new Intent(MapsActivity.this,GreenPointRegisterActivity.class);
+        i.putExtras(data);
+        startActivity(i);
     }
 
     public void profileView (View view){
