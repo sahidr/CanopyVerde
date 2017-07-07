@@ -1,26 +1,18 @@
 package com.idbcgroup.canopyverde;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
-import android.support.v4.content.SharedPreferencesCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -30,6 +22,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     private String latlng;
     private TextView current_location,image;
     private ImageView photo;
+    private int MAX_LINES = 2;
 
     Bitmap thumbnail;
 
@@ -66,7 +59,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
         try {
 
-            addresses = geocoder.getFromLocation(lat, lon, 2);
+            addresses = geocoder.getFromLocation(lat, lon, MAX_LINES);
             String address = addresses.get(0).getAddressLine(0);
             // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
             String address1 = addresses.get(1).getAddressLine(0);

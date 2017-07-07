@@ -272,7 +272,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                         if (!citiesList.isEmpty()) citiesList.clear();
 
-                        System.out.println(cities);
                         for (int i = 0; i < cities.length(); i++) {
                             String city = cities.get(i).toString();
                             citiesList.add(city);

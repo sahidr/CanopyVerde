@@ -86,7 +86,7 @@
             android:name=".UserProfileActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
-        <activity android:name=".PasswordChangeActivity"></activity>
+        <activity android:name=".PasswordChangeActivity"/>
     </application>
 
 </manifest>

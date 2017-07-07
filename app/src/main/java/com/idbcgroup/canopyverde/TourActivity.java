@@ -62,13 +62,10 @@ public class TourActivity extends AppCompatActivity {
                 .build()
         );
 
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        //skip = (Button) findViewById(R.id.skip);
         page0 = (ImageView) findViewById(R.id.page0);
         page1 = (ImageView) findViewById(R.id.page1);
         page2 = (ImageView) findViewById(R.id.page2);
@@ -83,9 +80,7 @@ public class TourActivity extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(int position) {
@@ -97,9 +92,7 @@ public class TourActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
     }
 
@@ -107,6 +100,7 @@ public class TourActivity extends AppCompatActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -119,6 +113,7 @@ public class TourActivity extends AppCompatActivity {
         private Integer[] tour_imgs = {R.drawable.tour_01, R.drawable.tour_01, R.drawable.tour_01, R.drawable.tour_01};
         private Integer[] tour_titles = {R.string.title_tour_1, R.string.title_tour_2, R.string.title_tour_3,R.string.title_tour_4};
         private Integer[] tour_desc = {R.string.lorem, R.string.lorem, R.string.lorem,R.string.lorem};
+
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -135,11 +130,15 @@ public class TourActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
+            /*
+            * Library used to change the font family dynamically in the fragments
+            * */
             CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                     .setDefaultFontPath("fonts/TitilliumWeb-Regular.ttf")
                     .setFontAttrId(R.attr.fontPath)
                     .build()
             );
+
 
             View rootView = inflater.inflate(R.layout.fragment_tour, container, false);
 
@@ -147,8 +146,10 @@ public class TourActivity extends AppCompatActivity {
 
             img = (ImageView) rootView.findViewById(R.id.app_img);
             img.setBackgroundResource(tour_imgs[argSectionNumber]);
+
             title = (TextView) rootView.findViewById(R.id.titleTour);
             title.setText(getString(tour_titles[argSectionNumber]));
+
             description = (TextView) rootView.findViewById(R.id.description);
             description.setText(getString(tour_desc[argSectionNumber]));
 
@@ -156,6 +157,9 @@ public class TourActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    * Class to manage the position of the fragment
+    * */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -174,6 +178,9 @@ public class TourActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    * End of the tour
+    * */
     public void toRegister(View view){
         SharedPreferences.Editor editor = getSharedPreferences("Tour", 0).edit();
         editor.putBoolean("visited", true);
@@ -183,6 +190,9 @@ public class TourActivity extends AppCompatActivity {
         finish();
     }
 
+    /*
+    * Base Context for fontPath
+    * */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));

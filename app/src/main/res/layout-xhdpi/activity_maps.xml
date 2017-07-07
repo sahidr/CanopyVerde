@@ -47,10 +47,10 @@
         android:id="@+id/locator"
         android:layout_width="33dp"
         android:layout_height="45dp"
-        android:layout_marginBottom="128dp"
         android:background="@drawable/locator"
         android:layout_above="@+id/currentLocation"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="129dp" />
 
     <ImageButton
         android:id="@+id/currentLocation"

@@ -49,10 +49,11 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private ProgressBar load;
+
     // Normal Sign In
     private EditText email,password;
     private boolean email_field, password_field;
-    private ProgressBar load;
     private boolean verified;
 
     // Google Sign in
@@ -65,8 +66,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button fb;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    AccessTokenTracker accessTokenTracker;
-    AccessToken accessToken;
 
     // Firebase
 
@@ -120,8 +119,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Facebook
 
-        //loginButton.setReadPermissions("email", "public_profile");
-
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -132,14 +129,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
-                // ...
+                load.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
-                // ...
+                load.setVisibility(View.INVISIBLE);
             }
+
         });
 
         // Google
@@ -195,11 +193,15 @@ public class LoginActivity extends AppCompatActivity {
                             String personEmail=task.getResult().getUser().getEmail();
                             Uri personPhoto =task.getResult().getUser().getPhotoUrl();
 
+                            String[] emailParts = personEmail.split("@");
+                            String username =  emailParts[0];
+
                             SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
                             editor.putBoolean("logged",true);
                             editor.putString("name",personName);
                             editor.putString("email",personEmail);
                             editor.putString("id",personId);
+                            editor.putString("username","@"+username);
                             editor.putString("photo", String.valueOf(personPhoto));
                             editor.apply();
                         }
@@ -253,11 +255,15 @@ public class LoginActivity extends AppCompatActivity {
                 String personId = account.getId();
                 Uri personPhoto = account.getPhotoUrl();
 
+                String[] emailParts = personEmail.split("@");
+                String username =  emailParts[0];
+
                 SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
                 editor.putBoolean("logged",true);
                 editor.putString("name",personName);
                 editor.putString("email",personEmail);
                 editor.putString("id",personId);
+                editor.putString("username","@"+username);
                 editor.putString("photo", String.valueOf(personPhoto));
                 editor.apply();
 
@@ -287,10 +293,6 @@ public class LoginActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    public void register(View view){
-        startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
     }
 
     public void login(View view){
@@ -323,14 +325,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void fb_login(View view){
-        loginButton.performClick();
-    }
-
-    public void restore(View view){
-        startActivity(new Intent(LoginActivity.this,PasswordRestoreActivity.class));
-    }
-
     public boolean verifyFields(boolean email_field, boolean password_field){
         if(!email_field)
             email.setError(getString(R.string.email_valid));
@@ -341,6 +335,18 @@ public class LoginActivity extends AppCompatActivity {
         //if(!city_field)
         //Toast.makeText(getBaseContext(),"Choose a City",Toast.LENGTH_SHORT).show();
         return (email_field);
+    }
+
+    public void fb_login(View view){
+        loginButton.performClick();
+    }
+
+    public void restore(View view){
+        startActivity(new Intent(LoginActivity.this,PasswordRestoreActivity.class));
+    }
+
+    public void register(View view){
+        startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
     }
 
     @Override

@@ -89,11 +89,11 @@ public class EditProfile extends AppCompatActivity {
     private void onCaptureImageResult(Intent data) {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        assert thumbnail != null;
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         editPic.setImageBitmap(thumbnail);
     }
 
-    @SuppressWarnings("deprecation")
     private void onSelectFromGalleryResult(Intent data) {
 
         Bitmap bm=null;
@@ -108,7 +108,8 @@ public class EditProfile extends AppCompatActivity {
     }
 
     public void editProfilePicture(View view){
-        final CharSequence uploadType[] = new CharSequence[] {"Take a Picture","Upload from Gallery"};
+        CharSequence uploadType[] = new CharSequence[] {
+                getString(R.string.picture),getString(R.string.gallery) };
         AlertDialog.Builder builder = new AlertDialog.Builder(EditProfile.this);
         builder.setItems(uploadType, new DialogInterface.OnClickListener() {
             @Override
@@ -125,7 +126,7 @@ public class EditProfile extends AppCompatActivity {
 
     public void deleteAccount (View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(EditProfile.this);
-        builder.setMessage("Estas seguro de querer eliminar la cuenta?");
+        builder.setMessage(R.string.confirm_message);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 load.setVisibility(View.VISIBLE);
@@ -159,4 +160,5 @@ public class EditProfile extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 }

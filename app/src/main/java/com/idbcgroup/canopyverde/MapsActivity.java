@@ -9,15 +9,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdate;
@@ -31,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.text.NumberFormat;
@@ -48,11 +56,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Context context;
     private Bitmap m_tree, m_user;
     private String m_date,m_type,m_size, m_status, m_username, m_location;
-    private int point_height = 50;
-    private int point_width = 50;
+    private int HEIGHT = 30;
+    private int WIDTH = 30;
     private TextView greenIndex;
     private TextView populationDensity;
     private RelativeLayout stats;
+    private SharedPreferences pref_session;
 
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
 
@@ -92,20 +101,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         private void render(Marker marker, View view) {
 
-
             m_date = "22/12/17";
             m_type = "Araguaney";
             m_size = "Mediano";
             m_status = marker.getSnippet(); //"Verificado";
 
             // ImageView tree = (ImageView) view.findViewById(R.id.treePic);
-            // ImageView profile = (ImageView) view.findViewById(R.id.profile);
-            // TextView username = (TextView) view.findViewById(R.id.user);
+            ImageView profile = (ImageView) view.findViewById(R.id.profile);
+            TextView user = (TextView) view.findViewById(R.id.user);
             TextView date = (TextView) view.findViewById(R.id.p_date);
             TextView type = (TextView) view.findViewById(R.id.p_type);
             TextView size = (TextView) view.findViewById(R.id.p_size);
             TextView status = (TextView) view.findViewById(R.id.p_status);
             // TextView location = (TextView) view.findViewById(R.id.location);
+
+
+            pref_session = getSharedPreferences("Session", 0);
+            String profilepic = pref_session.getString("photo",null);
+            String username = pref_session.getString("username",null);
 
             date.setText(m_date);
             type.setText(m_type);
@@ -113,8 +126,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (m_status.equals(getString(R.string.verified))){
                 status.setTextColor(getResources().getColor(R.color.colorCanopy));
+                user.setText("@idbcuser");
+                profile.setImageResource(R.drawable.btn_locate);
             } else {
                 status.setTextColor(getResources().getColor(R.color.yellow));
+                user.setText(username);
+                if (profilepic!=null) {
+                    Uri photo = Uri.parse(profilepic);
+                    Picasso.with(MapsActivity.this).load(photo).into(profile);
+                }
             }
             status.setText(m_status);
 
@@ -197,7 +217,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowCloseListener(this);
 
         BitmapDrawable green_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_verde);
-        Bitmap green_point_scaled = Bitmap.createScaledBitmap(green_point.getBitmap(), point_width, point_height, false);
+        Bitmap green_point_scaled = Bitmap.createScaledBitmap(green_point.getBitmap(),WIDTH, HEIGHT, false);
+
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+        Bitmap bmp = Bitmap.createBitmap(80, 80, conf);
+        Canvas canvas1 = new Canvas(bmp);
+
+// paint defines the text color, stroke width and size
+        Paint color = new Paint();
+        color.setTextSize(35);
+        color.setColor(Color.BLACK);
+
+// modify canvas
+        canvas1.drawBitmap(BitmapFactory.decodeResource(getResources(),
+                R.drawable.map_circle), 0,0, color);
+
 
         for (int i = 0; i < l.length; i++) {
             mMap.addMarker(new MarkerOptions()
@@ -205,7 +239,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .title("@username")
                     .snippet(getString(R.string.verified))
                     .icon(BitmapDescriptorFactory.fromBitmap(green_point_scaled))
-                     );
+                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.locator))
+                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.p_verde1))
+                    .anchor(0.5f, 0.4f)
+            );
         }
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -234,10 +271,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
 
-
                 SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
                 BitmapDrawable yellow_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_amarillo);
-                Bitmap yellow_point_scaled = Bitmap.createScaledBitmap(yellow_point.getBitmap(), point_width, point_height, false);
+                Bitmap yellow_point_scaled = Bitmap.createScaledBitmap(yellow_point.getBitmap(),WIDTH, HEIGHT, false);
                 //editor1.putBoolean("approved", false);
                 editor1.putLong( "lat", Double.doubleToRawLongBits( cameraPosition.target.latitude));
                 editor1.putLong( "long", Double.doubleToRawLongBits(cameraPosition.target.longitude ));
@@ -258,9 +294,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             .position(latLng)
                             .snippet(getString(R.string.not_verified))
                             .title("TREE")
-                            .icon(BitmapDescriptorFactory.fromBitmap(yellow_point_scaled)));
-
-                    //SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
+                            .icon(BitmapDescriptorFactory.fromBitmap(yellow_point_scaled))
+                            .anchor(0.5f, 0.4f)
+                    );
 
                     editor1.putBoolean("approved", false);
                     editor1.apply();
@@ -274,19 +310,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        //stats.setVisibility(View.INVISIBLE);
         stats.animate().alpha(0.0f);
         return false;
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //stats.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onInfoWindowClose(Marker marker) {
-        //stats.setVisibility(View.VISIBLE);
         stats.animate().alpha(1f);
     }
 
@@ -298,14 +331,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {}
+        } catch(Exception ex) { Log.d("NETWORK","Connection Error"); }
 
         if(!gps_enabled && !network_enabled) {
             // notify user
             AlertDialog.Builder dialog = new AlertDialog.Builder(context);
             dialog.setTitle(context.getResources().getString(R.string.gps_network_not_enabled));
             dialog.setMessage(context.getResources().getString(R.string.enable_location));
-            dialog.setPositiveButton(context.getResources().getString(R.string.open_location_settings), new DialogInterface.OnClickListener() {
+            dialog.setPositiveButton(context.getResources().getString(R.string.open_location_settings),
+                    new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
 
@@ -327,15 +361,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
                 mMap.animateCamera(cameraUpdate);
-            } catch (Exception e){}
+            } catch (Exception e){ Log.d("GPS","Location Error");}
         }
     }
 
     public void cameraView(View view){
         //startActivity(new Intent (MapsActivity.this, CameraActivity.class));
        cameraIntent();
-
     }
+
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent,0);
