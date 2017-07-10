@@ -42,7 +42,11 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowCloseListener,
@@ -101,13 +105,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         private void render(Marker marker, View view) {
 
-            m_date = "22/12/17";
+            m_date = "26/06/17";
             m_type = "Araguaney";
             m_size = "Mediano";
             m_status = marker.getSnippet(); //"Verificado";
 
             // ImageView tree = (ImageView) view.findViewById(R.id.treePic);
-            ImageView profile = (ImageView) view.findViewById(R.id.profile);
+            CircleImageView profile = (CircleImageView) view.findViewById(R.id.profile);
             TextView user = (TextView) view.findViewById(R.id.user);
             TextView date = (TextView) view.findViewById(R.id.p_date);
             TextView type = (TextView) view.findViewById(R.id.p_type);
@@ -115,22 +119,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             TextView status = (TextView) view.findViewById(R.id.p_status);
             // TextView location = (TextView) view.findViewById(R.id.location);
 
-
             pref_session = getSharedPreferences("Session", 0);
             String profilepic = pref_session.getString("photo",null);
             String username = pref_session.getString("username",null);
 
-            date.setText(m_date);
             type.setText(m_type);
             size.setText(m_size);
+
+            Calendar c = Calendar.getInstance();
+            System.out.println("Current time => " + c.getTime());
+
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy",Locale.US);
+            String formattedDate = df.format(c.getTime());
+
 
             if (m_status.equals(getString(R.string.verified))){
                 status.setTextColor(getResources().getColor(R.color.colorCanopy));
                 user.setText("@idbcuser");
                 profile.setImageResource(R.drawable.btn_locate);
+                date.setText(m_date);
+
             } else {
+
                 status.setTextColor(getResources().getColor(R.color.yellow));
                 user.setText(username);
+                date.setText(formattedDate);
+
                 if (profilepic!=null) {
                     Uri photo = Uri.parse(profilepic);
                     Picasso.with(MapsActivity.this).load(photo).into(profile);
@@ -138,35 +152,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             status.setText(m_status);
 
-            /*
-            //int badge;
-
-            //badge = android.R.drawable.star_big_on;
-
-            ((ImageView) view.findViewById(R.id.badge)).setImageResource(R.drawable.araguaney);
-
-            String title = marker.getTitle();
-            TextView titleUi = ((TextView) view.findViewById(R.id.title));
-            if (title != null) {
-                // Spannable string allows us to edit the formatting of the text.
-                //SpannableString titleText = new SpannableString(title);
-                //titleText.setSpan(new ForegroundColorSpan(Color.RED), 0, titleText.length(), 0);
-                //titleUi.setText(titleText);
-            } else {
-                titleUi.setText("");
-            }
-
-            String snippet = marker.getSnippet();
-            TextView snippetUi = ((TextView) view.findViewById(R.id.snippet));
-            if (snippet != null && snippet.length() > 12) {
-                //SpannableString snippetText = new SpannableString(snippet);
-                //snippetText.setSpan(new ForegroundColorSpan(Color.MAGENTA), 0, 10, 0);
-                //snippetText.setSpan(new ForegroundColorSpan(Color.BLUE), 12, snippet.length(), 0);
-                //snippetUi.setText(snippetText);
-            } else {
-                snippetUi.setText("");
-            }
-            */
         }
     }
 

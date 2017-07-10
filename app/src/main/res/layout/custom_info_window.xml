@@ -34,7 +34,7 @@
             android:id="@+id/content"
             android:layout_toEndOf="@id/treePic">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile"
                 android:layout_width="35dp"
                 android:layout_height="35dp"

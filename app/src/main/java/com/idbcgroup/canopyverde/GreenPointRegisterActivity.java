@@ -1,14 +1,27 @@
 package com.idbcgroup.canopyverde;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
+import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,8 +33,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
     private SharedPreferences pref_marker;
     private String latlng;
-    private TextView current_location,image;
-    private ImageView photo;
+    private TextView current_location;
     private int MAX_LINES = 2;
 
     Bitmap thumbnail;
@@ -35,20 +47,6 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
-
-        photo = (ImageView) findViewById(R.id.expanded_image);
-
-        Bundle extras = getIntent().getExtras();
-
-        if(extras == null) {
-            thumbnail= null;
-        } else {
-            thumbnail = (Bitmap) getIntent().getExtras().get("data");
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            photo.setImageBitmap(thumbnail);
-        }
-
 
         pref_marker = getSharedPreferences("Marker", 0);
         double lat = Double.longBitsToDouble( pref_marker.getLong( "lat", -1 ));
@@ -76,7 +74,43 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     }
 
     public void imageView (View view){
-        //photo.setVisibility(View.VISIBLE);
+
+        final Dialog dialog = new Dialog(GreenPointRegisterActivity.this);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(getLayoutInflater().inflate(R.layout.dialog, null));
+
+        ImageView photocapture = (ImageView) dialog.findViewById(R.id.photocaptured);
+
+        Button ok = (Button) dialog.findViewById(R.id.ok);
+        Button cancel = (Button) dialog.findViewById(R.id.cancel);
+
+        Bundle extras = getIntent().getExtras();
+
+        if(extras == null) {
+            thumbnail= null;
+        } else {
+            thumbnail = (Bitmap) getIntent().getExtras().get("data");
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            photocapture.setImageBitmap(thumbnail);
+        }
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        dialog.show();
+
     }
 
     public void yellowPointRegister(View view){
