@@ -3,9 +3,6 @@ package com.idbcgroup.canopyverde;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
@@ -16,8 +13,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,8 +21,6 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -175,7 +168,12 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     public void editProfile (View view){
-        Intent i = new Intent(UserProfileActivity.this, EditProfile.class);
+        Intent i = new Intent(UserProfileActivity.this, EditProfileActivity.class);
+        startActivity(i);
+    }
+
+    public void gameProfile(View view){
+        Intent i = new Intent(UserProfileActivity.this, GameProfileActivity.class);
         startActivity(i);
     }
 

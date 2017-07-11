@@ -1,65 +1,90 @@
 package com.idbcgroup.canopyverde;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static android.widget.Toast.LENGTH_SHORT;
-
-public class EditProfile extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity {
 
     private static final int SELECT_FILE = 1;
     private static final int REQUEST_CAMERA = 0;
     private CircleImageView editPic;
     private Button save;
-    private Button delete;
     private ProgressBar load;
     private Switch language, notifications;
+    private SharedPreferences pref_session;
+    private Context context;
+    private Bitmap thumbnail;
+    private int request;
+    private EditText editName, editUser,editEmail,editPassword,confirmPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        context = this;
         editPic = (CircleImageView) findViewById(R.id.editpic);
         save = (Button) findViewById(R.id.save);
-        delete = (Button) findViewById(R.id.deleteAccount);
         load = (ProgressBar) findViewById(R.id.load);
         language = (Switch) findViewById(R.id.languageSwitch);
+
+        editName = (EditText) findViewById(R.id.editName);
+        editUser = (EditText) findViewById(R.id.editUsername);
+        editEmail = (EditText) findViewById(R.id.editEmail);
+
+        pref_session = getSharedPreferences("Session", 0);
+
+        String name = pref_session.getString("name",null);
+        String email = pref_session.getString("email",null);
+        String username = pref_session.getString("username",null);
+        String profilepic = pref_session.getString("photo",null);
+
+        String[] emailParts = username.split("@");
+        String user =  emailParts[1];
+
+        if (profilepic!=null) {
+            Uri photo = Uri.parse(profilepic);
+            Picasso.with(context).load(photo).into(editPic);
+        }
+
+        editUser.setText(user);
+        editEmail.setText(email);
+        editName.setText(name);
+
+
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
     }
 
     private void galleryIntent() {
@@ -96,25 +121,26 @@ public class EditProfile extends AppCompatActivity {
 
     private void onSelectFromGalleryResult(Intent data) {
 
-        Bitmap bm=null;
+        Bitmap bm;
         if (data != null) {
             try {
-                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                bm = MediaStore.Images.Media.getBitmap(getApplicationContext()
+                        .getContentResolver(), data.getData());
+                editPic.setImageBitmap(bm);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        editPic.setImageBitmap(bm);
     }
 
     public void editProfilePicture(View view){
         CharSequence uploadType[] = new CharSequence[] {
                 getString(R.string.picture),getString(R.string.gallery) };
-        AlertDialog.Builder builder = new AlertDialog.Builder(EditProfile.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
         builder.setItems(uploadType, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == 0){
+            public void onClick(DialogInterface dialog, int select) {
+                if (select == 0){
                     cameraIntent();
                 }else{
                     galleryIntent();
@@ -125,7 +151,7 @@ public class EditProfile extends AppCompatActivity {
     }
 
     public void deleteAccount (View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder(EditProfile.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
         builder.setMessage(R.string.confirm_message);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -140,11 +166,13 @@ public class EditProfile extends AppCompatActivity {
                         }
                     });
                 }
-                SharedPreferences.Editor session_preferences = getSharedPreferences("Session", 0).edit().clear();
+                SharedPreferences.Editor session_preferences = getSharedPreferences("Session", 0)
+                        .edit().clear();
                 session_preferences.apply();
-                SharedPreferences.Editor tour_preferences = getSharedPreferences("Tour", 0).edit().clear();
+                SharedPreferences.Editor tour_preferences = getSharedPreferences("Tour", 0)
+                        .edit().clear();
                 tour_preferences.apply();
-                startActivity(new Intent(EditProfile.this, MainActivity.class)
+                startActivity(new Intent(EditProfileActivity.this, MainActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));

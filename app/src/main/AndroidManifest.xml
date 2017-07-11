@@ -71,11 +71,11 @@
             android:screenOrientation="portrait" />
         <activity android:name=".PasswordRestoreActivity" />
         <activity
-            android:name=".CameraActivity"
+            android:name=".CustomCameraActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".EditProfile"
+            android:name=".EditProfileActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
@@ -86,7 +86,10 @@
             android:name=".UserProfileActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
-        <activity android:name=".PasswordChangeActivity"/>
+        <activity android:name=".PasswordChangeActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".GameProfileActivity"/>
     </application>
 
 </manifest>

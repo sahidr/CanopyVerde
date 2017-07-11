@@ -164,7 +164,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/view"
-        android:onClick="imageView"
+        android:onClick="imagePreview"
         android:layout_marginTop="15dp"
         android:src="@drawable/ojo_big"
         android:layout_below="@+id/treeType"

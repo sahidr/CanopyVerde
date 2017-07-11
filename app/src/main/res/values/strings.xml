@@ -64,6 +64,8 @@
     <string name="tree_type">Tipo de árbol</string>
     <string name="image">Imagen</string>
     <string name="location_example">Av. Principal de los Cortijos, Caracas, Venezuela</string>
+    <string name="use">Usar</string>
+    <string name="retake">Capturar</string>
 
     <!--    Edit Profile    -->
     <string name="save">Guardar</string>

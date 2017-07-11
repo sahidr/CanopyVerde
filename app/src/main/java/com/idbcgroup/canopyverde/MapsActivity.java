@@ -43,6 +43,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -56,7 +57,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private SharedPreferences pref_marker;
     private Boolean approved;
     private MapStyleOptions style;
-    private LatLng marker;
     private Context context;
     private Bitmap m_tree, m_user;
     private String m_date,m_type,m_size, m_status, m_username, m_location;
@@ -66,7 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView populationDensity;
     private RelativeLayout stats;
     private SharedPreferences pref_session;
-
+    private ArrayList<LatLng> markers;
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
 
     LatLng l1 = new LatLng(10.492037, -66.827096);
@@ -86,7 +86,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // These are both viewgroups containing an ImageView with id "badge" and two TextViews with id
         // "title" and "snippet".
         private final View mWindow;
-
 
         CustomInfoWindowAdapter() {
             mWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
@@ -160,6 +159,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         context = this;
+
+
+        markers = new ArrayList<>();
+
+        for (int i=0; i<l.length;i++) markers.add(l[i]);
+
+
         // Obtain the SupportMapFragment and get notified when the map_circle is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -218,9 +224,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 R.drawable.map_circle), 0,0, color);
 
 
-        for (int i = 0; i < l.length; i++) {
+        for (int i = 0; i < markers.size(); i++) {
             mMap.addMarker(new MarkerOptions()
-                    .position(l[i])
+                    .position(markers.get(i))
                     .title("@username")
                     .snippet(getString(R.string.verified))
                     .icon(BitmapDescriptorFactory.fromBitmap(green_point_scaled))
@@ -256,24 +262,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
 
+                pref_marker = getSharedPreferences("Marker", 0);
                 SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
+                approved  = pref_marker.getBoolean("approved",false);
                 BitmapDrawable yellow_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_amarillo);
                 Bitmap yellow_point_scaled = Bitmap.createScaledBitmap(yellow_point.getBitmap(),WIDTH, HEIGHT, false);
                 //editor1.putBoolean("approved", false);
                 editor1.putLong( "lat", Double.doubleToRawLongBits( cameraPosition.target.latitude));
                 editor1.putLong( "long", Double.doubleToRawLongBits(cameraPosition.target.longitude ));
                 editor1.apply();
-
-                //marker = new LatLng(cameraPosition.target.latitude,cameraPosition.target.longitude);
-
-                pref_marker = getSharedPreferences("Marker", 0);
-
-                approved  = pref_marker.getBoolean("approved",false);
-
                 if (approved) {
                     double lat = Double.longBitsToDouble( pref_marker.getLong( "lat", -1 ));
                     double lon = Double.longBitsToDouble( pref_marker.getLong( "long", -1 ));
                     LatLng latLng = new LatLng( lat,lon);
+                    markers.add(latLng);
 
                     mMap.addMarker(new MarkerOptions()
                             .position(latLng)
@@ -286,7 +288,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     editor1.putBoolean("approved", false);
                     editor1.apply();
                 }
-
             }
         });
 
@@ -351,7 +352,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void cameraView(View view){
-        //startActivity(new Intent (MapsActivity.this, CameraActivity.class));
        cameraIntent();
     }
 
@@ -365,15 +365,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 0)
-                onCaptureImageResult(data);
+            Intent i = new Intent(MapsActivity.this,GreenPointRegisterActivity.class);
+            i.putExtras(data);
+            startActivity(i);
         }
-    }
-
-    private void onCaptureImageResult(Intent data) {
-        Intent i = new Intent(MapsActivity.this,GreenPointRegisterActivity.class);
-        i.putExtras(data);
-        startActivity(i);
     }
 
     public void profileView (View view){

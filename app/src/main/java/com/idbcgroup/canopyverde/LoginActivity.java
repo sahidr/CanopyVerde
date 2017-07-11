@@ -315,7 +315,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.putBoolean("logged",true);
             editor.putString("name","Sahid Reyes");
             editor.putString("email",email_text);
-            editor.putString("username","sahid_r");
+            editor.putString("username","@sahid_r");
             editor.apply();
 
             finish();

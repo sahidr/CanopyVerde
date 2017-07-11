@@ -3,25 +3,18 @@ package com.idbcgroup.canopyverde;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,7 +28,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     private String latlng;
     private TextView current_location;
     private int MAX_LINES = 2;
-
+    private ImageView photocapture;
     Bitmap thumbnail;
 
     @Override
@@ -51,6 +44,16 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         pref_marker = getSharedPreferences("Marker", 0);
         double lat = Double.longBitsToDouble( pref_marker.getLong( "lat", -1 ));
         double lon = Double.longBitsToDouble( pref_marker.getLong( "long", -1 ));
+
+        Bundle extras = getIntent().getExtras();
+
+        if(extras == null) {
+            thumbnail= null;
+        } else {
+            thumbnail = (Bitmap) getIntent().getExtras().get("data");
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        }
 
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses = null;
@@ -73,39 +76,29 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
     }
 
-    public void imageView (View view){
+    public void imagePreview (View view){
 
         final Dialog dialog = new Dialog(GreenPointRegisterActivity.this);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(getLayoutInflater().inflate(R.layout.dialog, null));
+        dialog.setContentView(getLayoutInflater().inflate(R.layout.image_preview,null));
 
-        ImageView photocapture = (ImageView) dialog.findViewById(R.id.photocaptured);
+        photocapture = (ImageView) dialog.findViewById(R.id.photocaptured);
 
-        Button ok = (Button) dialog.findViewById(R.id.ok);
-        Button cancel = (Button) dialog.findViewById(R.id.cancel);
+        Button use = (Button) dialog.findViewById(R.id.use);
+        Button retake = (Button) dialog.findViewById(R.id.retake);
+        photocapture.setImageBitmap(thumbnail);
 
-        Bundle extras = getIntent().getExtras();
-
-        if(extras == null) {
-            thumbnail= null;
-        } else {
-            thumbnail = (Bitmap) getIntent().getExtras().get("data");
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            photocapture.setImageBitmap(thumbnail);
-        }
-
-        ok.setOnClickListener(new View.OnClickListener() {
+        use.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
+        retake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                cameraIntent();
             }
         });
 
@@ -113,11 +106,28 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
     }
 
+    private void cameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            thumbnail = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            assert thumbnail != null;
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            photocapture.setImageBitmap(thumbnail);
+        }
+    }
+
     public void yellowPointRegister(View view){
         SharedPreferences.Editor editor = getSharedPreferences("Marker", 0).edit();
         editor.putBoolean("approved", true);
         editor.apply();
-        //startActivity(new Intent(GreenPointRegisterActivity.this, MapsActivity.class));
         finish();
     }
 

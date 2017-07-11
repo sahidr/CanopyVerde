@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
-public class CameraActivity extends AppCompatActivity {
+public class CustomCameraActivity extends AppCompatActivity {
     private Camera mCamera = null;
     private CameraView mCameraView = null;
     private ImageButton imgBack;
@@ -69,12 +69,12 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 /*if (message == "MAPS") {
-                    Intent i = new Intent(CameraActivity.this,GreenPointRegisterActivity.class);
+                    Intent i = new Intent(CustomCameraActivity.this,GreenPointRegisterActivity.class);
                     startActivity(i);
                 } else {
                     finish();
                 }*/
-                Intent i = new Intent(CameraActivity.this,GreenPointRegisterActivity.class);
+                Intent i = new Intent(CustomCameraActivity.this,GreenPointRegisterActivity.class);
                 startActivity(i);
                 finish();
             }
