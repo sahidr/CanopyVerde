@@ -77,8 +77,6 @@ public class EditProfileActivity extends AppCompatActivity {
         editEmail.setText(email);
         editName.setText(name);
 
-
-
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -25,16 +25,16 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class GreenPointRegisterActivity extends AppCompatActivity {
 
     private SharedPreferences pref_marker;
-    private String latlng;
     private TextView current_location;
     private int MAX_LINES = 2;
-    private ImageView photocapture;
+    private ImageView photoCapture;
     Bitmap thumbnail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_green_point_register);
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/TitilliumWeb-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
@@ -62,7 +62,8 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
             addresses = geocoder.getFromLocation(lat, lon, MAX_LINES);
             String address = addresses.get(0).getAddressLine(0);
-            // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            // If any additional address line present than only,
+            // check with max available address lines by getMaxAddressLineIndex()
             String address1 = addresses.get(1).getAddressLine(0);
             String city = addresses.get(0).getLocality();
             String state = addresses.get(0).getAdminArea();
@@ -73,7 +74,6 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void imagePreview (View view){
@@ -82,11 +82,11 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(getLayoutInflater().inflate(R.layout.image_preview,null));
 
-        photocapture = (ImageView) dialog.findViewById(R.id.photocaptured);
+        photoCapture = (ImageView) dialog.findViewById(R.id.photocaptured);
 
         Button use = (Button) dialog.findViewById(R.id.use);
         Button retake = (Button) dialog.findViewById(R.id.retake);
-        photocapture.setImageBitmap(thumbnail);
+        photoCapture.setImageBitmap(thumbnail);
 
         use.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,9 +101,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
                 cameraIntent();
             }
         });
-
         dialog.show();
-
     }
 
     private void cameraIntent() {
@@ -120,14 +118,13 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             assert thumbnail != null;
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            photocapture.setImageBitmap(thumbnail);
+            photoCapture.setImageBitmap(thumbnail);
         }
     }
 
     public void yellowPointRegister(View view){
-        SharedPreferences.Editor editor = getSharedPreferences("Marker", 0).edit();
-        editor.putBoolean("approved", true);
-        editor.apply();
+        Intent i = getIntent();
+        setResult(RESULT_OK, i);
         finish();
     }
 

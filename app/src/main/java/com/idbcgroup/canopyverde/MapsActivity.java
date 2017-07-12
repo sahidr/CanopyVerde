@@ -16,6 +16,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -55,7 +56,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private SharedPreferences pref_marker;
-    private Boolean approved;
     private MapStyleOptions style;
     private Context context;
     private Bitmap m_tree, m_user;
@@ -68,6 +68,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private SharedPreferences pref_session;
     private ArrayList<LatLng> markers;
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
+    private int CAMERA = 0;
+    private int GREEN_POINT_REGISTER = 1;
 
     LatLng l1 = new LatLng(10.492037, -66.827096);
     LatLng l2 = new LatLng(10.492330, -66.827681);
@@ -79,12 +81,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng l8 = new LatLng(10.475043, -66.954308);
     LatLng[] l = {l1,l2,l3,l4,l5,l6,l7,l8};
 
-
     /** Demonstrates customizing the info window and/or its contents. */
     private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
-        // These are both viewgroups containing an ImageView with id "badge" and two TextViews with id
-        // "title" and "snippet".
         private final View mWindow;
 
         CustomInfoWindowAdapter() {
@@ -125,32 +124,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             type.setText(m_type);
             size.setText(m_size);
 
-            Calendar c = Calendar.getInstance();
-            System.out.println("Current time => " + c.getTime());
-
+            Calendar calendar = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy",Locale.US);
-            String formattedDate = df.format(c.getTime());
-
+            String formattedDate = df.format(calendar.getTime());
 
             if (m_status.equals(getString(R.string.verified))){
                 status.setTextColor(getResources().getColor(R.color.colorCanopy));
                 user.setText("@idbcuser");
                 profile.setImageResource(R.drawable.btn_locate);
                 date.setText(m_date);
-
             } else {
-
                 status.setTextColor(getResources().getColor(R.color.yellow));
                 user.setText(username);
                 date.setText(formattedDate);
-
                 if (profilepic!=null) {
                     Uri photo = Uri.parse(profilepic);
                     Picasso.with(MapsActivity.this).load(photo).into(profile);
                 }
             }
             status.setText(m_status);
-
         }
     }
 
@@ -160,11 +152,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         context = this;
 
-
         markers = new ArrayList<>();
 
         for (int i=0; i<l.length;i++) markers.add(l[i]);
-
 
         // Obtain the SupportMapFragment and get notified when the map_circle is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -208,21 +198,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowCloseListener(this);
 
         BitmapDrawable green_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_verde);
-        Bitmap green_point_scaled = Bitmap.createScaledBitmap(green_point.getBitmap(),WIDTH, HEIGHT, false);
-
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        Bitmap bmp = Bitmap.createBitmap(80, 80, conf);
-        Canvas canvas1 = new Canvas(bmp);
-
-// paint defines the text color, stroke width and size
-        Paint color = new Paint();
-        color.setTextSize(35);
-        color.setColor(Color.BLACK);
-
-// modify canvas
-        canvas1.drawBitmap(BitmapFactory.decodeResource(getResources(),
-                R.drawable.map_circle), 0,0, color);
-
+        Bitmap green_point_scaled = Bitmap
+                .createScaledBitmap(green_point.getBitmap(),WIDTH, HEIGHT, false);
 
         for (int i = 0; i < markers.size(); i++) {
             mMap.addMarker(new MarkerOptions()
@@ -230,13 +207,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .title("@username")
                     .snippet(getString(R.string.verified))
                     .icon(BitmapDescriptorFactory.fromBitmap(green_point_scaled))
-                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.locator))
-                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.p_verde1))
                     .anchor(0.5f, 0.4f)
             );
         }
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat
+                .checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat
+                .checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -257,42 +236,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         MarkerOptions m = new MarkerOptions();
         m.anchor(0.5f, 0.5f);
-
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-
-                pref_marker = getSharedPreferences("Marker", 0);
-                SharedPreferences.Editor editor1 = getSharedPreferences("Marker", 0).edit();
-                approved  = pref_marker.getBoolean("approved",false);
-                BitmapDrawable yellow_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_amarillo);
-                Bitmap yellow_point_scaled = Bitmap.createScaledBitmap(yellow_point.getBitmap(),WIDTH, HEIGHT, false);
-                //editor1.putBoolean("approved", false);
-                editor1.putLong( "lat", Double.doubleToRawLongBits( cameraPosition.target.latitude));
-                editor1.putLong( "long", Double.doubleToRawLongBits(cameraPosition.target.longitude ));
-                editor1.apply();
-                if (approved) {
-                    double lat = Double.longBitsToDouble( pref_marker.getLong( "lat", -1 ));
-                    double lon = Double.longBitsToDouble( pref_marker.getLong( "long", -1 ));
-                    LatLng latLng = new LatLng( lat,lon);
-                    markers.add(latLng);
-
-                    mMap.addMarker(new MarkerOptions()
-                            .position(latLng)
-                            .snippet(getString(R.string.not_verified))
-                            .title("TREE")
-                            .icon(BitmapDescriptorFactory.fromBitmap(yellow_point_scaled))
-                            .anchor(0.5f, 0.4f)
-                    );
-
-                    editor1.putBoolean("approved", false);
-                    editor1.apply();
-                }
-            }
-        });
-
     }
-
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -321,7 +265,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if(!gps_enabled && !network_enabled) {
             // notify user
-            AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+            final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
             dialog.setTitle(context.getResources().getString(R.string.gps_network_not_enabled));
             dialog.setMessage(context.getResources().getString(R.string.enable_location));
             dialog.setPositiveButton(context.getResources().getString(R.string.open_location_settings),
@@ -329,22 +273,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
 
-                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    context.startActivity(myIntent);
-                    //get gps
+                    //Open OS Location Settings
+                    Intent enableLocation = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    context.startActivity(enableLocation);
                 }
             });
             dialog.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-
                 @Override
-                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-
+                public void onClick(DialogInterface dialogInterface, int paramInt) {
+                    dialogInterface.dismiss();
                 }
             });
             dialog.show();
         } else {
             try {
-                LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude());
+                LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(),
+                        mMap.getMyLocation().getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
                 mMap.animateCamera(cameraUpdate);
             } catch (Exception e){ Log.d("GPS","Location Error");}
@@ -352,22 +296,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void cameraView(View view){
-       cameraIntent();
+        CameraPosition cameraPosition = mMap.getCameraPosition();
+        SharedPreferences.Editor markerEditor = getSharedPreferences("Marker", 0).edit();
+        markerEditor.putLong("lat", Double.doubleToRawLongBits(cameraPosition.target.latitude));
+        markerEditor.putLong("long",Double.doubleToRawLongBits(cameraPosition.target.longitude));
+        markerEditor.apply();
+        cameraIntent();
     }
 
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent,0);
+        startActivityForResult(intent,CAMERA);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK) {
-            Intent i = new Intent(MapsActivity.this,GreenPointRegisterActivity.class);
-            i.putExtras(data);
-            startActivity(i);
+        if (requestCode == CAMERA){
+            if (resultCode == Activity.RESULT_OK) {
+                Intent i = new Intent(MapsActivity.this,GreenPointRegisterActivity.class);
+                i.putExtras(data);
+                startActivityForResult(i,GREEN_POINT_REGISTER);
+            }
+        } else if (requestCode == GREEN_POINT_REGISTER){
+            pref_marker = getSharedPreferences("Marker", 0);
+            BitmapDrawable yellow_point=(BitmapDrawable)getResources()
+                    .getDrawable(R.drawable.p_amarillo);
+            Bitmap yellow_point_scaled = Bitmap
+                    .createScaledBitmap(yellow_point.getBitmap(),WIDTH, HEIGHT, false);
+            if (resultCode == Activity.RESULT_OK) {
+                double lat = Double.longBitsToDouble(pref_marker.getLong("lat", -1));
+                double lon = Double.longBitsToDouble(pref_marker.getLong("long", -1));
+                LatLng latLng = new LatLng(lat, lon);
+                markers.add(latLng);
+                mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .snippet(getString(R.string.not_verified))
+                        .title("TREE")
+                        .icon(BitmapDescriptorFactory.fromBitmap(yellow_point_scaled))
+                        .anchor(0.5f, 0.4f)
+                );
+            }
         }
     }
 

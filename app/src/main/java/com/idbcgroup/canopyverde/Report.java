@@ -5,6 +5,9 @@ import java.util.Date;
 public class Report {
 
     private int status;
+        //RED 0
+        //YELLOW 1
+        //GREEN 2
     private String treeType;
     private String location;
     private String date;
