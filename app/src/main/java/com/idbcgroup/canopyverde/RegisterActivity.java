@@ -2,6 +2,7 @@ package com.idbcgroup.canopyverde;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -24,8 +25,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collection;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static java.util.Collections.sort;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -79,7 +84,6 @@ public class RegisterActivity extends AppCompatActivity {
         email_field = email_text.length() != 0
                 && android.util.Patterns.EMAIL_ADDRESS.matcher(email_text).matches();
         password_field = password_text.length() >= 8;
-
         country_field = !country.getSelectedItem().toString().equals("País");
         city_field = !city.getSelectedItem().toString().equals("Ciudad");
 
@@ -90,8 +94,6 @@ public class RegisterActivity extends AppCompatActivity {
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
             finish();
-        } else {
-            //Toast.makeText(getBaseContext(),"Fields must be filled",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -105,10 +107,6 @@ public class RegisterActivity extends AppCompatActivity {
             email.setError(getString(R.string.email_valid));
         //if(!password_field)
         //    password.setError(getString(R.string.password_valid));
-        //if(!country_field)
-        // Toast.makeText(getBaseContext(),"Choose a Country",Toast.LENGTH_SHORT).show();
-        //if(!city_field)
-        //Toast.makeText(getBaseContext(),"Choose a City",Toast.LENGTH_SHORT).show();
         return (fullname_field && username_field && email_field && password_field && country_field
                 && city_field);
     }
@@ -221,8 +219,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private class GetData extends AsyncTask <Void, Void, ArrayList<String>> {
 
-        URLConnection country_city;
-
         @Override
         protected ArrayList<String> doInBackground(Void... params) {
 
@@ -243,6 +239,10 @@ public class RegisterActivity extends AppCompatActivity {
                     String country = countries.get(i).toString();
                     countryList.add(country);
                 }
+                sort(countryList);
+                countryList.remove("País");
+                countryList.add(0,"País");
+
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
@@ -252,11 +252,10 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<String> result) {
 
-            ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+            final ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(RegisterActivity.this,
                     R.layout.spinner_item, result);
             countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             country.setAdapter(countryAdapter);
-
             country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -264,10 +263,8 @@ public class RegisterActivity extends AppCompatActivity {
                     try {
                         if (position!=0){
                             ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.fontColor));
-                            //parent.setBackgroundColor(getResources().getColor(R.color.fontColor));
-
-                            // Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+" Selected", Toast.LENGTH_SHORT).show();
                         }
+
                         JSONArray cities = countriesAndCities.getJSONArray(countryList.get(position));
 
                         if (!citiesList.isEmpty()) citiesList.clear();
@@ -276,6 +273,7 @@ public class RegisterActivity extends AppCompatActivity {
                             String city = cities.get(i).toString();
                             citiesList.add(city);
                         }
+                        sort(citiesList);
 
                         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(RegisterActivity.this,
                                 R.layout.spinner_item, citiesList);
@@ -287,7 +285,6 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 if (!parent.getItemAtPosition(position).toString().equals("Ciudad")){
                                     ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.fontColor));
-                                    // Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+" Selected", Toast.LENGTH_SHORT).show();
                                 }
                             }
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -164,12 +165,16 @@ public class EditProfileActivity extends AppCompatActivity {
                         }
                     });
                 }
+
+                MapStateManager map_preferences = new MapStateManager(getBaseContext());
+                map_preferences.deletePreferences();
                 SharedPreferences.Editor session_preferences = getSharedPreferences("Session", 0)
                         .edit().clear();
                 session_preferences.apply();
                 SharedPreferences.Editor tour_preferences = getSharedPreferences("Tour", 0)
                         .edit().clear();
                 tour_preferences.apply();
+
                 startActivity(new Intent(EditProfileActivity.this, MainActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

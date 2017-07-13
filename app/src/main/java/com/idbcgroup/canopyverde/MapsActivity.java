@@ -28,6 +28,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,6 +48,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -153,13 +156,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         context = this;
 
         markers = new ArrayList<>();
-
-        for (int i=0; i<l.length;i++) markers.add(l[i]);
-
-        // Obtain the SupportMapFragment and get notified when the map_circle is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        Collections.addAll(markers, l);
 
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US); //Italian
         formatter.setMaximumFractionDigits(1);
@@ -176,6 +173,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String density = getResources().getString(R.string.density, formatter.format(pop_density));
         populationDensity.setText(density);
 
+        setupMapIfNeeded();
+
+    }
+
+    private void setupMapIfNeeded() {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        if (mMap == null) {
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        }
     }
 
     /**
@@ -196,6 +204,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnInfoWindowCloseListener(this);
+
+        MapStateManager mgr = new MapStateManager(this);
+        CameraPosition position = mgr.getSavedCameraPosition();
+        if (position != null) {
+            CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
+            mMap.moveCamera(update);
+            mMap.setMapType(mgr.getSavedMapType());
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
+        }
 
         BitmapDrawable green_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_verde);
         Bitmap green_point_scaled = Bitmap
@@ -232,10 +250,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMinZoomPreference(12);
         mMap.setMaxZoomPreference(22);
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
 
         MarkerOptions m = new MarkerOptions();
         m.anchor(0.5f, 0.5f);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MapStateManager mgr = new MapStateManager(this);
+        mgr.saveMapState(mMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupMapIfNeeded();
     }
 
     @Override
@@ -272,7 +302,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-
                     //Open OS Location Settings
                     Intent enableLocation = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     context.startActivity(enableLocation);

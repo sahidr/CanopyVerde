@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
@@ -178,8 +179,10 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     public void logout(View view){
-        SharedPreferences.Editor preferences = getSharedPreferences("Session", 0).edit().clear();
-        preferences.apply();
+        SharedPreferences.Editor session_preferences = getSharedPreferences("Session", 0).edit().clear();
+        session_preferences.apply();
+        MapStateManager map_preferences = new MapStateManager(getBaseContext());
+        map_preferences.deletePreferences();
         Intent i = new Intent(UserProfileActivity.this,MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
