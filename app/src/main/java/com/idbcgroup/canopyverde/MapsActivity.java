@@ -1,7 +1,5 @@
 package com.idbcgroup.canopyverde;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,14 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -28,8 +21,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,8 +33,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
-
-import java.io.ByteArrayOutputStream;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,17 +51,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MapStyleOptions style;
     private Context context;
     private Bitmap m_tree, m_user;
-    private String m_date,m_type,m_size, m_status, m_username, m_location;
-    private int HEIGHT = 30;
-    private int WIDTH = 30;
-    private TextView greenIndex;
-    private TextView populationDensity;
+    private String m_date,m_type,m_size, m_username, m_location, m_image;
+    private int m_status;
+    private TextView greenIndex, populationDensity;
     private RelativeLayout stats;
     private SharedPreferences pref_session;
     private ArrayList<LatLng> markers;
+    private int counter = 0;
+
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
-    private int CAMERA = 0;
-    private int GREEN_POINT_REGISTER = 1;
+    private static int HEIGHT = 32;
+    private static int WIDTH = 32;
+    private static int REQUEST_CAMERA = 0;
+    private static int REQUEST_GREEN_POINT_REGISTER = 1;
 
     LatLng l1 = new LatLng(10.492037, -66.827096);
     LatLng l2 = new LatLng(10.492330, -66.827681);
@@ -106,46 +97,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         private void render(Marker marker, View view) {
 
-            m_date = "26/06/17";
-            m_type = "Araguaney";
-            m_size = "Mediano";
-            m_status = marker.getSnippet(); //"Verificado";
+            GreenPoint gp = (GreenPoint) marker.getTag();
+            assert gp != null;
+            m_status = gp.getStatus();
+            m_date = gp.getDate();
+            m_type = gp.getTreeType();
+            m_username = gp.getUser();
+            m_location = gp.getLocation();
+            m_image = gp.getImage();
 
-            // ImageView tree = (ImageView) view.findViewById(R.id.treePic);
+            //ImageView tree = (ImageView) view.findViewById(R.id.treePic);
             CircleImageView profile = (CircleImageView) view.findViewById(R.id.profile);
             TextView user = (TextView) view.findViewById(R.id.user);
             TextView date = (TextView) view.findViewById(R.id.p_date);
             TextView type = (TextView) view.findViewById(R.id.p_type);
             TextView size = (TextView) view.findViewById(R.id.p_size);
             TextView status = (TextView) view.findViewById(R.id.p_status);
-            // TextView location = (TextView) view.findViewById(R.id.location);
+            TextView location = (TextView) view.findViewById(R.id.location);
 
-            pref_session = getSharedPreferences("Session", 0);
-            String profilepic = pref_session.getString("photo",null);
-            String username = pref_session.getString("username",null);
-
+            user.setText(m_username);
+            date.setText(m_date);
             type.setText(m_type);
             size.setText(m_size);
+            location.setText(m_location);
 
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy",Locale.US);
-            String formattedDate = df.format(calendar.getTime());
-
-            if (m_status.equals(getString(R.string.verified))){
-                status.setTextColor(getResources().getColor(R.color.colorCanopy));
-                user.setText("@idbcuser");
+            if (m_image.equals("image")){
                 profile.setImageResource(R.drawable.btn_locate);
-                date.setText(m_date);
             } else {
-                status.setTextColor(getResources().getColor(R.color.yellow));
-                user.setText(username);
-                date.setText(formattedDate);
-                if (profilepic!=null) {
-                    Uri photo = Uri.parse(profilepic);
-                    Picasso.with(MapsActivity.this).load(photo).into(profile);
-                }
+                Uri photo = Uri.parse(m_image);
+                Picasso.with(MapsActivity.this).load(photo).into(profile);
             }
-            status.setText(m_status);
+
+            if (m_status == 0){
+                status.setTextColor(getResources().getColor(R.color.pink));
+                status.setText("RED");
+            } else if (m_status == 1) {
+                status.setTextColor(getResources().getColor(R.color.yellow));
+                status.setText(getString(R.string.not_verified));
+            } else if (m_status == 2){
+                status.setTextColor(getResources().getColor(R.color.colorCanopy));
+                status.setText(getString(R.string.verified));
+            }
+
         }
     }
 
@@ -215,18 +208,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
         }
 
+
         BitmapDrawable green_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_verde);
         Bitmap green_point_scaled = Bitmap
                 .createScaledBitmap(green_point.getBitmap(),WIDTH, HEIGHT, false);
 
         for (int i = 0; i < markers.size(); i++) {
-            mMap.addMarker(new MarkerOptions()
+            GreenPoint g = new GreenPoint(i,"Av. Los Cortijos","14/07/1993",10,11,12,"Roble","imagen",2);
+            g.setUser("@idbcgroup");
+            Marker m = mMap.addMarker(new MarkerOptions()
                     .position(markers.get(i))
-                    .title("@username")
-                    .snippet(getString(R.string.verified))
                     .icon(BitmapDescriptorFactory.fromBitmap(green_point_scaled))
                     .anchor(0.5f, 0.4f)
             );
+            m.setTag(g);
         }
 
         if (ActivityCompat
@@ -335,20 +330,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent,CAMERA);
+        startActivityForResult(intent,REQUEST_CAMERA);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CAMERA){
+        if (requestCode == REQUEST_CAMERA){
             if (resultCode == Activity.RESULT_OK) {
                 Intent i = new Intent(MapsActivity.this,GreenPointRegisterActivity.class);
                 i.putExtras(data);
-                startActivityForResult(i,GREEN_POINT_REGISTER);
+                startActivityForResult(i,REQUEST_GREEN_POINT_REGISTER);
             }
-        } else if (requestCode == GREEN_POINT_REGISTER){
+        } else if (requestCode == REQUEST_GREEN_POINT_REGISTER){
             pref_marker = getSharedPreferences("Marker", 0);
             BitmapDrawable yellow_point=(BitmapDrawable)getResources()
                     .getDrawable(R.drawable.p_amarillo);
@@ -359,13 +354,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 double lon = Double.longBitsToDouble(pref_marker.getLong("long", -1));
                 LatLng latLng = new LatLng(lat, lon);
                 markers.add(latLng);
-                mMap.addMarker(new MarkerOptions()
+
+                String location = (String) data.getExtras().get("location");
+
+                pref_session = getSharedPreferences("Session", 0);
+                String profilepic = pref_session.getString("photo",null);
+                String username = pref_session.getString("username",null);
+
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy",Locale.US);
+                String formattedDate = df.format(calendar.getTime());
+
+                GreenPoint g1 = new GreenPoint(counter,location,formattedDate,10,11,12,"Roble",profilepic,1);
+                g1.setUser(username);
+                Marker m1 = mMap.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .snippet(getString(R.string.not_verified))
-                        .title("TREE")
                         .icon(BitmapDescriptorFactory.fromBitmap(yellow_point_scaled))
                         .anchor(0.5f, 0.4f)
                 );
+                m1.setTag(g1);
+                counter++;
             }
         }
     }

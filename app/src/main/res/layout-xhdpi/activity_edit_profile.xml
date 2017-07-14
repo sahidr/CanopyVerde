@@ -112,18 +112,12 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/languageSwitch"
         android:layout_alignEnd="@+id/confirm_password"
-        android:layout_alignLeft="@+id/confirm_password"
-        android:layout_alignRight="@+id/confirm_password"
         android:layout_alignStart="@+id/confirm_password"
         android:layout_marginBottom="15dp"
-        android:checked="false"
         android:showText="true"
-        android:splitTrack="false"
-        android:switchPadding="100dp"
         android:text="@string/notification"
         android:textOff="@string/off"
-        android:textOn="@string/on"
-        tools:checked="false" />
+        android:textOn="@string/on" />
 
     <Switch
         android:id="@+id/languageSwitch"
@@ -131,12 +125,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/save"
         android:layout_alignEnd="@+id/notificationSwitch"
-        android:layout_alignLeft="@+id/notificationSwitch"
-        android:layout_alignRight="@+id/notificationSwitch"
         android:layout_alignStart="@+id/notificationSwitch"
         android:showText="true"
-        android:splitTrack="false"
-        android:switchPadding="100dp"
         android:text="@string/language"
         android:textOff="@string/en"
         android:textOn="@string/es" />

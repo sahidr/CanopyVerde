@@ -2,7 +2,6 @@ package com.idbcgroup.canopyverde;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -13,26 +12,22 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.BufferedReader;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static java.util.Collections.sort;
 
-public class RegisterActivity extends AppCompatActivity {
+public class UserRegisterActivity extends AppCompatActivity {
 
     private EditText fullname, username, email;
     TextInputEditText password;
@@ -90,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
         verified = verifyFields(fullname_field,username_field,email_field,password_field,country_field,city_field);
 
         if (verified) {
-            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+            Intent i = new Intent(UserRegisterActivity.this, LoginActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
             finish();
@@ -153,7 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<String> result) {
 
-            ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+            ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(UserRegisterActivity.this,
                     R.layout.spinner_item, result);
             countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             country.setAdapter(countryAdapter);
@@ -176,7 +171,7 @@ public class RegisterActivity extends AppCompatActivity {
                             citiesList.add(city);
                         }
 
-                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(UserRegisterActivity.this,
                                 R.layout.spinner_item, citiesList);
 
                         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -252,7 +247,7 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<String> result) {
 
-            final ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+            final ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(UserRegisterActivity.this,
                     R.layout.spinner_item, result);
             countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             country.setAdapter(countryAdapter);
@@ -275,7 +270,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                         sort(citiesList);
 
-                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(RegisterActivity.this,
+                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(UserRegisterActivity.this,
                                 R.layout.spinner_item, citiesList);
 
                         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

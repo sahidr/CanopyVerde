@@ -51,8 +51,6 @@
         android:layout_marginTop="16dp"
         android:layout_alignStart="@+id/currentLocation" />
 
-
-
     <ImageView
         android:id="@+id/locator"
         android:layout_width="33dp"
@@ -60,7 +58,7 @@
         android:background="@drawable/locator"
         android:layout_above="@+id/currentLocation"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="129dp" />
+        android:layout_marginBottom="134dp" />
 
     <ImageButton
         android:id="@+id/currentLocation"
@@ -99,7 +97,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
         android:background="@drawable/stat_bar"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/toolbar"
+        android:layout_toStartOf="@+id/locator">
 
         <TextView
             android:id="@+id/city"
@@ -127,12 +126,11 @@
             android:id="@+id/greenView"
             android:layout_width="10dp"
             android:layout_height="10dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginStart="45dp"
             android:background="@drawable/circle_statbar"
-            android:layout_alignTop="@+id/greenViewIndex"
-            android:layout_toEndOf="@+id/greenViewIndex"
-            android:layout_marginEnd="5dp"/>
+            android:layout_marginEnd="7dp"
+            android:layout_above="@+id/view3"
+            android:layout_marginBottom="2dp"
+            android:layout_toStartOf="@+id/greenViewIndexPercent" />
 
         <TextView
             android:id="@+id/greenViewIndexPercent"

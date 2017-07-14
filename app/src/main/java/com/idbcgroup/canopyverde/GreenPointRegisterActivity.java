@@ -29,6 +29,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     private int MAX_LINES = 2;
     private ImageView photoCapture;
     Bitmap thumbnail;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +69,11 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
             String city = addresses.get(0).getLocality();
             String state = addresses.get(0).getAdminArea();
 
+            String complete_location =  address+", "+address1+", "+state+city;
+            location = address;
+
             current_location = (TextView) findViewById(R.id.location);
-            current_location.setText(address+", "+address1+", "+state+city);
+            current_location.setText(complete_location);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -124,6 +128,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
     public void yellowPointRegister(View view){
         Intent i = getIntent();
+        i.putExtra("location",location);
         setResult(RESULT_OK, i);
         finish();
     }

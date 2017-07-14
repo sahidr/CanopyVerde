@@ -89,7 +89,7 @@ public class UserProfileActivity extends AppCompatActivity {
         profileEmail.setText(email);
 
         float gamepoints = 2544;
-        String points = getResources().getString(R.string.badge, formatter.format(gamepoints), getString(R.string.u_bagde));
+        String points = getResources().getString(R.string.badge_name, formatter.format(gamepoints), getString(R.string.u_bagde));
         CharSequence styledText = Html.fromHtml(points);
         badge.setText(styledText);
 

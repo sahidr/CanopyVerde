@@ -62,7 +62,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".UserRegisterActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
