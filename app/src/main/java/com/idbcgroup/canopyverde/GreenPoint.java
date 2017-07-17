@@ -1,9 +1,5 @@
 package com.idbcgroup.canopyverde;
 
-/**
- * Created by Rogelio on 14/7/2017.
- */
-
 public class GreenPoint {
 
     private int id;
@@ -11,28 +7,13 @@ public class GreenPoint {
     private String date;
     private int canopySize;
     private int stemSize;
-    private int height;
+    private String height;
     private String treeType;
     private String image;
     private int status;
     private String user;
 
     public GreenPoint(){}
-
-    public GreenPoint(int id, String location, String date, int canopySize, int stemSize, int height,
-            String treeType, String image, int status){  //, String user){
-
-        this.id = id;
-        this.location = location;
-        this.date = date;
-        this.canopySize = canopySize;
-        this.stemSize = stemSize;
-        this.height = height;
-        this.treeType = treeType;
-        this.image = image;
-        this.status = status;
-        //this.user = user;
-    }
 
     public int getId (){
         return id;
@@ -69,6 +50,7 @@ public class GreenPoint {
     public String getDate (){
         return date;
     }
+
     public void setDate(String date){
         this.date = date;
     }
@@ -77,9 +59,7 @@ public class GreenPoint {
         return user;
     }
 
-    public void setUser(String user){
-        this.user = user;
-    }
+    public void setUser(String user) { this.user = user; }
 
     public String getImage (){
         return image;
@@ -88,5 +68,30 @@ public class GreenPoint {
     public void setImage(String image){
         this.image = image;
     }
+
+    public String getHeight (){
+        return height;
+    }
+
+    public void setHeight(String height){
+        this.height = height;
+    }
+
+    public int getCanopySize (){
+        return canopySize;
+    }
+
+    public void setCanopySize(int canopy){
+        this.canopySize = canopy;
+    }
+
+    public int getStemSize (){
+        return stemSize;
+    }
+
+    public void setStemSize(int stem){
+        this.stemSize = stem;
+    }
+
 
 }

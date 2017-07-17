@@ -13,8 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,6 +32,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     private ImageView photoCapture;
     Bitmap thumbnail;
     private String location;
+    private Spinner canopySize,stemSize,heightSpinner,treeType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public void imagePreview (View view){
@@ -127,8 +131,27 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     }
 
     public void yellowPointRegister(View view){
+
+        canopySize = (Spinner) findViewById(R.id.canopySize);
+        String canopy  = (String) canopySize.getSelectedItem();
+
+        heightSpinner = (Spinner) findViewById(R.id.height);
+        String height = (String) heightSpinner.getSelectedItem();
+
+        stemSize = (Spinner) findViewById(R.id.stemSize);
+        String stem  = (String) stemSize.getSelectedItem();
+
+        treeType = (Spinner) findViewById(R.id.treeType);
+        String type  = (String) treeType.getSelectedItem();
+
+        //LOAD DATA INTO DATABASE
+
         Intent i = getIntent();
         i.putExtra("location",location);
+        i.putExtra("canopy",canopy);
+        i.putExtra("stem",stem);
+        i.putExtra("height", height);
+        i.putExtra("type",type);
         setResult(RESULT_OK, i);
         finish();
     }

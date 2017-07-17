@@ -18,9 +18,10 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.github.siyamed.shapeimageview.CircularImageView;
+import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,8 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Locale;
-
-import de.hdodenhof.circleimageview.CircleImageView;
+import java.util.Objects;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowCloseListener,
@@ -51,7 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MapStyleOptions style;
     private Context context;
     private Bitmap m_tree, m_user;
-    private String m_date,m_type,m_size, m_username, m_location, m_image;
+    private String m_date,m_type,m_size, m_location, m_image, m_email, m_profile;
     private int m_status;
     private TextView greenIndex, populationDensity;
     private RelativeLayout stats;
@@ -60,6 +60,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int counter = 0;
 
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
+    private static int MAX_FRACTION_DIGITS = 1;
+    private static final int REQUESTED = 0;
+    private static final int UNVERIFIED = 1;
+    private static final int VERIFIED = 2;
     private static int HEIGHT = 32;
     private static int WIDTH = 32;
     private static int REQUEST_CAMERA = 0;
@@ -97,17 +101,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         private void render(Marker marker, View view) {
 
-            GreenPoint gp = (GreenPoint) marker.getTag();
+            GreenPoint gp = (GreenPoint) marker.getTag();  //GREEN POINT DATA
             assert gp != null;
             m_status = gp.getStatus();
             m_date = gp.getDate();
             m_type = gp.getTreeType();
-            m_username = gp.getUser();
+            m_email = gp.getUser();
             m_location = gp.getLocation();
             m_image = gp.getImage();
+            m_size = gp.getHeight();
 
-            //ImageView tree = (ImageView) view.findViewById(R.id.treePic);
-            CircleImageView profile = (CircleImageView) view.findViewById(R.id.profile);
+            PorterShapeImageView tree = (PorterShapeImageView) view.findViewById(R.id.treePic);
+            PorterShapeImageView profile = (PorterShapeImageView) view.findViewById(R.id.profile);
             TextView user = (TextView) view.findViewById(R.id.user);
             TextView date = (TextView) view.findViewById(R.id.p_date);
             TextView type = (TextView) view.findViewById(R.id.p_type);
@@ -115,30 +120,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             TextView status = (TextView) view.findViewById(R.id.p_status);
             TextView location = (TextView) view.findViewById(R.id.location);
 
-            user.setText(m_username);
-            date.setText(m_date);
-            type.setText(m_type);
-            size.setText(m_size);
-            location.setText(m_location);
+            // from email get username and profile pic
 
-            if (m_image.equals("image")){
+            pref_session = getSharedPreferences("Session", 0);
+            m_profile = pref_session.getString("photo",null);
+
+            String username = pref_session.getString("username",null);
+
+            if (m_email.equals("@idbcgroup")) {
+                user.setText(m_email);
                 profile.setImageResource(R.drawable.btn_locate);
-            } else {
-                Uri photo = Uri.parse(m_image);
+            }else {
+                user.setText(username);
+                Uri photo = Uri.parse(m_profile);
                 Picasso.with(MapsActivity.this).load(photo).into(profile);
             }
+            date.setText(m_date);
+            type.setText(m_type);
+            size.setText(m_size+" m");
+            location.setText(m_location);
 
-            if (m_status == 0){
+            if (m_image.equals("none")){
+                tree.setImageResource(R.drawable.araguaney);
+            } else {
+                Uri photo = Uri.parse(m_image);
+                Picasso.with(MapsActivity.this).load(photo).into(tree);
+            }
+
+            if (m_status == REQUESTED){
                 status.setTextColor(getResources().getColor(R.color.pink));
                 status.setText("RED");
-            } else if (m_status == 1) {
+            } else if (m_status == UNVERIFIED) {
                 status.setTextColor(getResources().getColor(R.color.yellow));
                 status.setText(getString(R.string.not_verified));
-            } else if (m_status == 2){
+            } else if (m_status == VERIFIED){
                 status.setTextColor(getResources().getColor(R.color.colorCanopy));
                 status.setText(getString(R.string.verified));
             }
-
         }
     }
 
@@ -151,14 +169,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markers = new ArrayList<>();
         Collections.addAll(markers, l);
 
-        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US); //Italian
-        formatter.setMaximumFractionDigits(1);
-
         stats = (RelativeLayout) findViewById(R.id.stats);
+        greenIndex = (TextView) findViewById(R.id.greenViewIndexPercent);
+
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US); //Italian for Latin
+        formatter.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
 
         float green_index = (float) 100.001;
         float pop_density = (float) 100000;
-        greenIndex = (TextView) findViewById(R.id.greenViewIndexPercent);
+
         String percent = getResources().getString(R.string.percent, formatter.format(green_index));
         greenIndex.setText(percent+"%");
 
@@ -208,20 +227,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
         }
 
-
+        // DUMMY MARKERS
         BitmapDrawable green_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_verde);
         Bitmap green_point_scaled = Bitmap
                 .createScaledBitmap(green_point.getBitmap(),WIDTH, HEIGHT, false);
+        GreenPoint gp = new GreenPoint();
+        gp.setLocation("Av. Los Cortijos");
+        gp.setDate("14/07/1993");
+        gp.setHeight("2");
+        gp.setTreeType("Araguaney");
+        gp.setImage("none");
+        gp.setStatus(VERIFIED);
+        gp.setUser("@idbcgroup");
 
         for (int i = 0; i < markers.size(); i++) {
-            GreenPoint g = new GreenPoint(i,"Av. Los Cortijos","14/07/1993",10,11,12,"Roble","imagen",2);
-            g.setUser("@idbcgroup");
             Marker m = mMap.addMarker(new MarkerOptions()
                     .position(markers.get(i))
                     .icon(BitmapDescriptorFactory.fromBitmap(green_point_scaled))
                     .anchor(0.5f, 0.4f)
             );
-            m.setTag(g);
+            m.setTag(gp);
         }
 
         if (ActivityCompat
@@ -337,42 +362,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // CAMERA RESULT
+
         if (requestCode == REQUEST_CAMERA){
             if (resultCode == Activity.RESULT_OK) {
                 Intent i = new Intent(MapsActivity.this,GreenPointRegisterActivity.class);
                 i.putExtras(data);
                 startActivityForResult(i,REQUEST_GREEN_POINT_REGISTER);
             }
+
+            // GREEN POINT REGISTER RESULT
+
         } else if (requestCode == REQUEST_GREEN_POINT_REGISTER){
+
             pref_marker = getSharedPreferences("Marker", 0);
+
             BitmapDrawable yellow_point=(BitmapDrawable)getResources()
                     .getDrawable(R.drawable.p_amarillo);
             Bitmap yellow_point_scaled = Bitmap
                     .createScaledBitmap(yellow_point.getBitmap(),WIDTH, HEIGHT, false);
+
             if (resultCode == Activity.RESULT_OK) {
+
                 double lat = Double.longBitsToDouble(pref_marker.getLong("lat", -1));
                 double lon = Double.longBitsToDouble(pref_marker.getLong("long", -1));
                 LatLng latLng = new LatLng(lat, lon);
                 markers.add(latLng);
 
                 String location = (String) data.getExtras().get("location");
+                String canopy = (String) data.getExtras().get("canopy");
+                String stem = (String) data.getExtras().get("stem");
+                String height = (String) data.getExtras().get("height");
+                String type = (String) data.getExtras().get("type");
+
+                String image = "https://1.bp.blogspot.com/_Jfyk16Y3Lt8/SJjEuTgcJbI/AAAAAAAABZE/kBSPIYp8RrA/s400/roble.jpg";
 
                 pref_session = getSharedPreferences("Session", 0);
-                String profilepic = pref_session.getString("photo",null);
-                String username = pref_session.getString("username",null);
+                String email = pref_session.getString("email",null);
 
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy",Locale.US);
                 String formattedDate = df.format(calendar.getTime());
 
-                GreenPoint g1 = new GreenPoint(counter,location,formattedDate,10,11,12,"Roble",profilepic,1);
-                g1.setUser(username);
-                Marker m1 = mMap.addMarker(new MarkerOptions()
+                GreenPoint gp = new GreenPoint();
+                gp.setLocation(location);
+                gp.setDate(formattedDate);
+                gp.setHeight(height);
+                gp.setTreeType(type);
+                gp.setImage(image);
+                gp.setStatus(UNVERIFIED);
+                gp.setUser(email);
+
+                Marker m = mMap.addMarker(new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(yellow_point_scaled))
                         .anchor(0.5f, 0.4f)
                 );
-                m1.setTag(g1);
+                m.setTag(gp);
                 counter++;
             }
         }

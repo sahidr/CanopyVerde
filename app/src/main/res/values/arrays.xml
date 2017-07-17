@@ -10,17 +10,33 @@
 
     <string-array name="canopy_array">
         <item>Tamaño de Copa</item>
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+        <item>7</item>
     </string-array>
 
     <string-array name="stem_array">
         <item>Tamaño de Tronco</item>
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+        <item>7</item>
     </string-array>
 
     <string-array name="height_array">
         <item>Altura Aproximada</item>
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+        <item>7</item>
     </string-array>
 
     <string-array name="type_array">
         <item>Tipo de Árbol</item>
+        <item>Araguaney</item>
+        <item>Caobo</item>
+        <item>Roble</item>
+        <item>Samán</item>
     </string-array>
 </resources>

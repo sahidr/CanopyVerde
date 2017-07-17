@@ -68,10 +68,11 @@
             android:background="@drawable/editar"
             android:onClick="editProfile" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <com.github.siyamed.shapeimageview.mask.PorterShapeImageView
             android:id="@+id/profilepic"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            app:siShape="@drawable/circle_statbar"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -18,23 +17,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Switch;
-
+import com.github.siyamed.shapeimageview.CircularImageView;
+import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditProfileActivity extends AppCompatActivity {
 
     private static final int SELECT_FILE = 1;
     private static final int REQUEST_CAMERA = 0;
-    private CircleImageView editPic;
+    private PorterShapeImageView editPic;
     private Button save;
     private ProgressBar load;
     private Switch language, notifications;
@@ -50,7 +47,7 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
 
         context = this;
-        editPic = (CircleImageView) findViewById(R.id.editpic);
+        editPic = (PorterShapeImageView) findViewById(R.id.editpic);
         save = (Button) findViewById(R.id.save);
         load = (ProgressBar) findViewById(R.id.load);
         language = (Switch) findViewById(R.id.languageSwitch);

@@ -16,14 +16,13 @@
         android:elevation="2dp"
         android:visibility="invisible"/>
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <com.github.siyamed.shapeimageview.mask.PorterShapeImageView
         android:id="@+id/editpic"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:scaleType="centerCrop"
         android:onClick="editProfilePicture"
-        android:src="@drawable/btn_locate"
+        app:siShape="@drawable/circle_statbar"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp" />

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
@@ -17,15 +16,13 @@ import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.facebook.login.LoginManager;
+import com.github.siyamed.shapeimageview.CircularImageView;
+import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
-
 import java.text.NumberFormat;
 import java.util.Locale;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -39,7 +36,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager mViewPager;
     private TextView badge;
-    private CircleImageView profilePic;
+    private PorterShapeImageView profilePic;
     private TextView profileFullname, profileEmail, profileUsername;
     private Context context;
     private SharedPreferences pref_session;
@@ -57,7 +54,7 @@ public class UserProfileActivity extends AppCompatActivity {
         context = this;
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ITALIAN);
 
-        profilePic= (CircleImageView) findViewById(R.id.profilepic);
+        profilePic= (PorterShapeImageView) findViewById(R.id.profilepic);
         profileFullname = (TextView) findViewById(R.id.fullNameDisplay);
         profileEmail = (TextView) findViewById(R.id.emailDisplay);
         profileUsername = (TextView) findViewById(R.id.usernameDisplay);
