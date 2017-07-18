@@ -57,7 +57,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private RelativeLayout stats;
     private SharedPreferences pref_session;
     private ArrayList<LatLng> markers;
-    private int counter = 0;
 
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
     private static int MAX_FRACTION_DIGITS = 1;
@@ -132,12 +131,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 profile.setImageResource(R.drawable.btn_locate);
             }else {
                 user.setText(username);
-                Uri photo = Uri.parse(m_profile);
-                Picasso.with(MapsActivity.this).load(photo).into(profile);
+                if (m_profile != null){
+                    Uri photo = Uri.parse(m_profile);
+                    Picasso.with(MapsActivity.this).load(photo).into(profile);
+                } else {
+                    Picasso.with(MapsActivity.this).load(R.drawable.btn_locate).into(profile);
+                }
             }
             date.setText(m_date);
             type.setText(m_type);
-            size.setText(m_size+" m");
+
+            if (m_size.equals("Altura Aproximada"))
+                size.setText("Undefined");
+            else size.setText(m_size+"m");
             location.setText(m_location);
 
             if (m_image.equals("none")){
@@ -419,7 +425,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .anchor(0.5f, 0.4f)
                 );
                 m.setTag(gp);
-                counter++;
             }
         }
     }

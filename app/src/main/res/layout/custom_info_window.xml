@@ -38,6 +38,7 @@
                 android:id="@+id/profile"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
+                android:background="@drawable/btn_locate"
                 app:siShape="@drawable/circle_statbar"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true" />
