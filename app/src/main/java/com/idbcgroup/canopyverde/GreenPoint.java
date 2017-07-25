@@ -1,10 +1,12 @@
 package com.idbcgroup.canopyverde;
 
+import java.sql.Date;
+
 public class GreenPoint {
 
     private int id;
     private String location;
-    private String date;
+    private Date date;
     private int canopySize;
     private int stemSize;
     private String height;
@@ -47,11 +49,11 @@ public class GreenPoint {
         this.location = location;
     }
 
-    public String getDate (){
+    public Date getDate (){
         return date;
     }
 
-    public void setDate(String date){
+    public void setDate(Date date){
         this.date = date;
     }
 

@@ -1,7 +1,5 @@
 package com.idbcgroup.canopyverde;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,32 +9,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.lang3.text.WordUtils;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 public class UserProfileReportFragment extends Fragment {
 
-    private List reportList = new ArrayList();
+    private List<Report> reportList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.Adapter<ReportAdapter.ReportViewHolder> reportAdapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View reportView = inflater.inflate(R.layout.fragment_user_profile_report, container, false);
+
         recyclerView = (RecyclerView) reportView.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ReportAdapter(reportList);
+
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+
+        reportAdapter = new ReportAdapter(reportList);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(reportAdapter);
         prepareReportData();
 
         return reportView;
@@ -46,7 +51,13 @@ public class UserProfileReportFragment extends Fragment {
 
         Report report;
 
-        report = new Report(2,"Samán", "Av. Saman", "26\nJUN 2017");
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date(calendar.getTime().getTime());
+
+        SimpleDateFormat df = new SimpleDateFormat("dd\nMMM yyy", Locale.US);
+        String formattedDate = df.format(date);
+
+        report = new Report(2,"Samán", "Av. Saman", formattedDate); //"26\nJUN 2017"
         reportList.add(report);
 
         report = new Report(2,"Caobo", "Av. 3", "15\nJUN 2017");
@@ -61,7 +72,7 @@ public class UserProfileReportFragment extends Fragment {
         report = new Report(1,"Roble", "Av. Yaracuy", "12\nMAR 2017");
         reportList.add(report);
 
-        mAdapter.notifyDataSetChanged();
+        reportAdapter.notifyDataSetChanged();
     }
 
 }

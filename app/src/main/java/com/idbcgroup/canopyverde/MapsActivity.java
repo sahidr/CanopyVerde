@@ -34,6 +34,8 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
+
+import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,7 +53,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MapStyleOptions style;
     private Context context;
     private Bitmap m_tree, m_user;
-    private String m_date,m_type,m_size, m_location, m_image, m_email, m_profile;
+    private Date m_date;
+    private String m_type,m_size, m_location, m_image, m_email, m_profile;
     private int m_status;
     private TextView greenIndex, populationDensity;
     private RelativeLayout stats;
@@ -138,13 +141,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Picasso.with(MapsActivity.this).load(R.drawable.btn_locate).into(profile);
                 }
             }
-            date.setText(m_date);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy",Locale.US);
+            String pointDate = dateFormat.format(m_date);
+            date.setText(pointDate);
+
             type.setText(m_type);
+            location.setText(m_location);
 
             if (m_size.equals("Altura Aproximada"))
                 size.setText("Undefined");
             else size.setText(m_size+"m");
-            location.setText(m_location);
 
             if (m_image.equals("none")){
                 tree.setImageResource(R.drawable.araguaney);
@@ -239,7 +246,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .createScaledBitmap(green_point.getBitmap(),WIDTH, HEIGHT, false);
         GreenPoint gp = new GreenPoint();
         gp.setLocation("Av. Los Cortijos");
-        gp.setDate("14/07/1993");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 1993);
+        calendar.set(Calendar.DAY_OF_MONTH, 14);
+        calendar.set(Calendar.MONTH, 0);
+        java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
+
+        gp.setDate(date);
         gp.setHeight("2");
         gp.setTreeType("Araguaney");
         gp.setImage("none");
@@ -407,12 +421,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String email = pref_session.getString("email",null);
 
                 Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy",Locale.US);
-                String formattedDate = df.format(calendar.getTime());
-
+                Date date = new Date(calendar.getTime().getTime());
                 GreenPoint gp = new GreenPoint();
                 gp.setLocation(location);
-                gp.setDate(formattedDate);
+                gp.setDate(date); //formattedDate
                 gp.setHeight(height);
                 gp.setTreeType(type);
                 gp.setImage(image);

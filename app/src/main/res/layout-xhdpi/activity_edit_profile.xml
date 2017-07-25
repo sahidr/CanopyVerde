@@ -21,6 +21,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
+        android:src="@drawable/btn_locate"
         android:onClick="editProfilePicture"
         app:siShape="@drawable/circle_statbar"
         android:layout_alignParentTop="true"
