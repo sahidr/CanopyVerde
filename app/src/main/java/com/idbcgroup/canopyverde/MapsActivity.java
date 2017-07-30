@@ -84,16 +84,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /** Demonstrates customizing the info window and/or its contents. */
     private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
-        private final View mWindow;
+        private final View greenPointWindow;
+        private final View redPointWindow;
 
         CustomInfoWindowAdapter() {
-            mWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+            greenPointWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+            redPointWindow = getLayoutInflater().inflate(R.layout.red_points_dialog, null);
+
         }
 
         @Override
         public View getInfoWindow(Marker marker) {
-            render(marker, mWindow);
-            return mWindow;
+            GreenPoint gp = (GreenPoint) marker.getTag();  //GREEN POINT DATA
+            assert gp != null;
+            m_status = gp.getStatus();
+            if (m_status == 0) {
+                renderGreenPoint(marker, redPointWindow);
+            } else {
+                renderGreenPoint(marker, greenPointWindow);
+            }
+            return greenPointWindow;
         }
 
         @Override
@@ -101,7 +111,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return null;
         }
 
-        private void render(Marker marker, View view) {
+        private void renderRedPoint(Marker marker, View view){
+
+        }
+
+        private void renderGreenPoint(Marker marker, View view) {
 
             GreenPoint gp = (GreenPoint) marker.getTag();  //GREEN POINT DATA
             assert gp != null;

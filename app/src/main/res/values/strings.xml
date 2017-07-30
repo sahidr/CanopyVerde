@@ -8,15 +8,20 @@
     <string name="title_activity_tour">TourActivity</string>
     <string name="skip">Saltar</string>
     <string name="sign_up">Registrar</string>
-    <string name="title_tour_1">Tour Canopy 01</string>
-    <string name="title_tour_2">Tour Canopy 02</string>
-    <string name="title_tour_3">Tour Canopy 03</string>
-    <string name="title_tour_4">Tour Canopy 04</string>
+    <string name="title_tour_1">Identificación</string>
+    <string name="title_tour_2">Medición</string>
+    <string name="title_tour_3">Deja tu marca</string>
+    <string name="title_tour_4">Compara</string>
     <string name="welcome">Bienvenido a Canopy Verde</string>
     <string name="start">Comenzar</string>
-    <string name="desc1">Description 1</string>
-    <string name="desc2">Description 2</string>
-    <string name="desc3">Final description START</string>
+    <string name="desc_tour_1">Ayuda a identificar los árboles de tu ciudad:\n
+        Ubicación, Tipo, Tamaño</string>
+    <string name="desc_tour_2">Se parte de la medición del impacto verde y\n
+        la huella que deja tu ciudad</string>
+    <string name="desc_tour_3">Solicita a tu gobierno local plantar árboles\n
+        en zonas específicas</string>
+    <string name="desc_tour_4">Compara la huella y la marca de tu ciudad\n con
+        otras del mundo</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_user_profile1">User Profile</string>
     <string name="lorem">Lorem ipsum dolor sit amet, consectetur\n

@@ -8,9 +8,11 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -18,8 +20,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -145,7 +157,11 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         String type  = (String) treeType.getSelectedItem();
 
         //LOAD DATA INTO DATABASE
-
+/*
+        AttemptLogin attempt = new AttemptLogin();
+        attempt.execute("nuevo", "2");
+*/
+        ////
         Intent i = getIntent();
         i.putExtra("location",location);
         i.putExtra("canopy",canopy);
@@ -160,4 +176,108 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+
+    // AsyncTask. Sends Log In's data to the server's API and process the response.
+    public class AttemptLogin extends AsyncTask<String, Integer, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //progressBar.setVisibility(View.VISIBLE);
+        }
+
+        // Sends validated Log In's data to the server's API and process the response. Returns an
+        // integer value ([-1..1):
+        // * -1, if an error occurred during the communication
+        // * 0, if everything went OK (redirecting to MainActivity and updating SharedPreferences afterwards)
+        // * 1, if the credentials provided aren't valid
+        @Override
+        protected Integer doInBackground(String... strings) {
+
+            Integer result = -1;
+            try {
+                // Defining and initializing server's communication's variables
+                String credentials = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                credentials += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
+
+                //URL url = new URL("http://192.168.0.104/greenpoint/");
+                URL url = new URL("http://www.google.com");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+                connection.setReadTimeout(10000);
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                writer.write(credentials);
+                writer.flush();
+                APIResponse response = JSONResponseController.getJsonResponse(connection);
+
+                Log.w("AUXILIO", String.valueOf(response.getStatus()));
+
+                if (response != null) {
+                    if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+                        JSONObject jsonResponse = response.getBody();
+/*                        String token = jsonResponse.getString("token");
+                        Integer id = jsonResponse.getInt("id");
+                        String role = jsonResponse.getString("role");
+                        TokenSharedPreferences.setAuthToken(LoginActivity.this, token);
+                        UserPKSharedPreferences.setUserPK(LoginActivity.this, id);
+                        UserRoleSharedPreferences.setUserRole(LoginActivity.this, role);*/
+                        result = 0;
+
+                    } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                        JSONObject jsonResponse = response.getBody();
+                        String responseMessage = jsonResponse.getJSONArray("non_field_errors").getString(0);
+                        if (responseMessage.equals("Unable to log in with provided credentials.")) {
+                            result = 1;
+                        }
+                    } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
+                        JSONObject jsonResponse = response.getBody();
+                        String responseMessage = jsonResponse.getString("detail");
+                        Log.w("AUXILIO", responseMessage);
+                        if (responseMessage.equals("Not found.")) {
+                            result = -1;
+                        }
+                    }
+                }
+
+            } catch (MalformedURLException e) {
+                return result;
+            } catch (IOException e) {
+                return result;
+            } catch (JSONException e) {
+                return result;
+            }
+            return result;
+        }
+
+        // Process doInBackground() results
+        @Override
+        protected void onPostExecute(Integer anInt) {
+            String message;
+            switch (anInt) {
+                case (-1):
+                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                case (0):
+                    //Intent intent = new Intent(getBaseContext(), DashboardActivity.class);
+                    message = "¡Bienvenido!";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                    //startActivity(intent);
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                case (1):
+                    message = "Nombre de usuario y/o contraseña inválidos";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+
+
 }
