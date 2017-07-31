@@ -6,10 +6,182 @@
     android:layout_height="match_parent"
     tools:context="com.idbcgroup.canopyverde.GameProfileActivity">
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/badges"/>
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/actionBarTheme">
+
+        <ImageButton
+            android:id="@+id/profile"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/profile"
+            android:layout_marginStart="11dp"
+            android:layout_alignBottom="@+id/logo"
+            android:layout_alignParentStart="true"
+            android:onClick="backToProfile" />
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="145dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/logo_blanco" />
+
+        <ImageButton
+            android:id="@+id/map"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/map"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/profile"
+            android:layout_marginEnd="10dp"
+            android:onClick="goToMap"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/userContent"
+        android:background="@drawable/fondo_profile"
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentStart="true">
+
+        <com.github.siyamed.shapeimageview.mask.PorterShapeImageView
+            android:id="@+id/profilepic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:siShape="@drawable/circle_statbar"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="30dp"
+            android:background="@drawable/btn_locate"/>
+
+        <TextView
+            android:id="@+id/fullNameDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="@android:color/white"
+            android:text="@string/u_name"
+            android:layout_alignTop="@+id/profilepic"
+            android:layout_toEndOf="@+id/profilepic"
+            android:layout_marginStart="27dp" />
+
+        <TextView
+            android:id="@+id/usernameDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/u_user"
+            android:textColor="@android:color/white"
+            android:layout_alignBottom="@+id/profilepic"
+            android:layout_alignStart="@+id/fullNameDisplay" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_alignTop="@+id/usernameDisplay"
+            android:layout_toEndOf="@+id/usernameDisplay">
+
+            <ImageView
+                android:id="@+id/badgeImg"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="5dp"
+                app:srcCompat="@drawable/puntos"
+                android:layout_marginEnd="5dp"/>
+
+            <TextView
+                android:id="@+id/badgeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/badge_name_example"
+                android:textColor="@color/yellow" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="5"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0-10 Aprendiz"
+                android:textSize="10sp"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"/>
+            <View
+                android:layout_width="0.8dp"
+                android:layout_height="match_parent"
+                android:background="@color/yellow" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11-50 Novato"
+                android:textSize="10sp"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"/>
+            <View
+                android:layout_width="0.8dp"
+                android:layout_height="match_parent"
+                android:background="@color/yellow" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="51-100 Intermedio"
+                android:textSize="10sp"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"/>
+            <View
+                android:layout_width="0.8dp"
+                android:layout_height="match_parent"
+                android:background="@color/yellow" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="101-500 Experto"
+                android:textSize="10sp"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"/>
+            <View
+                android:layout_width="0.8dp"
+                android:layout_height="match_parent"
+                android:background="@color/yellow" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="501 +Maestro"
+                android:textSize="10sp"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"/>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/userContent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </RelativeLayout>

@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.android.gms.maps.CameraUpdate;
@@ -52,9 +54,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private SharedPreferences pref_marker;
     private MapStyleOptions style;
     private Context context;
-    private Bitmap m_tree, m_user;
+    private Bitmap m_tree;
     private Date m_date;
-    private String m_type,m_size, m_location, m_image, m_email, m_profile;
+    private String m_type,m_size, m_location, m_image, m_email, m_profile, m_user;
     private int m_status;
     private TextView greenIndex, populationDensity;
     private RelativeLayout stats;
@@ -63,6 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
     private static int MAX_FRACTION_DIGITS = 1;
+    private static final int UNREQUESTED = -1;
     private static final int REQUESTED = 0;
     private static final int UNVERIFIED = 1;
     private static final int VERIFIED = 2;
@@ -95,15 +98,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         @Override
         public View getInfoWindow(Marker marker) {
+            View markerView;
             GreenPoint gp = (GreenPoint) marker.getTag();  //GREEN POINT DATA
             assert gp != null;
             m_status = gp.getStatus();
-            if (m_status == 0) {
-                renderGreenPoint(marker, redPointWindow);
+
+            if (m_status == 0 || m_status == -1) {
+                renderRedPoint(marker, redPointWindow);
+                markerView = redPointWindow;
             } else {
                 renderGreenPoint(marker, greenPointWindow);
+                markerView = greenPointWindow;
             }
-            return greenPointWindow;
+            return markerView;
         }
 
         @Override
@@ -112,6 +119,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         private void renderRedPoint(Marker marker, View view){
+            GreenPoint rp = (GreenPoint) marker.getTag();  //RED POINT DATA
+            assert rp != null;
+            m_status = rp.getStatus();
+            m_location = rp.getLocation();
+
+            TextView available = (TextView) view.findViewById(R.id.available);
+            TextView plant = (TextView) view.findViewById(R.id.plant);
+
+            if (m_status == -1){
+
+                plant.setText(R.string.plant);
+
+            } else {
+                m_user = rp.getUser();
+                plant.setText(m_user);
+
+            }
 
         }
 
@@ -258,9 +282,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         BitmapDrawable green_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_verde);
         Bitmap green_point_scaled = Bitmap
                 .createScaledBitmap(green_point.getBitmap(),WIDTH, HEIGHT, false);
+
         GreenPoint gp = new GreenPoint();
         gp.setLocation("Av. Los Cortijos");
-
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 1993);
         calendar.set(Calendar.DAY_OF_MONTH, 14);
@@ -282,6 +306,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             );
             m.setTag(gp);
         }
+
+        GreenPoint rp = new GreenPoint();
+        rp.setLocation("Av. Los Cortijos");
+        rp.setDate(date);
+        rp.setHeight("2");
+        rp.setTreeType("Araguaney");
+        rp.setImage("none");
+        rp.setStatus(REQUESTED);
+        rp.setUser("@idbcgroup");
+
+        BitmapDrawable red_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_rojo);
+        Bitmap red_point_scaled = Bitmap
+                .createScaledBitmap(red_point.getBitmap(),WIDTH, HEIGHT, false);
+        LatLng l9 = new LatLng(10.485043, -66.854308);
+        Marker m1 = mMap.addMarker(new MarkerOptions()
+                .position(l9)
+                .icon(BitmapDescriptorFactory.fromBitmap(red_point_scaled))
+                .anchor(0.5f, 0.4f)
+        );
+        m1.setTag(rp);
+
+        GreenPoint rp1 = new GreenPoint();
+        rp1.setLocation("Av. Los Cortijos");
+        rp1.setStatus(UNREQUESTED);
+        LatLng l10 = new LatLng(10.486043, -66.844308);
+        Marker m2 = mMap.addMarker(new MarkerOptions()
+                .position(l10)
+                .icon(BitmapDescriptorFactory.fromBitmap(red_point_scaled))
+                .anchor(0.5f, 0.4f)
+        );
+        m2.setTag(rp1);
+
 
         if (ActivityCompat
                 .checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -330,6 +386,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        GreenPoint rp = (GreenPoint) marker.getTag();  //RED POINT DATA
+        assert rp != null;
+        m_status = rp.getStatus();
+
+        if (m_status==-1){
+            Toast.makeText(MapsActivity.this,"Form",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

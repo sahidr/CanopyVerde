@@ -77,7 +77,8 @@
     <string name="density">%1$s/km^2</string>
 
     <!--    Red Points    -->
-    <string name="request">Solicitar</string>
+    <string name="available">Espacio Disponible</string>
+    <string name="plant"><u>PLANTAR</u></string>
 
     <!--    Green Points Register    -->
     <string name="new_entry">Nueva Entrada</string>
@@ -115,6 +116,8 @@
 
     <!-- Game Profile -->
     <string name="badges">Logros</string>
+    <string name="badge_name_example">%1$s %2$s</string>
+    <string name="apprentice">0-10 Aprendiz</string>
 
     <!-- User Example -->
     <string name="u_name">Juan Antonio Lopez</string>
