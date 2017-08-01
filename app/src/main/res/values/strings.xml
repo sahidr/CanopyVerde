@@ -78,6 +78,7 @@
 
     <!--    Red Points    -->
     <string name="available">Espacio Disponible</string>
+    <string name="occupied">Espacio Ocupado</string>
     <string name="plant"><u>PLANTAR</u></string>
 
     <!--    Green Points Register    -->
@@ -118,6 +119,10 @@
     <string name="badges">Logros</string>
     <string name="badge_name_example">%1$s %2$s</string>
     <string name="apprentice">0-10 Aprendiz</string>
+    <string name="rookie">11-50 Novato</string>
+    <string name="intermediary">51-100 Intermedio</string>
+    <string name="expert">101-500 Experto</string>
+    <string name="master">501+ Maestro</string>
 
     <!-- User Example -->
     <string name="u_name">Juan Antonio Lopez</string>

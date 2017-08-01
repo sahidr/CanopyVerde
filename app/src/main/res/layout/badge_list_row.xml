@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="?android:attr/selectableItemBackground"
+    tools:context="com.idbcgroup.canopyverde.UserProfileReportFragment">
+
+    <ImageView
+        android:id="@+id/pointStatus"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/p_verde"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/BadgeTypeDisplay"
+        android:layout_width="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_height="wrap_content"
+        android:text="Reporte Verificado"
+        android:layout_alignBottom="@+id/pointStatus"
+        android:layout_toEndOf="@+id/pointStatus"
+        android:layout_marginStart="18dp" />
+
+    <TextView
+        android:id="@+id/pointsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black_overlay"
+        android:textSize="15sp"
+        android:text="+10"
+        android:layout_marginEnd="28dp"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/date" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="2dp"
+        android:id="@+id/date"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:id="@+id/dateDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="12"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="28sp" />
+
+        <TextView
+            android:id="@+id/monthDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MAR 2017"
+            android:textAlignment="center"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/date"
+        android:background="@color/colorLine"
+        android:layout_alignStart="@+id/pointStatus"
+        android:layout_alignEnd="@+id/date" />
+
+</RelativeLayout>

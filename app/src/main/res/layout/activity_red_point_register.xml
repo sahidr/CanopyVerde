@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.idbcgroup.canopyverde.RedPointRegister">
+
+        <TextView
+            android:id="@+id/entry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_entry"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/colorCanopy"
+            android:textSize="30sp"
+            android:layout_marginTop="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <ProgressBar
+            android:id="@+id/load"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/location_holder"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/first_field"
+            style="@style/spinnerItemStyle"
+            android:layout_marginTop="28dp"
+            android:layout_below="@+id/entry"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/location_example"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxWidth="200dp"
+            style="@style/spinnerItemStyle"
+            android:layout_marginStart="23dp"
+            android:layout_alignBaseline="@+id/location_holder"
+            android:layout_alignBottom="@+id/location_holder"
+            android:layout_alignStart="@+id/location_holder"
+            android:layout_toStartOf="@+id/drop" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/locationPoint"
+            android:layout_marginTop="13dp"
+            android:src="@drawable/ciudad_pin"
+            android:layout_alignTop="@+id/location_holder"
+            android:layout_alignStart="@+id/drop" />
+
+        <Spinner
+            android:id="@+id/treeType"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:entries="@array/type_array"
+            android:layout_alignEnd="@+id/location_holder"
+            android:layout_below="@+id/location_holder"
+            android:spinnerMode="dropdown"
+            android:background="@drawable/field"
+            android:layout_alignStart="@+id/location_holder" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/drop"
+            android:src="@drawable/seleccionar"
+            android:layout_marginStart="11dp"
+            android:layout_below="@+id/location_holder"
+            android:layout_toEndOf="@+id/entry"
+            android:layout_marginTop="15dp" />
+
+
+    <Button
+            android:id="@+id/yellowPointRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:background="@drawable/btn_ppal"
+            android:text="@string/sign_up"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:onClick="redPointRegister"
+            android:layout_marginBottom="15dp"
+            android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/treeType"
+        android:layout_alignEnd="@+id/treeType" />
+
+        <ImageView
+            android:id="@+id/expanded_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
+    </RelativeLayout>

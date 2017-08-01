@@ -46,6 +46,9 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowCloseListener,
         GoogleMap.OnMarkerClickListener {
@@ -113,6 +116,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return markerView;
         }
 
+
+
         @Override
         public View getInfoContents(Marker marker) {
             return null;
@@ -128,13 +133,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             TextView plant = (TextView) view.findViewById(R.id.plant);
 
             if (m_status == -1){
-
+                available.setText(R.string.available);
                 plant.setText(R.string.plant);
 
             } else {
+                available.setText(R.string.occupied);
                 m_user = rp.getUser();
                 plant.setText(m_user);
-
             }
 
         }
@@ -215,6 +220,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/TitilliumWeb-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+
         context = this;
 
         markers = new ArrayList<>();
@@ -361,8 +372,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMaxZoomPreference(22);
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
 
-        MarkerOptions m = new MarkerOptions();
-        m.anchor(0.5f, 0.5f);
+        //MarkerOptions m = new MarkerOptions();
+        //m.anchor(0.5f, 0.5f);
     }
 
     @Override
@@ -391,7 +402,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         m_status = rp.getStatus();
 
         if (m_status==-1){
-            Toast.makeText(MapsActivity.this,"Form",Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MapsActivity.this, RedPointRegister.class));
         }
     }
 
@@ -457,10 +468,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
         // CAMERA RESULT
-
         if (requestCode == REQUEST_CAMERA){
             if (resultCode == Activity.RESULT_OK) {
                 Intent i = new Intent(MapsActivity.this,GreenPointRegisterActivity.class);
@@ -521,4 +529,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void profileView (View view){
         startActivity(new Intent(MapsActivity.this, UserProfileActivity.class));
     }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+
 }

@@ -50,7 +50,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         Report report = reportList.get(position);
 
         if (report.getStatus() == 0) {
-            holder.status.setImageResource(android.R.drawable.presence_busy);
+            holder.status.setImageResource(R.drawable.p_rojo);
         } else  if (report.getStatus() == 1) {
             holder.status.setImageResource(R.drawable.p_amarillo);
         } else {

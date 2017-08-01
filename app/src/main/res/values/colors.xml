@@ -15,6 +15,7 @@
     <color name="black">#000</color>
 
     <!-- Green -->
+
     <color name="green_temp">#23A96E</color>
     <color name="green_dark">#159204</color>
     <color name="bright_green">#02D8B0</color>
@@ -22,9 +23,11 @@
 
     <color name="yellow">#FCAB53</color>
     <color name="pink">#E98C99</color>
+    <color name="red">#fc5353</color>
 
     <color name="bar">#40a3a3a3</color>
     <color name="fontColor">#365166</color>
+    <color name="profile">#58000000</color>
 
     <color name="treepediaBrown">#1b0a00</color>
     <color name="treepediaGreen">#5bdf3c</color>

@@ -11,39 +11,40 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:elevation="2dp"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/cameraLogo" />
 
     <com.github.siyamed.shapeimageview.mask.PorterShapeImageView
         android:id="@+id/editpic"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:src="@drawable/btn_locate"
-        android:onClick="editProfilePicture"
-        app:siShape="@drawable/circle_statbar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp" />
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:onClick="editProfilePicture"
+        android:src="@drawable/btn_locate"
+        android:tint="@color/profile"
+        app:siShape="@drawable/circle_statbar" />
 
-    <EditText
-        android:id="@+id/editUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="12"
-        android:hint="@string/username"
-        android:inputType="text"
-        android:layout_below="@+id/editName"
-        android:layout_alignLeft="@+id/editName"
-        android:layout_alignStart="@+id/editName" />
+    <ImageView
+        android:id="@+id/cameraLogo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:onClick="editProfilePicture"
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        android:layout_alignTop="@+id/editpic"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:id="@+id/editName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="12"
+        android:ems="10"
+        android:background="@drawable/first_field"
         android:hint="@string/full_name"
         android:inputType="textPersonName"
         android:layout_marginTop="16dp"
@@ -51,39 +52,50 @@
         android:layout_centerHorizontal="true" />
 
     <EditText
+        android:id="@+id/editUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:background="@drawable/field"
+        android:hint="@string/username"
+        android:inputType="text"
+        android:layout_below="@+id/editName"
+        android:layout_alignLeft="@+id/editName"
+        android:layout_alignStart="@+id/editName" />
+
+    <EditText
         android:id="@+id/editEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editUsername"
-        android:layout_alignStart="@+id/editUsername"
-        android:layout_below="@+id/editName"
-        android:layout_marginTop="43dp"
-        android:ems="12"
+        android:ems="10"
+        android:background="@drawable/field"
         android:hint="@string/email"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:layout_below="@+id/editUsername"
+        android:layout_alignStart="@+id/editUsername" />
+
     <EditText
         android:id="@+id/editPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="12"
+        android:ems="10"
+        android:background="@drawable/field"
         android:hint="@string/password"
         android:inputType="textPassword"
         tools:layout_editor_absoluteX="73dp"
         tools:layout_editor_absoluteY="232dp"
         android:layout_below="@+id/editEmail"
-        android:layout_alignLeft="@+id/editEmail"
         android:layout_alignStart="@+id/editEmail" />
     <EditText
         android:id="@+id/confirm_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="12"
+        android:ems="10"
+        android:background="@drawable/last_field"
         android:hint="@string/confirm_password"
         android:inputType="textPassword"
-        android:layout_alignTop="@+id/editPassword"
-        android:layout_alignLeft="@+id/editPassword"
-        android:layout_alignStart="@+id/editPassword"
-        android:layout_marginTop="41dp" />
+        android:layout_below="@+id/editPassword"
+        android:layout_alignStart="@+id/editPassword" />
 
     <Button
         android:id="@+id/save"
@@ -91,45 +103,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/save"
-        android:layout_marginBottom="12dp"
         android:layout_above="@+id/deleteAccount"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:id="@+id/cameraLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editpic"
-        android:layout_alignEnd="@+id/editpic"
-        android:layout_alignRight="@+id/editpic"
-        android:layout_toEndOf="@+id/load"
-        android:layout_toRightOf="@+id/load"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        android:layout_alignStart="@+id/editpic" />
 
     <Switch
         android:id="@+id/notificationSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/languageSwitch"
-        android:layout_alignEnd="@+id/confirm_password"
-        android:layout_alignStart="@+id/confirm_password"
-        android:layout_marginBottom="15dp"
         android:showText="true"
         android:text="@string/notification"
         android:textOff="@string/off"
-        android:textOn="@string/on" />
+        android:textOn="@string/on"
+        android:layout_above="@+id/languageSwitch"
+        android:layout_alignStart="@+id/confirm_password"
+        android:layout_alignEnd="@+id/confirm_password" />
 
     <Switch
         android:id="@+id/languageSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/save"
-        android:layout_alignEnd="@+id/notificationSwitch"
-        android:layout_alignStart="@+id/notificationSwitch"
         android:showText="true"
         android:text="@string/language"
         android:textOff="@string/en"
-        android:textOn="@string/es" />
+        android:textOn="@string/es"
+        android:layout_above="@+id/save"
+        android:layout_alignStart="@+id/notificationSwitch"
+        android:layout_alignEnd="@+id/confirm_password" />
 
     <Button
         android:id="@+id/deleteAccount"
@@ -137,10 +136,9 @@
         android:layout_height="wrap_content"
         android:text="@string/delete_account"
         android:onClick="deleteAccount"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:textSize="12sp"
-        android:layout_marginBottom="12dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>
