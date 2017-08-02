@@ -16,13 +16,14 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
-    <TextView
+    <EditText
         android:id="@+id/fullNameDisplayRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/u_name"
         android:layout_marginBottom="5dp"
         android:layout_above="@+id/emailRow"
+        android:background="@color/colorTransparent"
         android:layout_alignStart="@+id/emailDisplayRow" />
 
     <ImageView
@@ -34,14 +35,15 @@
         android:layout_below="@+id/profileRow"
         android:layout_alignParentStart="true" />
 
-    <TextView
+    <EditText
         android:id="@+id/emailDisplayRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/u_email"
         android:layout_marginBottom="5dp"
         android:layout_alignBottom="@+id/emailRow"
-        android:layout_alignStart="@+id/passwordDisplayRow" />
+        android:layout_alignStart="@+id/passwordDisplayRow"
+        android:background="@color/colorTransparent"/>
 
     <ImageView
         android:id="@+id/passwordRow"
@@ -52,7 +54,7 @@
         android:layout_below="@+id/emailRow"
         android:layout_alignParentStart="true" />
 
-    <TextView
+    <EditText
         android:id="@+id/passwordDisplayRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,7 +62,8 @@
         android:layout_marginBottom="5dp"
         android:layout_marginStart="23dp"
         android:layout_above="@+id/countryRow"
-        android:layout_toEndOf="@+id/passwordRow" />
+        android:layout_toEndOf="@+id/passwordRow"
+        android:background="@color/colorTransparent"/>
 
     <ImageView
         android:id="@+id/countryRow"
@@ -71,14 +74,15 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/countryDisplayRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/u_country"
         android:layout_marginBottom="5dp"
         android:layout_alignBottom="@+id/countryRow"
-        android:layout_alignStart="@+id/passwordDisplayRow" />
+        android:layout_alignStart="@+id/passwordDisplayRow"
+        android:background="@color/colorTransparent"/>
 
     <ImageView
         android:id="@+id/cityRow"
@@ -89,13 +93,14 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/cityDisplayRow"
         android:layout_width="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/cityRow"
         android:layout_alignStart="@+id/countryDisplayRow"
-        android:text="@string/u_city" />
+        android:text="@string/u_city"
+        android:background="@color/colorTransparent"/>
 
 </RelativeLayout>

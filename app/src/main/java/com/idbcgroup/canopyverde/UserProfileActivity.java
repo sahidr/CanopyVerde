@@ -1,32 +1,54 @@
 package com.idbcgroup.canopyverde;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
+
 import com.facebook.login.LoginManager;
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Locale;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends AppCompatActivity implements
+        UserProfileGeneralFragment.OnEditProfileInfo {
+
+    private static final int SELECT_FILE = 1;
+    private static final int REQUEST_CAMERA = 0;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -40,6 +62,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView profileFullname, profileEmail, profileUsername;
     private Context context;
     private SharedPreferences pref_session;
+    private ToggleButton edit;
+    private ImageView camera;
+    private boolean enable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +84,8 @@ public class UserProfileActivity extends AppCompatActivity {
         profileEmail = (TextView) findViewById(R.id.emailDisplay);
         profileUsername = (TextView) findViewById(R.id.usernameDisplay);
         badge = (TextView) findViewById(R.id.badgeName);
+        edit = (ToggleButton) findViewById(R.id.edit);
+        camera = (ImageView) findViewById(R.id.cameraLogo);
 
         // User
 
@@ -100,6 +127,21 @@ public class UserProfileActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        edit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                enable=isChecked;
+                if (isChecked) {
+                    edit.setChecked(true);
+                    camera.setVisibility(View.VISIBLE);
+                    profilePic.setColorFilter(ContextCompat.getColor(context,R.color.profile));
+
+                } else {
+                    edit.setChecked(false);
+                    camera.setVisibility(View.INVISIBLE);
+                    profilePic.setColorFilter(ContextCompat.getColor(context,R.color.colorTransparent));
+                }
+            }
+        });
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -123,6 +165,79 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+
+    private void galleryIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
+    }
+
+    private void cameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        assert thumbnail != null;
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        profilePic.setImageBitmap(thumbnail);
+    }
+
+    private void onSelectFromGalleryResult(Intent data) {
+
+        Bitmap bm;
+        if (data != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(getApplicationContext()
+                        .getContentResolver(), data.getData());
+                profilePic.setImageBitmap(bm);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void editProfilePicture(View view){
+        CharSequence uploadType[] = new CharSequence[] {
+                getString(R.string.picture),getString(R.string.gallery) };
+        AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileActivity.this);
+        builder.setItems(uploadType, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int select) {
+                if (select == 0){
+                    cameraIntent();
+                }else{
+                    galleryIntent();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    public void onProfileChange(String name, String email, String password, String country, String city) {
+
+        Log.d("USER",name);
+        Log.d("USER",email);
+        Log.d("USER",password);
+        Log.d("USER",country);
+        Log.d("USER",city);
+
     }
 
     /**
@@ -166,8 +281,10 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     public void editProfile (View view){
-        Intent i = new Intent(UserProfileActivity.this, EditProfileActivity.class);
-        startActivity(i);
+        //Intent i = new Intent(UserProfileActivity.this, EditProfileActivity.class);
+        //startActivity(i);
+        //edit.setImageResource(android.R.drawable.ic_menu_save);
+
     }
 
     public void gameProfile(View view){
@@ -178,8 +295,8 @@ public class UserProfileActivity extends AppCompatActivity {
     public void logout(View view){
         SharedPreferences.Editor session_preferences = getSharedPreferences("Session", 0).edit().clear();
         session_preferences.apply();
-        MapStateManager map_preferences = new MapStateManager(getBaseContext());
-        map_preferences.deletePreferences();
+        //MapStateManager map_preferences = new MapStateManager(getBaseContext());
+        //map_preferences.deletePreferences();
         Intent i = new Intent(UserProfileActivity.this,MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -125,12 +125,12 @@
     <string name="master">501+ Maestro</string>
 
     <!-- User Example -->
-    <string name="u_name">Juan Antonio Lopez</string>
+    <string name="u_name">Juan Antonio López</string>
     <string name="u_user">\@juan.lopez88</string>
     <string name="u_email">juan.lopez88@gmail.com</string>
     <string name="u_country">Venezuela</string>
     <string name="u_city">Caracas</string>
-    <string name="u_bagde">Tree Master</string>
+    <string name="u_bagde">Maestro</string>
     <string name="gps_network_not_enabled">Ubicación Desactivada</string>
     <string name="enable_location">\nVerifica que la ubicación del GPS está activada</string>
     <string name="open_location_settings">Configuración del GPS</string>
@@ -146,11 +146,7 @@
     <string name="facebook_app_id">1453933398031719</string>
     <string name="facebook_app_id_test">328566677556016</string>
     <string name="fb_login_protocol_scheme">fb1453933398031719</string>
-    <string name="title_activity_user_profile2">UserProfile2</string>
-    <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="large_text">"Material is the metaphor.\n\n"</string>
     <string name="facebook">Sign in with Facebook</string>
-    <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
@@ -159,6 +155,5 @@
 
     <string name="google">Sign in with Google</string>
     <string name="title_activity_user_profile">UserProfileActivity</string>
-
 
 </resources>

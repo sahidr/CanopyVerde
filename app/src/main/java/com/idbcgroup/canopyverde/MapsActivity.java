@@ -96,7 +96,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         CustomInfoWindowAdapter() {
             greenPointWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
             redPointWindow = getLayoutInflater().inflate(R.layout.red_points_dialog, null);
-
         }
 
         @Override
@@ -115,7 +114,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             return markerView;
         }
-
 
 
         @Override
@@ -141,7 +139,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 m_user = rp.getUser();
                 plant.setText(m_user);
             }
-
         }
 
         private void renderGreenPoint(Marker marker, View view) {
@@ -225,7 +222,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
-
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         context = this;
 
         markers = new ArrayList<>();
@@ -247,17 +246,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String density = getResources().getString(R.string.density, formatter.format(pop_density));
         populationDensity.setText(density);
 
-        setupMapIfNeeded();
-
-    }
-
-    private void setupMapIfNeeded() {
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        if (mMap == null) {
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-        }
     }
 
     /**
@@ -275,19 +263,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         style = MapStyleOptions.loadRawResourceStyle(this, R.raw.canopy_style_map);
         mMap.setMapStyle(style);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnInfoWindowCloseListener(this);
-
-        MapStateManager mgr = new MapStateManager(this);
-        CameraPosition position = mgr.getSavedCameraPosition();
-        if (position != null) {
-            CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
-            mMap.moveCamera(update);
-            mMap.setMapType(mgr.getSavedMapType());
-        } else {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
-        }
 
         // DUMMY MARKERS
         BitmapDrawable green_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_verde);
@@ -372,21 +351,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMaxZoomPreference(22);
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
 
-        //MarkerOptions m = new MarkerOptions();
-        //m.anchor(0.5f, 0.5f);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MapStateManager mgr = new MapStateManager(this);
-        mgr.saveMapState(mMap);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setupMapIfNeeded();
     }
 
     @Override
@@ -475,7 +439,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 i.putExtras(data);
                 startActivityForResult(i,REQUEST_GREEN_POINT_REGISTER);
             }
-
             // GREEN POINT REGISTER RESULT
 
         } else if (requestCode == REQUEST_GREEN_POINT_REGISTER){

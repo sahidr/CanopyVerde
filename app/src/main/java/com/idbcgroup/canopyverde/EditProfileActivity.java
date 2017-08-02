@@ -169,8 +169,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     });
                 }
 
-                MapStateManager map_preferences = new MapStateManager(getBaseContext());
-                map_preferences.deletePreferences();
+                //MapStateManager map_preferences = new MapStateManager(getBaseContext());
+                //map_preferences.deletePreferences();
                 SharedPreferences.Editor session_preferences = getSharedPreferences("Session", 0)
                         .edit().clear();
                 session_preferences.apply();

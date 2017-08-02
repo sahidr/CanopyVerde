@@ -72,7 +72,13 @@ public class GameProfileActivity extends AppCompatActivity {
             profileUsername.setText(username);
         }
 
-        profileFullname.setText(name);
+        String[] namesplit = name.split(" ");
+        if (namesplit.length <= 2 ){
+            profileFullname.setText(name);
+        }
+        else {
+            profileFullname.setText(namesplit[0]+" "+namesplit[2]);
+        }
 
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ITALIAN);
         float gamePoints = 2544;
