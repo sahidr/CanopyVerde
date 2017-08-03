@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,8 +45,7 @@ import java.util.Locale;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class UserProfileActivity extends AppCompatActivity implements
-        UserProfileGeneralFragment.OnEditProfileInfo {
+public class UserProfileActivity extends AppCompatActivity {
 
     private static final int SELECT_FILE = 1;
     private static final int REQUEST_CAMERA = 0;
@@ -64,8 +64,8 @@ public class UserProfileActivity extends AppCompatActivity implements
     private SharedPreferences pref_session;
     private ToggleButton edit;
     private ImageView camera;
-    private boolean enable = false;
-
+//    private boolean enable;
+    UserProfileGeneralFragment general;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,16 +129,32 @@ public class UserProfileActivity extends AppCompatActivity implements
 
         edit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                enable=isChecked;
-                if (isChecked) {
-                    edit.setChecked(true);
-                    camera.setVisibility(View.VISIBLE);
-                    profilePic.setColorFilter(ContextCompat.getColor(context,R.color.profile));
 
+                EditText[] fields = getFragment().getFields();
+
+                if (isChecked) {
+                    // Edit enable
+                    // Can take picture and edit data
+
+                    edit.setChecked(true);
+                    camera.setVisibility(View.VISIBLE); // Take picture enable
+                    profilePic.setColorFilter(ContextCompat.getColor(context,R.color.profile));
+                    for (int i =0; i < fields.length ; i++){
+                        fields[i].setEnabled(true);
+                    }
                 } else {
+                    // Edit Disable Save data enable
+                    // Form disable
+
                     edit.setChecked(false);
-                    camera.setVisibility(View.INVISIBLE);
+                    camera.setVisibility(View.INVISIBLE); // Take picture disable
                     profilePic.setColorFilter(ContextCompat.getColor(context,R.color.colorTransparent));
+
+                    String[] data;
+                    for (int i =0; i < fields.length ; i++){
+                        fields[i].setEnabled(false);
+                        Log.d("DATA FIELDS",fields[i].getText().toString());
+                    }
                 }
             }
         });
@@ -150,9 +166,7 @@ public class UserProfileActivity extends AppCompatActivity implements
     }
 
     private void changeTabsFont() {
-
         Typeface tf = Typeface.createFromAsset(UserProfileActivity.this.getAssets(), "fonts/TitilliumWeb-Regular.ttf");
-
         ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
         int tabsCount = vg.getChildCount();
         for (int j = 0; j < tabsCount; j++) {
@@ -166,7 +180,6 @@ public class UserProfileActivity extends AppCompatActivity implements
             }
         }
     }
-
 
     private void galleryIntent() {
         Intent intent = new Intent();
@@ -229,52 +242,6 @@ public class UserProfileActivity extends AppCompatActivity implements
         builder.show();
     }
 
-    @Override
-    public void onProfileChange(String name, String email, String password, String country, String city) {
-
-        Log.d("USER",name);
-        Log.d("USER",email);
-        Log.d("USER",password);
-        Log.d("USER",country);
-        Log.d("USER",city);
-
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position){
-                case 0 : return new UserProfileGeneralFragment();
-                case 1 : return new UserProfileReportFragment();
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getString(R.string.general);
-                case 1:
-                    return getString(R.string.report);
-            }
-            return null;
-        }
-    }
 
     public void backToMap(View view){
         onBackPressed();
@@ -306,6 +273,49 @@ public class UserProfileActivity extends AppCompatActivity implements
         LoginManager.getInstance().logOut();
         finish();
     }
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position){
+                case 0 : general = new UserProfileGeneralFragment(); //UserProfileGeneralFragment.newInstance(enable);
+                //general.setArguments(args);
+                return general;
+                case 1 : return new UserProfileReportFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getString(R.string.general);
+                case 1:
+                    return getString(R.string.report);
+            }
+            return null;
+        }
+    }
+
+    public UserProfileGeneralFragment getFragment() {
+        return general;
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));

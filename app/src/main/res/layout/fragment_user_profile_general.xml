@@ -23,6 +23,7 @@
         android:text="@string/u_name"
         android:layout_marginBottom="5dp"
         android:layout_above="@+id/emailRow"
+        android:enabled="false"
         android:background="@color/colorTransparent"
         android:layout_alignStart="@+id/emailDisplayRow" />
 
@@ -43,6 +44,7 @@
         android:layout_marginBottom="5dp"
         android:layout_alignBottom="@+id/emailRow"
         android:layout_alignStart="@+id/passwordDisplayRow"
+        android:enabled="false"
         android:background="@color/colorTransparent"/>
 
     <ImageView
@@ -59,6 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="************"
+        android:enabled="false"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="23dp"
         android:layout_above="@+id/countryRow"
@@ -79,6 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/u_country"
+        android:enabled="false"
         android:layout_marginBottom="5dp"
         android:layout_alignBottom="@+id/countryRow"
         android:layout_alignStart="@+id/passwordDisplayRow"
@@ -101,6 +105,7 @@
         android:layout_alignBottom="@+id/cityRow"
         android:layout_alignStart="@+id/countryDisplayRow"
         android:text="@string/u_city"
+        android:enabled="false"
         android:background="@color/colorTransparent"/>
 
 </RelativeLayout>
