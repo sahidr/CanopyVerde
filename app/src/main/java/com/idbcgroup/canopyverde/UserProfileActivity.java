@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -39,11 +42,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -64,6 +74,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private SharedPreferences pref_session;
     private ToggleButton edit;
     private ImageView camera;
+    private String name;
+    private Bitmap image;
+
 //    private boolean enable;
     UserProfileGeneralFragment general;
     @Override
@@ -139,8 +152,8 @@ public class UserProfileActivity extends AppCompatActivity {
                     edit.setChecked(true);
                     camera.setVisibility(View.VISIBLE); // Take picture enable
                     profilePic.setColorFilter(ContextCompat.getColor(context,R.color.profile));
-                    for (int i =0; i < fields.length ; i++){
-                        fields[i].setEnabled(true);
+                    for (EditText field : fields) {
+                        field.setEnabled(true);
                     }
                 } else {
                     // Edit Disable Save data enable
@@ -150,11 +163,35 @@ public class UserProfileActivity extends AppCompatActivity {
                     camera.setVisibility(View.INVISIBLE); // Take picture disable
                     profilePic.setColorFilter(ContextCompat.getColor(context,R.color.colorTransparent));
 
-                    String[] data;
-                    for (int i =0; i < fields.length ; i++){
-                        fields[i].setEnabled(false);
-                        Log.d("DATA FIELDS",fields[i].getText().toString());
+                    ArrayList<String> data = new ArrayList<String>();
+                    for (EditText field : fields) {
+                        field.setEnabled(false);
+                        data.add(String.valueOf(field.getText()));
+                        Log.d("DATA FIELDS", field.getText().toString());
                     }
+
+                    final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                    dialog.setTitle("Save Content?");//context.getResources().getString(R.string.gps_network_not_enabled));
+                    //dialog.setMessage(context.getResources().getString(R.string.enable_location));
+                    dialog.setPositiveButton(context.getResources().getString(R.string.ok),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                    //Load data into server
+                                }
+                            });
+                    dialog.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int paramInt) {
+                            dialogInterface.dismiss();
+
+                            finish();
+                            //startActivity(getIntent());
+
+                        }
+                    });
+                    dialog.show();
+
                 }
             }
         });
@@ -190,6 +227,16 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "CanopyVerde/profile");
+        imagesFolder.mkdirs(); // <----
+        Calendar calendar = Calendar.getInstance();
+        java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
+        SimpleDateFormat date_name = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+        name = date_name.format(date);
+        File image = new File(imagesFolder, name);
+        Uri uriSavedImage = Uri.fromFile(image);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file name
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
@@ -204,11 +251,21 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void onCaptureImageResult(Intent data) {
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        /*Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         assert thumbnail != null;
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        profilePic.setImageBitmap(thumbnail);
+        //profilePic.setImageBitmap(thumbnail);
+*/
+        image = BitmapFactory.decodeFile(
+                Environment.getExternalStorageDirectory()+
+                        "/CanopyVerde/profile"+name);
+        profilePic.setImageBitmap(image);
+        //Uri image = () data.getStringExtra(MediaStore.EXTRA_OUTPUT);
+        //data.getClipData()
+        //Uri image = data.getExtras().get(EXTRA_);
+        //Picasso.with(context).load(image).into(profilePic);
+
     }
 
     private void onSelectFromGalleryResult(Intent data) {

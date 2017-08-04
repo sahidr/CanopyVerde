@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -86,6 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng l7 = new LatLng(10.484345, -66.826400);
     LatLng l8 = new LatLng(10.475043, -66.954308);
     LatLng[] l = {l1,l2,l3,l4,l5,l6,l7,l8};
+    private String name;
 
     /** Demonstrates customizing the info window and/or its contents. */
     private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
@@ -427,6 +430,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "CanopyVerde");
+        imagesFolder.mkdirs(); // <----
+
+        Calendar calendar = Calendar.getInstance();
+        java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
+        SimpleDateFormat date_name = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+        name = date_name.format(date);
+        File image = new File(imagesFolder, name);
+        Uri uriSavedImage = Uri.fromFile(image);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file name
         startActivityForResult(intent,REQUEST_CAMERA);
     }
 
@@ -437,6 +450,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == Activity.RESULT_OK) {
                 Intent i = new Intent(MapsActivity.this,GreenPointRegisterActivity.class);
                 i.putExtras(data);
+                i.putExtra("NAME",name);
                 startActivityForResult(i,REQUEST_GREEN_POINT_REGISTER);
             }
             // GREEN POINT REGISTER RESULT
