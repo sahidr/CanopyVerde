@@ -1,5 +1,8 @@
 package com.idbcgroup.canopyverde;
 
+import android.util.Log;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;
@@ -12,58 +15,68 @@ import java.net.HttpURLConnection;
 
 public class JSONResponseController {
 
-    public static APIResponse getJsonResponse(HttpURLConnection connection) throws IOException, JSONException {
+    public static APIResponse getJsonResponse(HttpURLConnection connection, boolean object) throws IOException, JSONException {
 
         /**
          * Initializes an APIResponse instance with the connection's response code in order to check
          * whether the request is valid or not.
          */
-        APIResponse response = new APIResponse(connection.getResponseCode());
-        StringBuilder responseBody = new StringBuilder();
+        APIResponse response;
+        try {
+            response = new APIResponse(connection.getResponseCode());
+            StringBuilder responseBody = new StringBuilder();
 
-        if ((response.getStatus() == HttpURLConnection.HTTP_OK ) ||
-                (response.getStatus() == HttpURLConnection.HTTP_CREATED)) {
-            /**
-             * If valid, sets the APIResponse's body (JSON) after processing response body.
-             * Finally, a valid APIResponse is returned.
-             */
-            InputStream in = new BufferedInputStream(connection.getInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader((in)));
+            if ((response.getStatus() == HttpURLConnection.HTTP_OK) ||
+                    (response.getStatus() == HttpURLConnection.HTTP_CREATED)) {
+                /**
+                 * If valid, sets the APIResponse's body (JSON) after processing response body.
+                 * Finally, a valid APIResponse is returned.
+                 */
+                InputStream in = new BufferedInputStream(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(new InputStreamReader((in)));
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                responseBody.append(line);
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    responseBody.append(line);
+                }
+
+                if (object) {
+                    response.setBody(new JSONObject(responseBody.toString()));
+                } else {
+                    response.setBody(new JSONArray(responseBody.toString()));
+                }
+                return response;
+
+            } else if ((response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) ||
+                    (response.getStatus() == HttpURLConnection.HTTP_UNAUTHORIZED) ||
+                    (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND)
+                    ) {
+                /**
+                 * If invalid, sets the APIResponse's error body (JSON) after processing response body.
+                 * Finally, an invalid APIResponse is returned.
+                 */
+                InputStream in = new BufferedInputStream(connection.getErrorStream());
+                BufferedReader reader = new BufferedReader(new InputStreamReader((in)));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    responseBody.append(line);
+                }
+
+                response.setBody(new JSONObject(responseBody.toString()));
+                return response;
+
+            } else {
+
+                /**
+                 * If there was an error during communication (e.g. +500 errors), null is returned.
+                 */
+                response = new APIResponse(-2);
+                return response;
             }
-
-            response.setBody(new JSONObject(responseBody.toString()));
-
+        } catch (java.net.SocketTimeoutException e){
+            response = new APIResponse(-2);
             return response;
-
-        } else if ((response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) ||
-                (response.getStatus() == HttpURLConnection.HTTP_UNAUTHORIZED) ||
-                (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND)
-                ){
-            /**
-             * If invalid, sets the APIResponse's error body (JSON) after processing response body.
-             * Finally, an invalid APIResponse is returned.
-             */
-            InputStream in = new BufferedInputStream(connection.getErrorStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader((in)));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                responseBody.append(line);
-            }
-
-            response.setBody(new JSONObject(responseBody.toString()));
-            return response;
-
-        } else {
-
-            /**
-             * If there was an error during communication (e.g. +500 errors), null is returned.
-             */
-            return null;
         }
     }
 }

@@ -18,42 +18,37 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class GreenPointRegisterActivity extends AppCompatActivity {
 
-    private SharedPreferences pref_marker;
+    private SharedPreferences pref_marker,pref_session;
     private TextView current_location;
     private int MAX_LINES = 2;
     private ImageView photoCapture;
     Bitmap thumbnail;
     private String location;
     private Spinner canopySize,stemSize,heightSpinner,treeType;
-    private String name;
+    private String imageName,email;
+    double latitud, longitud;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,20 +60,22 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+        pref_session = getSharedPreferences("Session", 0);
+        email = pref_session.getString("email",null);
 
         pref_marker = getSharedPreferences("Marker", 0);
-        double lat = Double.longBitsToDouble( pref_marker.getLong( "lat", -1 ));
-        double lon = Double.longBitsToDouble( pref_marker.getLong( "long", -1 ));
+        latitud = Double.longBitsToDouble( pref_marker.getLong( "lat", -1 ));
+        longitud = Double.longBitsToDouble( pref_marker.getLong( "long", -1 ));
 
-        name = (String) getIntent().getExtras().get("NAME");
+        imageName = (String) getIntent().getExtras().get("NAME");
 
 
-        if(name == null) {
+        if(imageName == null) {
             thumbnail= null;
         } else {
             thumbnail = BitmapFactory.decodeFile(
                     Environment.getExternalStorageDirectory()+
-                            "/CanopyVerde/"+name);
+                            "/CanopyVerde/"+imageName);
             /*
             thumbnail = (Bitmap) getIntent().getExtras().get("data");
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -91,7 +88,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
         try {
 
-            addresses = geocoder.getFromLocation(lat, lon, MAX_LINES);
+            addresses = geocoder.getFromLocation(latitud, longitud, MAX_LINES);
             String address = addresses.get(0).getAddressLine(0);
             // If any additional address line present than only,
             // check with max available address lines by getMaxAddressLineIndex()
@@ -146,10 +143,10 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
         SimpleDateFormat date_name = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
-        name = date_name.format(date);
-        File image = new File(imagesFolder, name);
+        imageName = date_name.format(date);
+        File image = new File(imagesFolder, imageName);
         Uri uriSavedImage = Uri.fromFile(image);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file name
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file imageName
         startActivityForResult(intent, 0);
     }
 
@@ -165,7 +162,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
             */
             Bitmap image = BitmapFactory.decodeFile(
                     Environment.getExternalStorageDirectory()+
-                            "/CanopyVerde/"+name);
+                            "/CanopyVerde/"+imageName);
             photoCapture.setImageBitmap(image);
 
 
@@ -188,16 +185,29 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
         //LOAD DATA INTO DATABASE
 
+        Log.d("LATITUD", String.valueOf(latitud));
+        Log.d("LONGITUD", String.valueOf(longitud));
+        Log.d("CANOPY", String.valueOf(canopy));
+        Log.d("STEM", String.valueOf(stem));
+        Log.d("HEIGHT", String.valueOf(height));
+        Log.d("TYPE", String.valueOf(type));
+        Log.d("LOCATION", String.valueOf(location));
+        Log.d("USER", email);
 
+        Post p = new Post();
+        p.execute(String.valueOf(latitud),String.valueOf(longitud),canopy,stem,height,type,location,"1",email);
+
+/*
         Intent i = getIntent();
         i.putExtra("location",location);
         i.putExtra("canopy",canopy);
         i.putExtra("stem",stem);
         i.putExtra("height", height);
         i.putExtra("type",type);
-        i.putExtra("name",name);
+        i.putExtra("imageName",imageName);
         setResult(RESULT_OK, i);
         finish();
+        */
     }
 
     @Override
@@ -208,7 +218,106 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
     // AsyncTask. Sends Log In's data to the server's API and process the response.
 
+    public class Post extends AsyncTask<String, Integer, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            JSONObject apiResponse = new JSONObject();
+            URL url;
+            HttpURLConnection urlConnection = null;
+            Integer result = 0;
+            try {
+                url = new URL("http://192.168.1.85:8000/greenpoint/");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setReadTimeout(10000);
+
+                String form = URLEncoder.encode("latitud", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                form += "&" + URLEncoder.encode("longitud", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
+                form += "&" + URLEncoder.encode("canopy", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
+                form += "&" + URLEncoder.encode("stem", "UTF-8") + "=" + URLEncoder.encode(strings[3], "UTF-8");
+                form += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(strings[4], "UTF-8");
+                form += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(strings[5], "UTF-8");
+                form += "&" + URLEncoder.encode("location", "UTF-8") + "=" + URLEncoder.encode(strings[6], "UTF-8");
+                form += "&" + URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode(strings[7], "UTF-8");
+                form += "&" + URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(strings[8], "UTF-8");
+
+                OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+                writer.write(form);
+                writer.flush();
+                APIResponse response = JSONResponseController.getJsonResponse(urlConnection,true);
 
 
+                if (response != null) {
+                    if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+                        JSONObject jsonResponse = response.getBody();
 
+                        Log.d("OK","ok");
+
+                        result = 0;
+
+                    } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                        Log.d("BAD","BAD");
+
+                        JSONObject jsonResponse = response.getBody();
+                        String responseMessage = jsonResponse.getJSONArray("non_field_errors").getString(0);
+                        if (responseMessage.equals("Unable to log in with provided form.")) {
+                            result = 1;
+                        }
+                    } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
+                        JSONObject jsonResponse = response.getBody();
+                        String responseMessage = jsonResponse.getString("detail");
+                        Log.d("NOTFOUND", responseMessage);
+                        if (responseMessage.equals("Not found.")) {
+                            result = -1;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                return -1;
+            }
+            return result;
+        }
+
+        // Process doInBackground() results
+        @Override
+        protected void onPostExecute(Integer anInt) {
+            String message;
+            Intent i = getIntent();
+            switch (anInt) {
+                case (-1):
+                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_CANCELED, i);
+                    finish();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                case (0):
+                    //Intent intent = new Intent(getBaseContext(), DashboardActivity.class);
+                    message = "¡Bienvenido!";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_OK, i);
+                    finish();
+                    //startActivity(intent);
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                case (1):
+                    message = "Nombre de usuario y/o contraseña inválidos";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_CANCELED, i);
+                    finish();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
 }
