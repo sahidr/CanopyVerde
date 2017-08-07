@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -17,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -38,7 +40,21 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -78,16 +94,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static int WIDTH = 32;
     private static int REQUEST_CAMERA = 0;
     private static int REQUEST_GREEN_POINT_REGISTER = 1;
-
-    LatLng l1 = new LatLng(10.492037, -66.827096);
-    LatLng l2 = new LatLng(10.492330, -66.827681);
-    LatLng l3 = new LatLng(10.488365, -66.825681);
-    LatLng l4 = new LatLng(10.488530, -66.825873);
-    LatLng l5 = new LatLng(10.490110, -66.827370);
-    LatLng l6 = new LatLng(10.491841, -66.826925);
-    LatLng l7 = new LatLng(10.484345, -66.826400);
-    LatLng l8 = new LatLng(10.475043, -66.954308);
-    LatLng[] l = {l1,l2,l3,l4,l5,l6,l7,l8};
     private String name;
 
     /** Demonstrates customizing the info window and/or its contents. */
@@ -196,7 +202,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 size.setText("Undefined");
             else size.setText(m_size+"m");
 
-            if (m_image.equals("none")){
+            if (m_image.equals("none")|| (m_image.equals(""))){
                 tree.setImageResource(R.drawable.araguaney);
             } else {
                 Uri photo = Uri.parse(m_image);
@@ -225,14 +231,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+
+        Get g = new Get();
+        g.execute();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         context = this;
-
-        markers = new ArrayList<>();
-        Collections.addAll(markers, l);
-
+        markers = new ArrayList<LatLng>();
         stats = (RelativeLayout) findViewById(R.id.stats);
         greenIndex = (TextView) findViewById(R.id.greenViewIndexPercent);
 
@@ -510,6 +517,78 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    public class Get extends AsyncTask<String, Integer, Integer>{
+        @Override
+        protected Integer doInBackground(String... params) {
+
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                url = new URL("http://192.168.0.106:8000/greenpoint/");
+
+                urlConnection = (HttpURLConnection) url
+                        .openConnection();
+
+                StringBuilder responseBody = new StringBuilder();
+                InputStream input = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader reader = new BufferedReader(new InputStreamReader((input)));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    responseBody.append(line);
+                }
+
+                JSONArray jsonArray =  new JSONArray(responseBody.toString());
+                JSONObject jsonResponse;
+
+                // DUMMY MARKERS
+                BitmapDrawable green_point=(BitmapDrawable)getResources().getDrawable(R.drawable.p_verde);
+                Bitmap green_point_scaled = Bitmap
+                        .createScaledBitmap(green_point.getBitmap(),WIDTH, HEIGHT, false);
+
+                GreenPoint gp;
+                for (int i=0; i< jsonArray.length(); i++) {
+                    jsonResponse = new JSONObject(String.valueOf(jsonArray.getJSONObject(i)));
+
+                    Float latitud = Float.parseFloat(jsonResponse.getString("latitud"));
+                    Float longitud = Float.parseFloat(jsonResponse.getString("longitud"));
+                    int canopy = jsonResponse.getInt("canopy");
+                    int stem = jsonResponse.getInt("stem");
+                    int height = jsonResponse.getInt("height");
+                    String type = jsonResponse.getString("type");
+                    String location = jsonResponse.getString("location");
+
+                    Log.d("LATITUD", String.valueOf(latitud));
+                    Log.d("LONGITUD", String.valueOf(longitud));
+                    Log.d("CANOPY", String.valueOf(canopy));
+                    Log.d("STEM", String.valueOf(stem));
+                    Log.d("HEIGHT", String.valueOf(height));
+                    Log.d("TYPE", String.valueOf(type));
+                    Log.d("LOCATION", String.valueOf(location));
+
+                    gp = new GreenPoint();
+                    gp.setLocation(location);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.YEAR, 1993);
+                    calendar.set(Calendar.DAY_OF_MONTH, 14);
+                    calendar.set(Calendar.MONTH, 0);
+                    java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
+
+                    markers.add(new LatLng(latitud,longitud));
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+
+
     }
 
 
