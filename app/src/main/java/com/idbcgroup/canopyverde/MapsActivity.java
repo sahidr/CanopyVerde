@@ -18,14 +18,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.github.siyamed.shapeimageview.CircularImageView;
 import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,33 +36,17 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
-
-import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Locale;
-import java.util.Objects;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -152,71 +133,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Get g = new Get();
         g.execute();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 1993);
-        calendar.set(Calendar.DAY_OF_MONTH, 14);
-        calendar.set(Calendar.MONTH, 0);
-        java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
-/*
-
-        // DUMMY MARKERS
-        BitmapDrawable green_point = (BitmapDrawable) getResources().getDrawable(R.drawable.p_verde);
-        Bitmap green_point_scaled = Bitmap
-                .createScaledBitmap(green_point.getBitmap(), WIDTH, HEIGHT, false);
-
-        GreenPoint gp = new GreenPoint();
-        gp.setLocation("Av. Los Cortijos");
-
-
-        gp.setDate(date);
-        gp.setHeight("2");
-        gp.setTreeType("Araguaney");
-        gp.setImage("none");
-        gp.setStatus(VERIFIED);
-        gp.setUser("@idbcgroup");
-
-        for (int i = 0; i < latlong.size(); i++) {
-            Marker m = mMap.addMarker(new MarkerOptions()
-                    .position(latlong.get(i))
-                    .icon(BitmapDescriptorFactory.fromBitmap(green_point_scaled))
-                    .anchor(0.5f, 0.4f)
-            );
-            m.setTag(gp);
-        }
-*/
-        GreenPoint rp = new GreenPoint();
-        rp.setLocation("Av. Los Cortijos");
-        rp.setDate(date);
-        rp.setHeight("2");
-        rp.setTreeType("Araguaney");
-        rp.setImage("none");
-        rp.setStatus(REQUESTED);
-        rp.setUser("@idbcgroup");
-
-        BitmapDrawable red_point = (BitmapDrawable) getResources().getDrawable(R.drawable.p_rojo);
-        Bitmap red_point_scaled = Bitmap
-                .createScaledBitmap(red_point.getBitmap(), WIDTH, HEIGHT, false);
-        LatLng l9 = new LatLng(10.485043, -66.854308);
-        Marker m1 = mMap.addMarker(new MarkerOptions()
-                .position(l9)
-                .icon(BitmapDescriptorFactory.fromBitmap(red_point_scaled))
-                .anchor(0.5f, 0.4f)
-        );
-        m1.setTag(rp);
-
-        GreenPoint rp1 = new GreenPoint();
-        rp1.setLocation("Av. Los Cortijos");
-        rp1.setStatus(UNREQUESTED);
-        LatLng l10 = new LatLng(10.486043, -66.844308);
-        Marker m2 = mMap.addMarker(new MarkerOptions()
-                .position(l10)
-                .icon(BitmapDescriptorFactory.fromBitmap(red_point_scaled))
-                .anchor(0.5f, 0.4f)
-        );
-        m2.setTag(rp1);
-
-
-        if (ActivityCompat
+      if (ActivityCompat
                 .checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat
                 .checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -369,17 +286,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 url = new URL("http://192.168.1.85:8000/greenpoint/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
-                /*
-                StringBuilder responseBody = new StringBuilder();
-                InputStream input = new BufferedInputStream(urlConnection.getInputStream());
-                BufferedReader reader = new BufferedReader(new InputStreamReader((input)));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    responseBody.append(line);
-                }
-                apiResponse = new JSONObject(responseBody.toString());
-                */
 
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection,false);
                 if (response != null) {
@@ -415,41 +321,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                    JSONArray pointsArray = response.getJSONArray("body");
                    JSONObject points;
 
-                   GreenPoint gp;
+                   GreenPoint gp, rp;
 
                    for (int i = 0; i < pointsArray.length(); i++) {
                        points = pointsArray.getJSONObject(i);
                        Float latitud = Float.parseFloat(points.getString("latitud"));
                        Float longitud = Float.parseFloat(points.getString("longitud"));
-                       int canopy = points.getInt("canopy");
-                       int stem = points.getInt("stem");
-                       int height = points.getInt("height");
-                       String type = points.getString("type");
+                       int status = points.getInt("status");
                        String location = points.getString("location");
                        Date date = java.sql.Date.valueOf(points.getString("date"));
-                       int status = points.getInt("status");
-                       String user = points.getString("user");
+
                        Log.d("LATITUD", String.valueOf(latitud));
                        Log.d("LONGITUD", String.valueOf(longitud));
-                       Log.d("CANOPY", String.valueOf(canopy));
-                       Log.d("STEM", String.valueOf(stem));
-                       Log.d("HEIGHT", String.valueOf(height));
-                       Log.d("TYPE", String.valueOf(type));
                        Log.d("LOCATION", String.valueOf(location));
                        Log.d("DATE", String.valueOf(date));
                        Log.d("STATUS", String.valueOf(status));
-                       Log.d("USER", user);
 
                        gp = new GreenPoint();
                        gp.setLocation(location);
                        gp.setDate(date);
-                       gp.setUser(user);
                        gp.setImage("");
-                       gp.setTreeType(type);
-                       gp.setHeight(String.valueOf(height));
                        gp.setStatus(status);
-
                        int drawable = R.drawable.p_amarillo;
+
+                       if (status == 1 || status == 2){
+                           int canopy = points.getInt("canopy");
+                           int stem = points.getInt("stem");
+                           int height = points.getInt("height");
+                           String type = points.getString("type");
+                           String user = points.getString("user");
+
+                           Log.d("CANOPY", String.valueOf(canopy));
+                           Log.d("STEM", String.valueOf(stem));
+                           Log.d("HEIGHT", String.valueOf(height));
+                           Log.d("TYPE", String.valueOf(type));
+                           Log.d("USER", user);
+                           gp.setUser(user);
+                           gp.setTreeType(type);
+                           gp.setHeight(String.valueOf(height));
+                       } else if (status == 0){
+                           String type = points.getString("type");
+                           String user = points.getString("user");
+                           Log.d("TYPE", String.valueOf(type));
+                           Log.d("USER", user);
+                           gp.setUser(user);
+                           gp.setTreeType(type);
+                       }
 
                        switch (status){
                            case -1:

@@ -185,6 +185,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
         //LOAD DATA INTO DATABASE
 
+        Log.d("DATA TO SEND", "DATA BELOW: ");
         Log.d("LATITUD", String.valueOf(latitud));
         Log.d("LONGITUD", String.valueOf(longitud));
         Log.d("CANOPY", String.valueOf(canopy));
@@ -195,7 +196,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         Log.d("USER", email);
 
         Post p = new Post();
-        p.execute(String.valueOf(latitud),String.valueOf(longitud),canopy,stem,height,type,location,"1",email);
+        p.execute(String.valueOf(latitud),String.valueOf(longitud),canopy,stem,height,type,location,"1");
 
 /*
         Intent i = getIntent();
@@ -246,7 +247,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
                 form += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(strings[5], "UTF-8");
                 form += "&" + URLEncoder.encode("location", "UTF-8") + "=" + URLEncoder.encode(strings[6], "UTF-8");
                 form += "&" + URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode(strings[7], "UTF-8");
-                form += "&" + URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(strings[8], "UTF-8");
+                //form += "&" + URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(strings[8], "UTF-8");
 
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
                 writer.write(form);
