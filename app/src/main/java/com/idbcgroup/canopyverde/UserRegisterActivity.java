@@ -6,20 +6,24 @@ import android.os.AsyncTask;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -55,7 +59,7 @@ public class UserRegisterActivity extends AppCompatActivity {
         country = (Spinner) findViewById(R.id.country);
         city = (Spinner) findViewById(R.id.city);
 
-        GetData json = new GetData();
+        GetCountries json = new GetCountries();
         json.execute();
 
     }
@@ -67,28 +71,29 @@ public class UserRegisterActivity extends AppCompatActivity {
 
     public void userRegister(View view){
 
-        String fullname_text,username_text,email_text,password_text;
+        String fullname_text,username_text,email_text,password_text,country_text, city_text;
 
         fullname_text = fullname.getText().toString();
         username_text = username.getText().toString();
         email_text = email.getText().toString();
         password_text = password.getText().toString();
+        country_text = country.getSelectedItem().toString();
+        city_text = city.getSelectedItem().toString();
 
         fullname_field = fullname_text.length() != 0;
         username_field = username_text.length() != 0;
         email_field = email_text.length() != 0
                 && android.util.Patterns.EMAIL_ADDRESS.matcher(email_text).matches();
         password_field = password_text.length() >= 8;
-        country_field = !country.getSelectedItem().toString().equals("País");
-        city_field = !city.getSelectedItem().toString().equals("Ciudad");
+        country_field = !country_text.equals("País");
+        city_field = !city_text.equals("Ciudad");
 
-        verified = verifyFields(fullname_field,username_field,email_field,password_field,country_field,city_field);
+        verified = verifyFields(fullname_field,username_field,email_field,password_field,
+                country_field,city_field);
 
         if (verified) {
-            Intent i = new Intent(UserRegisterActivity.this, LoginActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
-            finish();
+            PostUser postUser = new PostUser();
+            postUser.execute(username_text,email_text,password_text,fullname_text,country_text,city_text);
         }
     }
 
@@ -107,7 +112,7 @@ public class UserRegisterActivity extends AppCompatActivity {
     }
 
 
-    private class GetData extends AsyncTask <Void, Void, ArrayList<String>> {
+    private class GetCountries extends AsyncTask <Void, Void, ArrayList<String>> {
 
         @Override
         protected ArrayList<String> doInBackground(Void... params) {
@@ -195,6 +200,92 @@ public class UserRegisterActivity extends AppCompatActivity {
                 }
             });
 
+        }
+    }
+
+    private class PostUser extends AsyncTask<String, Integer, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+            Integer result = -1;
+            try {
+                url = new URL("http://192.168.1.85:8000/userProfile/");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestMethod("POST");
+
+                JSONObject user = new JSONObject();
+                JSONObject profile = new JSONObject();
+                user.put("username",strings[0]);
+                user.put("email",strings[1]);
+                user.put("password",strings[2]);
+                profile.put("fk_user",user);
+                profile.put("fullname",strings[3]);
+                profile.put("country",strings[4]);
+                profile.put("city",strings[5]);
+
+                OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+                writer.write(profile.toString());
+                writer.flush();
+                APIResponse response = JSONResponseController.getJsonResponse(urlConnection, true);
+
+                if (response != null) {
+                    if (response.getStatus() == HttpURLConnection.HTTP_OK || response.getStatus() == HttpURLConnection.HTTP_CREATED) {
+                        Log.d("OK", "OK");
+                        result = 0;
+                    } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                        Log.d("BAD", "BAD");
+                        result = 1;
+                    } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
+                        Log.d("NOT", "FOUND");
+                        result = -1;
+                    }
+                }
+            } catch (Exception e) {
+                return result;
+            }
+            return result;
+        }
+
+        // Process doInBackground() results
+        @Override
+        protected void onPostExecute(Integer anInt) {
+            String message;
+            Intent i = getIntent();
+            switch (anInt) {
+                case (-1):
+                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_CANCELED, i);
+                    finish();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                case (0):
+                    //Intent intent = new Intent(getBaseContext(), DashboardActivity.class);
+                    message = "¡Bienvenido!";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_OK, i);
+                    finish();
+                    //startActivity(intent);
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                case (1):
+                    message = "Nombre de usuario y/o contraseña inválidos";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_CANCELED, i);
+                    finish();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
