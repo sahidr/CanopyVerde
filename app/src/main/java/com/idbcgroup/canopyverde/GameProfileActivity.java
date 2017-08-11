@@ -54,7 +54,7 @@ public class GameProfileActivity extends AppCompatActivity {
 
         pref_session = getSharedPreferences("Session", 0);
 
-        String name = pref_session.getString("name",null);
+        //String name = pref_session.getString("name",null);
         String email = pref_session.getString("email",null);
         String username = pref_session.getString("username",null);
         String profilepic = pref_session.getString("photo",null);
@@ -69,9 +69,9 @@ public class GameProfileActivity extends AppCompatActivity {
             String user =  emailParts[0];
             profileUsername.setText("@"+user);
         } else {
-            profileUsername.setText(username);
+            profileUsername.setText("@"+username);
         }
-
+/*
         String[] namesplit = name.split(" ");
         if (namesplit.length <= 2 ){
             profileFullname.setText(name);
@@ -79,7 +79,7 @@ public class GameProfileActivity extends AppCompatActivity {
         else {
             profileFullname.setText(namesplit[0]+" "+namesplit[2]);
         }
-
+*/
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ITALIAN);
         float gamePoints = 2544;
         String points = getResources().getString(R.string.badge_name_example, formatter.format(gamePoints),

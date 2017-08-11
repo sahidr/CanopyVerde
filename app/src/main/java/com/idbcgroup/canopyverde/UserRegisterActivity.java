@@ -235,10 +235,10 @@ public class UserRegisterActivity extends AppCompatActivity {
                 writer.write(profile.toString());
                 writer.flush();
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection, true);
-
+                Log.d("OK", response.getBody().toString());
                 if (response != null) {
                     if (response.getStatus() == HttpURLConnection.HTTP_OK || response.getStatus() == HttpURLConnection.HTTP_CREATED) {
-                        Log.d("OK", "OK");
+                        Log.d("OK", response.getBody().toString());
                         result = 0;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
                         Log.d("BAD", "BAD");

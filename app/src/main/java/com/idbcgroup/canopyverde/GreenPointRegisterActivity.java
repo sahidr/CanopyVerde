@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +39,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class GreenPointRegisterActivity extends AppCompatActivity {
 
+    private static final int UNVERIFIED = 1;
     private SharedPreferences pref_marker,pref_session;
     private TextView current_location;
     private int MAX_LINES = 2;
@@ -48,7 +48,8 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     private String location;
     private Spinner canopySize,stemSize,heightSpinner,treeType;
     private String imageName,email;
-    double latitud, longitud;
+    private int id;
+    double latitude, longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,11 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         );
         pref_session = getSharedPreferences("Session", 0);
         email = pref_session.getString("email",null);
+        id = pref_session.getInt("id",0);
 
         pref_marker = getSharedPreferences("Marker", 0);
-        latitud = Double.longBitsToDouble( pref_marker.getLong( "lat", -1 ));
-        longitud = Double.longBitsToDouble( pref_marker.getLong( "long", -1 ));
+        latitude = Double.longBitsToDouble( pref_marker.getLong( "lat", -1 ));
+        longitude = Double.longBitsToDouble( pref_marker.getLong( "long", -1 ));
 
         imageName = (String) getIntent().getExtras().get("NAME");
 
@@ -74,21 +76,14 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
             thumbnail= null;
         } else {
             thumbnail = BitmapFactory.decodeFile(
-                    Environment.getExternalStorageDirectory()+
-                            "/CanopyVerde/"+imageName);
-            /*
-            thumbnail = (Bitmap) getIntent().getExtras().get("data");
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        */
+                    Environment.getExternalStorageDirectory()+ "/CanopyVerde/"+imageName);
         }
-
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses = null;
 
         try {
 
-            addresses = geocoder.getFromLocation(latitud, longitud, MAX_LINES);
+            addresses = geocoder.getFromLocation(latitude, longitude, MAX_LINES);
             String address = addresses.get(0).getAddressLine(0);
             // If any additional address line present than only,
             // check with max available address lines by getMaxAddressLineIndex()
@@ -98,7 +93,6 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
             String complete_location =  address+", "+address1+", "+state+city;
             location = address;
-
             current_location = (TextView) findViewById(R.id.location);
             current_location.setText(complete_location);
 
@@ -153,19 +147,10 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            /*
-            thumbnail = (Bitmap) data.getExtras().get("data");
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            assert thumbnail != null;
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            photoCapture.setImageBitmap(thumbnail);
-            */
+
             Bitmap image = BitmapFactory.decodeFile(
-                    Environment.getExternalStorageDirectory()+
-                            "/CanopyVerde/"+imageName);
+                    Environment.getExternalStorageDirectory()+ "/CanopyVerde/"+imageName);
             photoCapture.setImageBitmap(image);
-
-
         }
     }
 
@@ -186,29 +171,19 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         //LOAD DATA INTO DATABASE
 
         Log.d("DATA TO SEND", "DATA BELOW: ");
-        Log.d("LATITUD", String.valueOf(latitud));
-        Log.d("LONGITUD", String.valueOf(longitud));
+        Log.d("LATITUD", String.valueOf(latitude));
+        Log.d("LONGITUD", String.valueOf(longitude));
         Log.d("CANOPY", String.valueOf(canopy));
         Log.d("STEM", String.valueOf(stem));
         Log.d("HEIGHT", String.valueOf(height));
         Log.d("TYPE", String.valueOf(type));
         Log.d("LOCATION", String.valueOf(location));
-        Log.d("USER", email);
+        Log.d("ID", String.valueOf(id));
 
         Post p = new Post();
-        p.execute(String.valueOf(latitud),String.valueOf(longitud),canopy,stem,height,type,location,"1");
+        p.execute(String.valueOf(latitude),String.valueOf(longitude),canopy,stem,height,type,location,
+                String.valueOf(UNVERIFIED), String.valueOf(id));
 
-/*
-        Intent i = getIntent();
-        i.putExtra("location",location);
-        i.putExtra("canopy",canopy);
-        i.putExtra("stem",stem);
-        i.putExtra("height", height);
-        i.putExtra("type",type);
-        i.putExtra("imageName",imageName);
-        setResult(RESULT_OK, i);
-        finish();
-        */
     }
 
     @Override
@@ -239,15 +214,15 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setReadTimeout(10000);
 
-                String form = URLEncoder.encode("latitud", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
-                form += "&" + URLEncoder.encode("longitud", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
+                String form = URLEncoder.encode("latitude", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                form += "&" + URLEncoder.encode("longitude", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
                 form += "&" + URLEncoder.encode("canopy", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
                 form += "&" + URLEncoder.encode("stem", "UTF-8") + "=" + URLEncoder.encode(strings[3], "UTF-8");
                 form += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(strings[4], "UTF-8");
                 form += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(strings[5], "UTF-8");
                 form += "&" + URLEncoder.encode("location", "UTF-8") + "=" + URLEncoder.encode(strings[6], "UTF-8");
                 form += "&" + URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode(strings[7], "UTF-8");
-                //form += "&" + URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(strings[8], "UTF-8");
+                form += "&" + URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(strings[8], "UTF-8");
 
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
                 writer.write(form);

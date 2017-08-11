@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,6 +36,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Arrays;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -291,9 +301,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view){
 
-        load.setVisibility(View.VISIBLE);
         String email_text,password_text;
-
         email_text = email.getText().toString();
         password_text = password.getText().toString();
 
@@ -304,19 +312,14 @@ public class LoginActivity extends AppCompatActivity {
         verified = verifyFields(email_field, password_field);
 
         if (verified) {
-            startActivity(new Intent(LoginActivity.this,MapsActivity.class));
-            SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
-            editor.putBoolean("logged",true);
-            editor.putString("name","Sahid Reyes");
-            editor.putString("email",email_text);
-            editor.putString("username","@sahid_r");
-            editor.apply();
 
-            finish();
+            AttemptLogin l = new AttemptLogin();
+            l.execute(email_text,password_text);
+
         } else {
-            load.setVisibility(View.INVISIBLE);
             //Toast.makeText(getBaseContext(),"Fields must be filled",Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public boolean verifyFields(boolean email_field, boolean password_field){
@@ -347,6 +350,104 @@ public class LoginActivity extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+    // AsyncTask. Sends Log In's data to the server's API and process the response.
+    public class AttemptLogin extends AsyncTask<String, Integer, Integer> {
 
+        @Override
+        protected void onPreExecute() {
+            //progressBar.setVisibility(View.VISIBLE);
+        }
+
+        // Sends validated Log In's data to the server's API and process the response. Returns an
+        // integer value ([-1..1):
+        // * -1, if an error occurred during the communication
+        // * 0, if everything went OK (redirecting to MainActivity and updating SharedPreferences afterwards)
+        // * 1, if the credentials provided aren't valid
+        @Override
+        protected Integer doInBackground(String... strings) {
+
+            Integer result = -1;
+            try {
+                // Defining and initializing server's communication's variables
+                String credentials = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                credentials += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
+
+                URL url = new URL("http://192.168.1.85:8000/api-token-auth/");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+
+                Log.d("Credentias",credentials);
+
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                writer.write(credentials);
+                writer.flush();
+                APIResponse response = JSONResponseController.getJsonResponse(connection,true);
+
+                if (response != null){
+
+                    Log.w("RESPONSE_STATUS", String.valueOf(response.getStatus()));
+                    Log.d("RESPONSE_BODY", String.valueOf(response.getBody()));
+
+                    if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+                        JSONObject response_body = response.getBody();
+                        SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
+                        editor.putBoolean("logged",true);
+                        editor.putString("username",response_body.getString("username"));
+                        editor.putInt("id",response_body.getInt("id"));
+                        editor.putString("email",response_body.getString("email"));
+                        editor.putString("token",response_body.getString("token"));
+                        editor.apply();
+
+                        Log.d("OK", "OK");
+                        result = 0;
+
+                    } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                        Log.d("BAD", "BAD");
+                        result = 1;
+                    } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
+                        Log.d("NOT", "FOUND");
+                        result = -1;
+                    }
+                }
+
+            } catch (MalformedURLException e) {
+                return result;
+            } catch (IOException e) {
+                return result;
+            } catch (JSONException e) {
+                return result;
+            }
+            return result;
+        }
+
+        // Process doInBackground() results
+        @Override
+        protected void onPostExecute(Integer anInt) {
+            String message;
+            switch (anInt) {
+                case (-1):
+                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                case (0):
+                    Intent intent = new Intent(getBaseContext(), MapsActivity.class);
+                    message = "¡Bienvenido!";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                    finish();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                case (1):
+                    message = "Nombre de usuario y/o contraseña inválidos";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
 }

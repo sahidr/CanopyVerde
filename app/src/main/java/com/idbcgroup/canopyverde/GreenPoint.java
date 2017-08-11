@@ -13,7 +13,8 @@ public class GreenPoint {
     private String treeType;
     private String image;
     private int status;
-    private String user;
+    private String username;
+    private String profileImage;
 
     public GreenPoint(){}
 
@@ -57,11 +58,11 @@ public class GreenPoint {
         this.date = date;
     }
 
-    public String getUser (){
-        return user;
+    public String getUsername (){
+        return username;
     }
 
-    public void setUser(String user) { this.user = user; }
+    public void setUsername(String username) { this.username = username; }
 
     public String getImage (){
         return image;
@@ -95,5 +96,12 @@ public class GreenPoint {
         this.stemSize = stem;
     }
 
+    public String getProfileImage (){
+        return profileImage;
+    }
+
+    public void setProfileImage(String image){
+        this.profileImage = image;
+    }
 
 }

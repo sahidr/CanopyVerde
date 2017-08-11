@@ -55,12 +55,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
-    private SharedPreferences pref_marker;
     private MapStyleOptions style;
     private Context context;
-    private Bitmap m_tree;
     private Date m_date;
-    private String m_type, m_size, m_location, m_image, m_email, m_profile, m_user;
+    private String m_type, m_size, m_location, m_image, m_username, m_profile;
     private int m_status;
     private TextView greenIndex, populationDensity;
     private RelativeLayout stats;
@@ -76,7 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static int WIDTH = 32;
     private static int REQUEST_CAMERA = 0;
     private static int REQUEST_GREEN_POINT_REGISTER = 1;
-    private String name;
+    private String imageName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +150,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMinZoomPreference(12);
-        mMap.setMaxZoomPreference(22);
+        mMap.setMaxZoomPreference(20);
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
 
     }
@@ -241,10 +239,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Calendar calendar = Calendar.getInstance();
         java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
         SimpleDateFormat date_name = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
-        name = date_name.format(date);
-        File image = new File(imagesFolder, name);
+        imageName = date_name.format(date);
+        File image = new File(imagesFolder, imageName);
         Uri uriSavedImage = Uri.fromFile(image);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file name
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file imageName
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
@@ -255,7 +253,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == Activity.RESULT_OK) {
                 Intent i = new Intent(MapsActivity.this, GreenPointRegisterActivity.class);
                 i.putExtras(data);
-                i.putExtra("NAME", name);
+                i.putExtra("NAME", imageName);
                 startActivityForResult(i, REQUEST_GREEN_POINT_REGISTER);
             }
             // GREEN POINT REGISTER RESULT
@@ -288,6 +286,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 urlConnection.setConnectTimeout(10000);
 
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection,false);
+                Log.w("API_RESPONSE", response.toString());
+
                 if (response != null) {
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {
                         apiResponse.put("status",0);
@@ -325,14 +325,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                    for (int i = 0; i < pointsArray.length(); i++) {
                        points = pointsArray.getJSONObject(i);
-                       Float latitud = Float.parseFloat(points.getString("latitud"));
-                       Float longitud = Float.parseFloat(points.getString("longitud"));
+                       Float latitude = Float.parseFloat(points.getString("latitude"));
+                       Float longitude = Float.parseFloat(points.getString("longitude"));
                        int status = points.getInt("status");
                        String location = points.getString("location");
                        Date date = java.sql.Date.valueOf(points.getString("date"));
 
-                       Log.d("LATITUD", String.valueOf(latitud));
-                       Log.d("LONGITUD", String.valueOf(longitud));
+                       Log.d("LATITUD", String.valueOf(latitude));
+                       Log.d("LONGITUD", String.valueOf(longitude));
                        Log.d("LOCATION", String.valueOf(location));
                        Log.d("DATE", String.valueOf(date));
                        Log.d("STATUS", String.valueOf(status));
@@ -349,22 +349,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                            int stem = points.getInt("stem");
                            int height = points.getInt("height");
                            String type = points.getString("type");
-                           String user = points.getString("user");
+                           String user = points.getString("username");
 
                            Log.d("CANOPY", String.valueOf(canopy));
                            Log.d("STEM", String.valueOf(stem));
                            Log.d("HEIGHT", String.valueOf(height));
                            Log.d("TYPE", String.valueOf(type));
                            Log.d("USER", user);
-                           gp.setUser(user);
+                           gp.setUsername(user);
                            gp.setTreeType(type);
                            gp.setHeight(String.valueOf(height));
                        } else if (status == 0){
                            String type = points.getString("type");
-                           String user = points.getString("user");
+                           String user = points.getString("username");
                            Log.d("TYPE", String.valueOf(type));
                            Log.d("USER", user);
-                           gp.setUser(user);
+                           gp.setUsername(user);
                            gp.setTreeType(type);
                        }
 
@@ -390,7 +390,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                .createScaledBitmap(color.getBitmap(), WIDTH, HEIGHT, false);
 
                         Marker m = mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(latitud, longitud))
+                                .position(new LatLng(latitude, longitude))
                                 .icon(BitmapDescriptorFactory.fromBitmap(color_scaled))
                                 .anchor(0.5f, 0.4f)
                         );
@@ -425,7 +425,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             assert gp != null;
             m_status = gp.getStatus();
 
-            if (m_status == 0 || m_status == -1) {
+            if (m_status == UNREQUESTED || m_status == REQUESTED) {
                 renderRedPoint(marker, redPointWindow);
                 markerView = redPointWindow;
             } else {
@@ -456,8 +456,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             } else {
                 available.setText(R.string.occupied);
-                m_user = rp.getUser();
-                plant.setText(m_user);
+                m_username = rp.getUsername();
+                plant.setText(m_username);
             }
         }
 
@@ -468,10 +468,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             m_status = gp.getStatus();
             m_date = gp.getDate();
             m_type = gp.getTreeType();
-            m_email = gp.getUser();
+            m_username = gp.getUsername();
             m_location = gp.getLocation();
             m_image = gp.getImage();
             m_size = gp.getHeight();
+            m_profile = gp.getProfileImage();
 
             PorterShapeImageView tree = (PorterShapeImageView) view.findViewById(R.id.treePic);
             PorterShapeImageView profile = (PorterShapeImageView) view.findViewById(R.id.profile);
@@ -484,16 +485,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             // from email get username and profile pic
 
-            pref_session = getSharedPreferences("Session", 0);
-            m_profile = pref_session.getString("photo",null);
+            //pref_session = getSharedPreferences("Session", 0);
+            //m_profile = pref_session.getString("photo",null);
 
-            String username = pref_session.getString("username",null);
+            //String username = pref_session.getString("username",null);
 
-            if (m_email.equals("idbcgroup@gmail.com")) {
+            if (m_username.equals("idbcgroup")) {
                 user.setText("@idbcgroup");
                 profile.setImageResource(R.drawable.btn_locate);
             }else {
-                user.setText(username);
+                user.setText("@"+m_username);
                 if (m_profile != null){
                     Uri photo = Uri.parse(m_profile);
                     Picasso.with(MapsActivity.this).load(photo).into(profile);
