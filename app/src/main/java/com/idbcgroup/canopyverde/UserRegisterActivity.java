@@ -216,7 +216,7 @@ public class UserRegisterActivity extends AppCompatActivity {
             HttpURLConnection urlConnection = null;
             Integer result = -1;
             try {
-                url = new URL("http://192.168.1.85:8000/userProfile/");
+                url = new URL("http://192.168.0.107:8000/userProfile/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestMethod("POST");

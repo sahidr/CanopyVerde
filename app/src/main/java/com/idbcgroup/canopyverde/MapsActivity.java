@@ -166,9 +166,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GreenPoint rp = (GreenPoint) marker.getTag();  //RED POINT DATA
         assert rp != null;
         m_status = rp.getStatus();
+        int rp_id = rp.getId();
+        Float lat = rp.getLatitude();
+        Float lng = rp.getLongitude();
+        String rp_location = rp.getLocation();
 
         if (m_status == -1) {
-            startActivity(new Intent(MapsActivity.this, RedPointRegister.class));
+            Intent i =new Intent(MapsActivity.this, RedPointRegister.class);
+            i.putExtra("id",rp_id);
+            i.putExtra("latitude",lat);
+            i.putExtra("longitude",lng);
+            i.putExtra("location",rp_location);
+            startActivity(i);
         }
     }
 
@@ -281,7 +290,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             HttpURLConnection urlConnection = null;
 
             try {
-                url = new URL("http://192.168.1.85:8000/greenpoint/");
+                url = new URL("http://192.168.0.107:8000/greenpoint/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 
@@ -328,6 +337,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                        Float latitude = Float.parseFloat(points.getString("latitude"));
                        Float longitude = Float.parseFloat(points.getString("longitude"));
                        int status = points.getInt("status");
+                       int id = points.getInt("id");
                        String location = points.getString("location");
                        Date date = java.sql.Date.valueOf(points.getString("date"));
 
@@ -336,8 +346,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                        Log.d("LOCATION", String.valueOf(location));
                        Log.d("DATE", String.valueOf(date));
                        Log.d("STATUS", String.valueOf(status));
+                       Log.d("ID", String.valueOf(id));
 
                        gp = new GreenPoint();
+                       gp.setLatitude(latitude);
+                       gp.setLongitude(longitude);
+                       gp.setId(id);
                        gp.setLocation(location);
                        gp.setDate(date);
                        gp.setImage("");
@@ -457,7 +471,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 available.setText(R.string.occupied);
                 m_username = rp.getUsername();
-                plant.setText(m_username);
+                plant.setText("@"+m_username);
             }
         }
 

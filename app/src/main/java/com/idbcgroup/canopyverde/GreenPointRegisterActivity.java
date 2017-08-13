@@ -208,7 +208,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
             HttpURLConnection urlConnection = null;
             Integer result = 0;
             try {
-                url = new URL("http://192.168.1.85:8000/greenpoint/");
+                url = new URL("http://192.168.0.107:8000/greenpoint/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setRequestMethod("POST");

@@ -15,6 +15,7 @@ public class GreenPoint {
     private int status;
     private String username;
     private String profileImage;
+    private Float latitude, longitude;
 
     public GreenPoint(){}
 
@@ -104,4 +105,19 @@ public class GreenPoint {
         this.profileImage = image;
     }
 
+    public Float getLatitude (){
+        return latitude;
+    }
+
+    public void setLatitude(Float latitude){
+        this.latitude = latitude;
+    }
+
+    public Float getLongitude (){
+        return longitude;
+    }
+
+    public void setLongitude(Float longitude){
+        this.longitude = longitude;
+    }
 }

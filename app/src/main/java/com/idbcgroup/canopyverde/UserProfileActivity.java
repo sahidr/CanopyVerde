@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -33,6 +34,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.facebook.login.LoginManager;
@@ -41,9 +43,15 @@ import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -74,7 +82,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private SharedPreferences pref_session;
     private ToggleButton edit;
     private ImageView camera;
-    private String name;
+    private int id;
+    private String imageName;
     private Bitmap image;
 
 //    private boolean enable;
@@ -104,10 +113,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
         pref_session = getSharedPreferences("Session", 0);
 
-        String name = pref_session.getString("name",null);
         String email = pref_session.getString("email",null);
         String username = pref_session.getString("username",null);
         String profilepic = pref_session.getString("photo",null);
+        id = pref_session.getInt("id",0);
 
         if (profilepic!=null) {
             Uri photo = Uri.parse(profilepic);
@@ -122,7 +131,7 @@ public class UserProfileActivity extends AppCompatActivity {
             profileUsername.setText(username);
         }
 
-        profileFullname.setText(name);
+        //profileFullname.setText(imageName);
         profileEmail.setText(email);
 
         float gamepoints = 2544;
@@ -233,10 +242,10 @@ public class UserProfileActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
         SimpleDateFormat date_name = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
-        name = date_name.format(date);
-        File image = new File(imagesFolder, name);
+        imageName = date_name.format(date);
+        File image = new File(imagesFolder, imageName);
         Uri uriSavedImage = Uri.fromFile(image);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file name
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file imageName
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
@@ -259,7 +268,7 @@ public class UserProfileActivity extends AppCompatActivity {
 */
         image = BitmapFactory.decodeFile(
                 Environment.getExternalStorageDirectory()+
-                        "/CanopyVerde/profile"+name);
+                        "/CanopyVerde/profile"+imageName);
         profilePic.setImageBitmap(image);
         //Uri image = () data.getStringExtra(MediaStore.EXTRA_OUTPUT);
         //data.getClipData()
@@ -377,4 +386,98 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+
+
+    // AsyncTask. Sends Log In's data to the server's API and process the response.
+
+    public class Post extends AsyncTask<String, Integer, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            //progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            JSONObject apiResponse = new JSONObject();
+            URL url;
+            HttpURLConnection urlConnection = null;
+            Integer result = 0;
+            try {
+                url = new URL("http://192.168.0.107:8000/userProfile/"+id+"/");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+
+                APIResponse response = JSONResponseController.getJsonResponse(urlConnection,true);
+
+
+                if (response != null) {
+                    if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+                        JSONObject jsonResponse = response.getBody();
+
+                        Log.d("OK","ok");
+
+                        result = 0;
+
+                    } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                        Log.d("BAD","BAD");
+
+                        JSONObject jsonResponse = response.getBody();
+                        String responseMessage = jsonResponse.getJSONArray("non_field_errors").getString(0);
+                        if (responseMessage.equals("Unable to log in with provided form.")) {
+                            result = 1;
+                        }
+                    } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
+                        JSONObject jsonResponse = response.getBody();
+                        String responseMessage = jsonResponse.getString("detail");
+                        Log.d("NOTFOUND", responseMessage);
+                        if (responseMessage.equals("Not found.")) {
+                            result = -1;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                return -1;
+            }
+            return result;
+        }
+
+        // Process doInBackground() results
+        @Override
+        protected void onPostExecute(Integer anInt) {
+            String message;
+            Intent i = getIntent();
+            switch (anInt) {
+                case (-1):
+                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_CANCELED, i);
+                    finish();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                case (0):
+                    //Intent intent = new Intent(getBaseContext(), DashboardActivity.class);
+                    message = "¡Bienvenido!";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_OK, i);
+                    finish();
+                    //startActivity(intent);
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                case (1):
+                    message = "Nombre de usuario y/o contraseña inválidos";
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_CANCELED, i);
+                    finish();
+                    //progressBar.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
+
 }
