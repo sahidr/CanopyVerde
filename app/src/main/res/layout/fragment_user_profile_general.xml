@@ -62,7 +62,7 @@
         android:id="@+id/passwordDisplayRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="************"
+        android:hint="************"
         android:enabled="false"
         android:inputType="textPassword"
         android:layout_marginBottom="5dp"

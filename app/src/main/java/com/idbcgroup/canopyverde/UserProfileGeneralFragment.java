@@ -30,9 +30,10 @@ public class UserProfileGeneralFragment extends Fragment {
         city = (EditText) view.findViewById(R.id.cityDisplayRow);
 
         pref_session = this.getActivity().getSharedPreferences("Session", 0);
-        String name = pref_session.getString("name",null);
         String email = pref_session.getString("email",null);
-        fullname.setText(name);
+        String fullnameText = pref_session.getString("fullname",null);
+
+        fullname.setText(fullnameText);
         emailprofile.setText(email);
 
         return view;

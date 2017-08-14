@@ -93,7 +93,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity android:name=".GameProfileActivity" />
-        <activity android:name=".RedPointRegister" />
+        <activity android:name=".RedPointRegisterActivity" />
     </application>
 
 </manifest>

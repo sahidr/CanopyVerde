@@ -22,7 +22,7 @@ import java.net.URLEncoder;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class RedPointRegister extends AppCompatActivity {
+public class RedPointRegisterActivity extends AppCompatActivity {
 
     private static final int REQUESTED = 0;
     private int rp_id, user_id;
@@ -57,7 +57,7 @@ public class RedPointRegister extends AppCompatActivity {
 
         String type  = (String) treeType.getSelectedItem();
 
-        Post p = new Post();
+        PutRedPoint p = new PutRedPoint();
         p.execute(String.valueOf(lat), String.valueOf(lng), location,type, String.valueOf(REQUESTED), String.valueOf(user_id));
 
     }
@@ -68,10 +68,9 @@ public class RedPointRegister extends AppCompatActivity {
     }
 
 
-
     // AsyncTask. Sends Log In's data to the server's API and process the response.
 
-    public class Post extends AsyncTask<String, Integer, Integer> {
+    public class PutRedPoint extends AsyncTask<String, Integer, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -109,7 +108,6 @@ public class RedPointRegister extends AppCompatActivity {
 
                 if (response != null) {
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {
-                        JSONObject jsonResponse = response.getBody();
 
                         Log.d("OK","ok");
 
@@ -153,14 +151,14 @@ public class RedPointRegister extends AppCompatActivity {
                     break;
                 case (0):
                     //Intent intent = new Intent(getBaseContext(), DashboardActivity.class);
-                    message = "¡Bienvenido!";
+                    message = "¡Red Point Registered!";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     finish();
                     //startActivity(intent);
                     //progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
-                    message = "Nombre de usuario y/o contraseña inválidos";
+                    message = "Invalid Data";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     //progressBar.setVisibility(View.GONE);
                     break;

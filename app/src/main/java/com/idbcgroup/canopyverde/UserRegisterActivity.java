@@ -216,7 +216,7 @@ public class UserRegisterActivity extends AppCompatActivity {
             HttpURLConnection urlConnection = null;
             Integer result = -1;
             try {
-                url = new URL("http://192.168.0.107:8000/userProfile/");
+                url = new URL("http://192.168.0.107:8000/profile/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestMethod("POST");
@@ -235,7 +235,7 @@ public class UserRegisterActivity extends AppCompatActivity {
                 writer.write(profile.toString());
                 writer.flush();
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection, true);
-                Log.d("OK", response.getBody().toString());
+
                 if (response != null) {
                     if (response.getStatus() == HttpURLConnection.HTTP_OK || response.getStatus() == HttpURLConnection.HTTP_CREATED) {
                         Log.d("OK", response.getBody().toString());
@@ -258,28 +258,24 @@ public class UserRegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Integer anInt) {
             String message;
-            Intent i = getIntent();
             switch (anInt) {
                 case (-1):
                     message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    setResult(RESULT_CANCELED, i);
                     finish();
                     //progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
-                    //Intent intent = new Intent(getBaseContext(), DashboardActivity.class);
-                    message = "¡Bienvenido!";
+
+                    message = "¡User Created!";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    setResult(RESULT_OK, i);
                     finish();
                     //startActivity(intent);
                     //progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
-                    message = "Nombre de usuario y/o contraseña inválidos";
+                    message = "Invalid Data";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    setResult(RESULT_CANCELED, i);
                     finish();
                     //progressBar.setVisibility(View.GONE);
                     break;

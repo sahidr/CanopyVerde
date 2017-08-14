@@ -128,7 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnInfoWindowCloseListener(this);
 
-        Get g = new Get();
+        GetGreenPoints g = new GetGreenPoints();
         g.execute();
 
       if (ActivityCompat
@@ -172,7 +172,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String rp_location = rp.getLocation();
 
         if (m_status == -1) {
-            Intent i =new Intent(MapsActivity.this, RedPointRegister.class);
+            Intent i =new Intent(MapsActivity.this, RedPointRegisterActivity.class);
             i.putExtra("id",rp_id);
             i.putExtra("latitude",lat);
             i.putExtra("longitude",lng);
@@ -282,7 +282,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public class Get extends AsyncTask<String, Integer, JSONObject> {
+    public class GetGreenPoints extends AsyncTask<String, Integer, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
             JSONObject apiResponse = new JSONObject();
@@ -295,7 +295,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 urlConnection.setConnectTimeout(10000);
 
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection,false);
-                Log.w("API_RESPONSE", response.toString());
 
                 if (response != null) {
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {

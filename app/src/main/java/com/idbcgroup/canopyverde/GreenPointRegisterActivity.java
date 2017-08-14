@@ -180,7 +180,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         Log.d("LOCATION", String.valueOf(location));
         Log.d("ID", String.valueOf(id));
 
-        Post p = new Post();
+        PostYellowPoint p = new PostYellowPoint();
         p.execute(String.valueOf(latitude),String.valueOf(longitude),canopy,stem,height,type,location,
                 String.valueOf(UNVERIFIED), String.valueOf(id));
 
@@ -194,7 +194,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
     // AsyncTask. Sends Log In's data to the server's API and process the response.
 
-    public class Post extends AsyncTask<String, Integer, Integer> {
+    public class PostYellowPoint extends AsyncTask<String, Integer, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -232,7 +232,6 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
                 if (response != null) {
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {
-                        JSONObject jsonResponse = response.getBody();
 
                         Log.d("OK","ok");
 
@@ -276,7 +275,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
                     break;
                 case (0):
                     //Intent intent = new Intent(getBaseContext(), DashboardActivity.class);
-                    message = "¡Bienvenido!";
+                    message = "¡Yellow Point Added!";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     setResult(RESULT_OK, i);
                     finish();
@@ -284,7 +283,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
                     //progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
-                    message = "Nombre de usuario y/o contraseña inválidos";
+                    message = "Invalid data";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     setResult(RESULT_CANCELED, i);
                     finish();

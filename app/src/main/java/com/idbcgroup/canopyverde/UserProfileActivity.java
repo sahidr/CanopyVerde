@@ -84,6 +84,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private ImageView camera;
     private int id;
     private String imageName;
+    private String username, email;
     private Bitmap image;
 
 //    private boolean enable;
@@ -113,9 +114,13 @@ public class UserProfileActivity extends AppCompatActivity {
 
         pref_session = getSharedPreferences("Session", 0);
 
-        String email = pref_session.getString("email",null);
-        String username = pref_session.getString("username",null);
+        email = pref_session.getString("email",null);
+        username = pref_session.getString("username",null);
+        String fullname = pref_session.getString("fullname",null);
         String profilepic = pref_session.getString("photo",null);
+        int game_points = pref_session.getInt("game_points",0);
+        String badge_name = pref_session.getString("badge",null);
+
         id = pref_session.getInt("id",0);
 
         if (profilepic!=null) {
@@ -123,19 +128,11 @@ public class UserProfileActivity extends AppCompatActivity {
             Picasso.with(context).load(photo).into(profilePic);
         }
 
-        if (username==null){
-            String[] emailParts = email.split("@");
-            String user =  emailParts[0];
-            profileUsername.setText("@"+user);
-        } else {
-            profileUsername.setText(username);
-        }
-
-        //profileFullname.setText(imageName);
+        profileFullname.setText(fullname);
         profileEmail.setText(email);
+        profileUsername.setText("@"+username);
 
-        float gamepoints = 2544;
-        String points = getResources().getString(R.string.badge_name, formatter.format(gamepoints), getString(R.string.u_bagde));
+        String points = getResources().getString(R.string.badge_name, formatter.format(game_points), badge_name);
         CharSequence styledText = Html.fromHtml(points);
         badge.setText(styledText);
 
@@ -152,7 +149,8 @@ public class UserProfileActivity extends AppCompatActivity {
         edit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                EditText[] fields = getFragment().getFields();
+                final EditText[] fields = getFragment().getFields();
+                final ArrayList<String> data = new ArrayList<String>();
 
                 if (isChecked) {
                     // Edit enable
@@ -172,12 +170,14 @@ public class UserProfileActivity extends AppCompatActivity {
                     camera.setVisibility(View.INVISIBLE); // Take picture disable
                     profilePic.setColorFilter(ContextCompat.getColor(context,R.color.colorTransparent));
 
-                    ArrayList<String> data = new ArrayList<String>();
+
+
                     for (EditText field : fields) {
                         field.setEnabled(false);
                         data.add(String.valueOf(field.getText()));
                         Log.d("DATA FIELDS", field.getText().toString());
                     }
+
 
                     final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
                     dialog.setTitle("Save Content?");//context.getResources().getString(R.string.gps_network_not_enabled));
@@ -187,6 +187,15 @@ public class UserProfileActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
                                     //Load data into server
+
+                                    PutUser p = new PutUser();
+                                    String fullname = data.get(0);
+                                    String email = data.get(1);
+                                    String password = data.get(2);
+                                    String country = data.get(3);
+                                    String city = data.get(4);
+                                    p.execute(fullname,country,city);
+
                                 }
                             });
                     dialog.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -391,7 +400,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
     // AsyncTask. Sends Log In's data to the server's API and process the response.
 
-    public class Post extends AsyncTask<String, Integer, Integer> {
+
+    private class PutUser extends AsyncTask<String, Integer, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -400,45 +410,47 @@ public class UserProfileActivity extends AppCompatActivity {
 
         @Override
         protected Integer doInBackground(String... strings) {
-            JSONObject apiResponse = new JSONObject();
             URL url;
             HttpURLConnection urlConnection = null;
-            Integer result = 0;
+            Integer result = -1;
             try {
-                url = new URL("http://192.168.0.107:8000/userProfile/"+id+"/");
+                url = new URL("http://192.168.0.107:8000/profile/"+id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setDoOutput(true);
+                urlConnection.setRequestMethod("PUT");
 
+                JSONObject user = new JSONObject();
+                JSONObject profile = new JSONObject();
 
-                APIResponse response = JSONResponseController.getJsonResponse(urlConnection,true);
+                user.put("username", username);
+                user.put("email", email);
 
+                profile.put("fk_user", user);
+                profile.put("fullname", strings[0]);
+                profile.put("country", strings[1]);
+                profile.put("city", strings[2]);
+
+                OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+                writer.write(profile.toString());
+                writer.flush();
+
+                APIResponse response = JSONResponseController.getJsonResponse(urlConnection, true);
 
                 if (response != null) {
-                    if (response.getStatus() == HttpURLConnection.HTTP_OK) {
-                        JSONObject jsonResponse = response.getBody();
-
-                        Log.d("OK","ok");
-
+                    if (response.getStatus() == HttpURLConnection.HTTP_OK || response.getStatus() == HttpURLConnection.HTTP_CREATED) {
+                        Log.d("OK", response.getBody().toString());
                         result = 0;
-
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.d("BAD","BAD");
-
-                        JSONObject jsonResponse = response.getBody();
-                        String responseMessage = jsonResponse.getJSONArray("non_field_errors").getString(0);
-                        if (responseMessage.equals("Unable to log in with provided form.")) {
-                            result = 1;
-                        }
+                        Log.d("BAD", "BAD");
+                        result = 1;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
-                        JSONObject jsonResponse = response.getBody();
-                        String responseMessage = jsonResponse.getString("detail");
-                        Log.d("NOTFOUND", responseMessage);
-                        if (responseMessage.equals("Not found.")) {
-                            result = -1;
-                        }
+                        Log.d("NOT", "FOUND");
+                        result = -1;
                     }
                 }
             } catch (Exception e) {
-                return -1;
+                return result;
             }
             return result;
         }
@@ -447,28 +459,24 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Integer anInt) {
             String message;
-            Intent i = getIntent();
             switch (anInt) {
                 case (-1):
                     message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    setResult(RESULT_CANCELED, i);
                     finish();
                     //progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
-                    //Intent intent = new Intent(getBaseContext(), DashboardActivity.class);
-                    message = "¡Bienvenido!";
+
+                    message = "¡User Updated!";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    setResult(RESULT_OK, i);
                     finish();
-                    //startActivity(intent);
+
                     //progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
-                    message = "Nombre de usuario y/o contraseña inválidos";
+                    message = "Invalid Data";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    setResult(RESULT_CANCELED, i);
                     finish();
                     //progressBar.setVisibility(View.GONE);
                     break;
@@ -476,8 +484,5 @@ public class UserProfileActivity extends AppCompatActivity {
                     break;
             }
         }
-
     }
-
-
 }

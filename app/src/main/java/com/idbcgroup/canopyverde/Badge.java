@@ -1,5 +1,9 @@
 package com.idbcgroup.canopyverde;
 
+import org.xml.sax.DTDHandler;
+
+import java.sql.Date;
+
 /**
  * Created by Rogelio on 1/8/2017.
  */
@@ -12,11 +16,11 @@ public class Badge {
     //GREEN 2
     private String reportType;
     private int point;
-    private String date;
+    private Date date;
 
     public Badge(){}
 
-    public Badge(int status, String reportType, int point, String date) {
+    public Badge(int status, String reportType, int point, Date date) {
         this.status = status;
         this.reportType = reportType;
         this.point = point;
@@ -47,11 +51,11 @@ public class Badge {
         this.point = point;
     }
 
-    public String getDate (){
+    public Date getDate (){
         return date;
     }
 
-    public void setDate(String date){
+    public void setDate(Date date){
         this.date = date;
     }
 }

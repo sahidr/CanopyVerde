@@ -377,8 +377,6 @@ public class LoginActivity extends AppCompatActivity {
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");
 
-                Log.d("Credentias",credentials);
-
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
                 writer.write(credentials);
                 writer.flush();
@@ -386,29 +384,34 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (response != null){
 
-                    Log.w("RESPONSE_STATUS", String.valueOf(response.getStatus()));
-                    Log.d("RESPONSE_BODY", String.valueOf(response.getBody()));
-
-                    if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+                    if (response.getStatus()==HttpURLConnection.HTTP_OK) {
                         JSONObject response_body = response.getBody();
+
                         SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
                         editor.putBoolean("logged",true);
                         editor.putString("username",response_body.getString("username"));
                         editor.putInt("id",response_body.getInt("id"));
                         editor.putString("email",response_body.getString("email"));
                         editor.putString("token",response_body.getString("token"));
+                        editor.putString("fullname",response_body.getString("fullname"));
+                        editor.putString("country",response_body.getString("country"));
+                        editor.putString("city",response_body.getString("city"));
+                        editor.putString("badge",response_body.getString("badge"));
+                        editor.putInt("game_points",response_body.getInt("points"));
                         editor.apply();
 
                         Log.d("OK", "OK");
-                        result = 0;
+                        return 0;
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
                         Log.d("BAD", "BAD");
                         result = 1;
-                    } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
+                    } else {
                         Log.d("NOT", "FOUND");
                         result = -1;
                     }
+
+
                 }
 
             } catch (MalformedURLException e) {
