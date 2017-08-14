@@ -372,7 +372,7 @@ public class LoginActivity extends AppCompatActivity {
                 String credentials = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
                 credentials += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
 
-                URL url = new URL("http://192.168.0.107:8000/api-token-auth/");
+                URL url = new URL("http://192.168.1.85:8000/api-token-auth/");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");

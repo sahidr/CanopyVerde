@@ -27,7 +27,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
 
         public ReportViewHolder(View v) {
             super(v);
-            status = (ImageView) v.findViewById(R.id.colorPoint);
+            status = (ImageView) v.findViewById(R.id.pointStatus);
             treeType = (TextView) v.findViewById(R.id.treeTypeDisplay);
             location = (TextView) v.findViewById(R.id.locationDisplay);
             date = (TextView) v.findViewById(R.id.dateDisplay);
@@ -58,7 +58,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         }
         holder.treeType.setText(report.getTreeType());
         holder.location.setText(report.getLocation());
-        String s= report.getDate();
+        String s= String.valueOf(report.getDate());
         SpannableString ss1=  new SpannableString(s);
         ss1.setSpan(new RelativeSizeSpan(2f), 0,2, 0); // set size
         holder.date.setText(ss1);

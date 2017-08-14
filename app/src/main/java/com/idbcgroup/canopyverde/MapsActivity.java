@@ -290,7 +290,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             HttpURLConnection urlConnection = null;
 
             try {
-                url = new URL("http://192.168.0.107:8000/greenpoint/");
+                url = new URL("http://192.168.1.85:8000/greenpoint/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 
@@ -339,14 +339,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                        int id = points.getInt("id");
                        String location = points.getString("location");
                        Date date = java.sql.Date.valueOf(points.getString("date"));
-
+/*
                        Log.d("LATITUD", String.valueOf(latitude));
                        Log.d("LONGITUD", String.valueOf(longitude));
                        Log.d("LOCATION", String.valueOf(location));
                        Log.d("DATE", String.valueOf(date));
                        Log.d("STATUS", String.valueOf(status));
                        Log.d("ID", String.valueOf(id));
-
+*/
                        gp = new GreenPoint();
                        gp.setLatitude(latitude);
                        gp.setLongitude(longitude);
@@ -363,20 +363,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                            int height = points.getInt("height");
                            String type = points.getString("type");
                            String user = points.getString("username");
-
+/*
                            Log.d("CANOPY", String.valueOf(canopy));
                            Log.d("STEM", String.valueOf(stem));
                            Log.d("HEIGHT", String.valueOf(height));
                            Log.d("TYPE", String.valueOf(type));
                            Log.d("USER", user);
+                           */
                            gp.setUsername(user);
                            gp.setTreeType(type);
                            gp.setHeight(String.valueOf(height));
                        } else if (status == 0){
                            String type = points.getString("type");
                            String user = points.getString("username");
-                           Log.d("TYPE", String.valueOf(type));
-                           Log.d("USER", user);
+                           //Log.d("TYPE", String.valueOf(type));
+                           //Log.d("USER", user);
                            gp.setUsername(user);
                            gp.setTreeType(type);
                        }

@@ -33,6 +33,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -86,6 +87,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private String imageName;
     private String username, email;
     private Bitmap image;
+    private ProgressBar progressBar;
 
 //    private boolean enable;
     UserProfileGeneralFragment general;
@@ -102,7 +104,8 @@ public class UserProfileActivity extends AppCompatActivity {
         context = this;
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ITALIAN);
 
-        profilePic= (PorterShapeImageView) findViewById(R.id.profilepic);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        profilePic = (PorterShapeImageView) findViewById(R.id.profilepic);
         profileFullname = (TextView) findViewById(R.id.fullNameDisplay);
         profileEmail = (TextView) findViewById(R.id.emailDisplay);
         profileUsername = (TextView) findViewById(R.id.usernameDisplay);
@@ -132,7 +135,7 @@ public class UserProfileActivity extends AppCompatActivity {
         profileEmail.setText(email);
         profileUsername.setText("@"+username);
 
-        String points = getResources().getString(R.string.badge_name, formatter.format(game_points), badge_name);
+        String points = this.getResources().getString(R.string.badge_name, formatter.format(game_points), badge_name);
         CharSequence styledText = Html.fromHtml(points);
         badge.setText(styledText);
 
@@ -169,8 +172,6 @@ public class UserProfileActivity extends AppCompatActivity {
                     edit.setChecked(false);
                     camera.setVisibility(View.INVISIBLE); // Take picture disable
                     profilePic.setColorFilter(ContextCompat.getColor(context,R.color.colorTransparent));
-
-
 
                     for (EditText field : fields) {
                         field.setEnabled(false);
@@ -396,8 +397,6 @@ public class UserProfileActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-
-
     // AsyncTask. Sends Log In's data to the server's API and process the response.
 
 
@@ -405,7 +404,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            //progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -414,7 +413,7 @@ public class UserProfileActivity extends AppCompatActivity {
             HttpURLConnection urlConnection = null;
             Integer result = -1;
             try {
-                url = new URL("http://192.168.0.107:8000/profile/"+id+"/");
+                url = new URL("http://192.168.1.85:8000/profile/"+id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setDoOutput(true);
@@ -464,21 +463,20 @@ public class UserProfileActivity extends AppCompatActivity {
                     message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     finish();
-                    //progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
 
                     message = "¡User Updated!";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     finish();
-
-                    //progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
                     message = "Invalid Data";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     finish();
-                    //progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     break;
                 default:
                     break;

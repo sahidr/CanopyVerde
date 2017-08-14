@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,11 +48,12 @@ public class GameProfileActivity extends AppCompatActivity {
 
     private TextView badge;
     private PorterShapeImageView profilePic;
-    private TextView profileFullname, profileEmail, profileUsername;
+    private TextView profileFullname, profileUsername;
     private Context context;
     private SharedPreferences pref_session;
     private int user_id;
     private ListView badgeList;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +67,14 @@ public class GameProfileActivity extends AppCompatActivity {
 
         context = this;
 
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         profilePic= (PorterShapeImageView) findViewById(R.id.profilepic);
         profileFullname = (TextView) findViewById(R.id.fullNameDisplay);
         profileUsername = (TextView) findViewById(R.id.usernameDisplay);
         badge = (TextView) findViewById(R.id.badgeName);
         badgeList = (ListView) findViewById(R.id.reward_list);
         pref_session = getSharedPreferences("Session", 0);
+
 
         String fullname = pref_session.getString("fullname",null);
         String username = pref_session.getString("username",null);
@@ -115,6 +119,13 @@ public class GameProfileActivity extends AppCompatActivity {
 
 
     public class Get extends AsyncTask<String, Integer, JSONObject> {
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+
         @Override
         protected JSONObject doInBackground(String... params) {
             JSONObject apiResponse = new JSONObject();
@@ -122,12 +133,11 @@ public class GameProfileActivity extends AppCompatActivity {
             HttpURLConnection urlConnection = null;
 
             try {
-                url = new URL("http://192.168.0.107:8000/game/"+user_id+"/");
+                url = new URL("http://192.168.1.85:8000/game/"+user_id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection,false);
-                Log.w("API_RESPONSE", response.toString());
 
                 if (response != null) {
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {
@@ -156,7 +166,7 @@ public class GameProfileActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject response) {
 
             try {
-                //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));
+
                 ArrayList<Badge> data = new ArrayList<Badge>();
                 if (response.getInt("status") == 0) {
                     JSONArray gameReportArray = response.getJSONArray("body");
@@ -214,10 +224,6 @@ public class GameProfileActivity extends AppCompatActivity {
                                 reportDay.setText(day);
                                 reportDate.setText(month);
 
-                                /*
-                                SpannableString format =  new SpannableString(date);
-                                format.setSpan(new RelativeSizeSpan(2f), 0,2, 0); // set size
-                                reportDate.setText(format);*/
                             }
                         }
                     });
@@ -229,6 +235,7 @@ public class GameProfileActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            progressBar.setVisibility(View.GONE);
         }
     }
 

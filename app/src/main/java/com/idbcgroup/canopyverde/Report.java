@@ -1,6 +1,6 @@
 package com.idbcgroup.canopyverde;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Report {
 
@@ -10,11 +10,11 @@ public class Report {
         //GREEN 2
     private String treeType;
     private String location;
-    private String date;
+    private java.sql.Date date;
 
     public Report(){}
 
-    public Report(int status, String treeType, String location, String date) {
+    public Report(int status, String treeType, String location, Date date) {
         this.status = status;
         this.treeType = treeType;
         this.location = location;
@@ -45,11 +45,11 @@ public class Report {
         this.location = location;
     }
 
-    public String getDate (){
+    public Date getDate (){
         return date;
     }
 
-    public void setDate(String date){
+    public void setDate(Date date){
         this.date = date;
     }
 }

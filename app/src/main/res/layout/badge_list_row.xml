@@ -6,7 +6,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:background="?android:attr/selectableItemBackground"
-    tools:context="com.idbcgroup.canopyverde.UserProfileReportFragment">
+    tools:context="com.idbcgroup.canopyverde.GameProfileActivity">
 
     <ImageView
         android:id="@+id/pointStatus"
