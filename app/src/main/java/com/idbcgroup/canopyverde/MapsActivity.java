@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -23,6 +24,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,12 +44,15 @@ import org.json.JSONObject;
 import org.json.JSONException;
 import java.io.File;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -58,8 +64,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MapStyleOptions style;
     private Context context;
     private Date m_date;
-    private String m_type, m_size, m_location, m_image, m_username, m_profile;
+    private String m_type, m_size, m_location, m_username, m_profile;
     private int m_status;
+    private String  m_image;
     private TextView greenIndex, populationDensity;
     private RelativeLayout stats;
     private SharedPreferences pref_session;
@@ -75,6 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static int REQUEST_CAMERA = 0;
     private static int REQUEST_GREEN_POINT_REGISTER = 1;
     private String imageName;
+    private Bitmap imageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +139,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GetGreenPoints g = new GetGreenPoints();
         g.execute();
 
-      if (ActivityCompat
+        if (ActivityCompat
                 .checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat
                 .checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -325,82 +333,65 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             try {
                 //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));
 
-               if (response.getInt("status") == 0) {
-                   JSONArray pointsArray = response.getJSONArray("body");
-                   JSONObject points;
+                if (response.getInt("status") == 0) {
+                    JSONArray pointsArray = response.getJSONArray("body");
+                    JSONObject points;
 
-                   GreenPoint gp, rp;
+                    GreenPoint gp, rp;
+                    for (int i = 0; i < pointsArray.length(); i++) {
+                        points = pointsArray.getJSONObject(i);
+                        Float latitude = Float.parseFloat(points.getString("latitude"));
+                        Float longitude = Float.parseFloat(points.getString("longitude"));
+                        int status = points.getInt("status");
+                        int id = points.getInt("id");
+                        String location = points.getString("location");
+                        Date date = java.sql.Date.valueOf(points.getString("date"));
+                        String image = points.getString("image");
+                        //Bitmap imageBitmap;
+                        gp = new GreenPoint();
+                        gp.setLatitude(latitude);
+                        gp.setLongitude(longitude);
+                        gp.setId(id);
+                        gp.setLocation(location);
+                        gp.setDate(date);
+                        gp.setImage(image);
+                        gp.setStatus(status);
 
-                   for (int i = 0; i < pointsArray.length(); i++) {
-                       points = pointsArray.getJSONObject(i);
-                       Float latitude = Float.parseFloat(points.getString("latitude"));
-                       Float longitude = Float.parseFloat(points.getString("longitude"));
-                       int status = points.getInt("status");
-                       int id = points.getInt("id");
-                       String location = points.getString("location");
-                       Date date = java.sql.Date.valueOf(points.getString("date"));
-/*
-                       Log.d("LATITUD", String.valueOf(latitude));
-                       Log.d("LONGITUD", String.valueOf(longitude));
-                       Log.d("LOCATION", String.valueOf(location));
-                       Log.d("DATE", String.valueOf(date));
-                       Log.d("STATUS", String.valueOf(status));
-                       Log.d("ID", String.valueOf(id));
-*/
-                       gp = new GreenPoint();
-                       gp.setLatitude(latitude);
-                       gp.setLongitude(longitude);
-                       gp.setId(id);
-                       gp.setLocation(location);
-                       gp.setDate(date);
-                       gp.setImage("");
-                       gp.setStatus(status);
-                       int drawable = R.drawable.p_amarillo;
+                        int drawable = R.drawable.p_amarillo;
 
-                       if (status == 1 || status == 2){
-                           int canopy = points.getInt("canopy");
-                           int stem = points.getInt("stem");
-                           int height = points.getInt("height");
-                           String type = points.getString("type");
-                           String user = points.getString("username");
-/*
-                           Log.d("CANOPY", String.valueOf(canopy));
-                           Log.d("STEM", String.valueOf(stem));
-                           Log.d("HEIGHT", String.valueOf(height));
-                           Log.d("TYPE", String.valueOf(type));
-                           Log.d("USER", user);
-                           */
-                           gp.setUsername(user);
-                           gp.setTreeType(type);
-                           gp.setHeight(String.valueOf(height));
-                       } else if (status == 0){
-                           String type = points.getString("type");
-                           String user = points.getString("username");
-                           //Log.d("TYPE", String.valueOf(type));
-                           //Log.d("USER", user);
-                           gp.setUsername(user);
-                           gp.setTreeType(type);
-                       }
+                        if (status == 1 || status == 2){
+                           //int canopy = points.getInt("canopy");
+                           //int stem = points.getInt("stem");
+                            int height = points.getInt("height");
+                            String type = points.getString("type");
+                            String user = points.getString("username");
+                            gp.setUsername(user);
+                            gp.setTreeType(type);
+                            gp.setHeight(String.valueOf(height));
+                        } else if (status == 0){
+                            String type = points.getString("type");
+                            String user = points.getString("username");
+                            gp.setUsername(user);
+                            gp.setTreeType(type);
+                        }
 
-                       switch (status){
-                           case -1:
-                               drawable = R.drawable.p_rojo;
-                               break;
-                           case 0:
-                               drawable = R.drawable.p_rojo;
-                               break;
-                           case 1:
-                               drawable = R.drawable.p_amarillo;
-                               break;
-                           case 2:
-                               drawable = R.drawable.p_verde;
-                               break;
-                       }
+                        switch (status){
+                            case -1:
+                                drawable = R.drawable.p_rojo;
+                                break;
+                            case 0:
+                                drawable = R.drawable.p_rojo;
+                                break;
+                            case 1:
+                                drawable = R.drawable.p_amarillo;
+                                break;
+                            case 2:
+                                drawable = R.drawable.p_verde;
+                                break;
+                        }
+                        BitmapDrawable color = (BitmapDrawable) getResources().getDrawable(drawable);
 
-                       BitmapDrawable color = (BitmapDrawable) getResources().getDrawable(drawable);
-
-
-                       Bitmap color_scaled = Bitmap
+                        Bitmap color_scaled = Bitmap
                                .createScaledBitmap(color.getBitmap(), WIDTH, HEIGHT, false);
 
                         Marker m = mMap.addMarker(new MarkerOptions()
@@ -409,10 +400,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .anchor(0.5f, 0.4f)
                         );
                         m.setTag(gp);
-                   }
-               } else {
-                   Toast.makeText(MapsActivity.this,"FailtoLoad",Toast.LENGTH_SHORT).show();
-               }
+                    }
+                } else {
+                    Toast.makeText(MapsActivity.this, "FailtoLoad", Toast.LENGTH_SHORT).show();
+                }
             }catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -496,26 +487,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             TextView size = (TextView) view.findViewById(R.id.p_size);
             TextView status = (TextView) view.findViewById(R.id.p_status);
             TextView location = (TextView) view.findViewById(R.id.location);
-
-            // from email get username and profile pic
-
-            //pref_session = getSharedPreferences("Session", 0);
-            //m_profile = pref_session.getString("photo",null);
-
-            //String username = pref_session.getString("username",null);
-
-            if (m_username.equals("idbcgroup")) {
-                user.setText("@idbcgroup");
-                profile.setImageResource(R.drawable.btn_locate);
-            }else {
-                user.setText("@"+m_username);
-                if (m_profile != null){
-                    Uri photo = Uri.parse(m_profile);
-                    Picasso.with(MapsActivity.this).load(photo).into(profile);
-                } else {
-                    Picasso.with(MapsActivity.this).load(R.drawable.btn_locate).into(profile);
-                }
-            }
+            Glide.with(MapsActivity.this).load(m_image).into(tree);
+            //Uri profile_pic = Uri.parse(m_profile);
+            //Picasso.with(MapsActivity.this).load(profile_pic).into(profile);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy",Locale.US);
             String pointDate = dateFormat.format(m_date);
@@ -523,18 +497,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             type.setText(m_type);
             location.setText(m_location);
+            user.setText("@"+m_username);
 
             if (m_size.equals("Altura Aproximada"))
                 size.setText("Undefined");
             else size.setText(m_size+"m");
 
-            if (m_image.equals("none")|| (m_image.equals(""))){
-                tree.setImageResource(R.drawable.araguaney);
-            } else {
-                Uri photo = Uri.parse(m_image);
-                Picasso.with(MapsActivity.this).load(photo).into(tree);
-            }
+            //Uri photo = Uri.parse(m_image);//"https://1.bp.blogspot.com/_Jfyk16Y3Lt8/SJjEuTgcJbI/AAAAAAAABZE/kBSPIYp8RrA/s400/roble.jpg");
+            //Glide.with(getBaseContext()).load(photo).into(tree);
 
+            Log.w("I'm still here","AQQQQQQQQQQQQQQQUIIIIIIIIIIIIIIIIIIIIII");
             if (m_status == UNVERIFIED) {
                 status.setTextColor(getResources().getColor(R.color.yellow));
                 status.setText(getString(R.string.not_verified));
@@ -542,6 +514,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 status.setTextColor(getResources().getColor(R.color.colorCanopy));
                 status.setText(getString(R.string.verified));
             }
+            view.invalidate();
+            view.requestLayout();
+            view.refreshDrawableState();
         }
     }
 

@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -24,12 +25,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -50,6 +53,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     private String imageName,email;
     private int id;
     double latitude, longitude;
+    private String encodedString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +74,6 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         longitude = Double.longBitsToDouble( pref_marker.getLong( "long", -1 ));
 
         imageName = (String) getIntent().getExtras().get("NAME");
-
 
         if(imageName == null) {
             thumbnail= null;
@@ -168,21 +171,17 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         treeType = (Spinner) findViewById(R.id.treeType);
         String type  = (String) treeType.getSelectedItem();
 
-        //LOAD DATA INTO DATABASE
 
-        Log.d("DATA TO SEND", "DATA BELOW: ");
-        Log.d("LATITUD", String.valueOf(latitude));
-        Log.d("LONGITUD", String.valueOf(longitude));
-        Log.d("CANOPY", String.valueOf(canopy));
-        Log.d("STEM", String.valueOf(stem));
-        Log.d("HEIGHT", String.valueOf(height));
-        Log.d("TYPE", String.valueOf(type));
-        Log.d("LOCATION", String.valueOf(location));
-        Log.d("ID", String.valueOf(id));
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        // Must compress the Image to reduce image size to make upload easy
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        byte[] byte_arr = stream.toByteArray();
+        // Encode Image to String
+        encodedString = Base64.encodeToString(byte_arr, 0);
 
         PostYellowPoint p = new PostYellowPoint();
         p.execute(String.valueOf(latitude),String.valueOf(longitude),canopy,stem,height,type,location,
-                String.valueOf(UNVERIFIED), String.valueOf(id));
+                String.valueOf(UNVERIFIED), String.valueOf(id),encodedString);
 
     }
 
@@ -211,21 +210,25 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
                 url = new URL("http://192.168.1.85:8000/greenpoint/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setReadTimeout(10000);
 
-                String form = URLEncoder.encode("latitude", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
-                form += "&" + URLEncoder.encode("longitude", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
-                form += "&" + URLEncoder.encode("canopy", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
-                form += "&" + URLEncoder.encode("stem", "UTF-8") + "=" + URLEncoder.encode(strings[3], "UTF-8");
-                form += "&" + URLEncoder.encode("height", "UTF-8") + "=" + URLEncoder.encode(strings[4], "UTF-8");
-                form += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(strings[5], "UTF-8");
-                form += "&" + URLEncoder.encode("location", "UTF-8") + "=" + URLEncoder.encode(strings[6], "UTF-8");
-                form += "&" + URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode(strings[7], "UTF-8");
-                form += "&" + URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(strings[8], "UTF-8");
+                JSONObject form = new JSONObject();
+
+                form.put("latitude",strings[0]);
+                form.put("longitude",strings[1]);
+                form.put("canopy",strings[2]);
+                form.put("stem",strings[3]);
+                form.put("height",strings[4]);
+                form.put("type",strings[5]);
+                form.put("location",strings[6]);
+                form.put("status",strings[7]);
+                form.put("user",strings[8]);
+                form.put("image",strings[9]);
 
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
-                writer.write(form);
+                writer.write(String.valueOf(form));
                 writer.flush();
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection,true);
 
@@ -241,10 +244,9 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
                         Log.d("BAD","BAD");
 
                         JSONObject jsonResponse = response.getBody();
-                        String responseMessage = jsonResponse.getJSONArray("non_field_errors").getString(0);
-                        if (responseMessage.equals("Unable to log in with provided form.")) {
-                            result = 1;
-                        }
+                        Log.d("BODY", String.valueOf(response.getBody()));
+                        result = 1;
+
                     } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
                         JSONObject jsonResponse = response.getBody();
                         String responseMessage = jsonResponse.getString("detail");

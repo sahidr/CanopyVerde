@@ -157,8 +157,6 @@ public class UserProfileReportFragment extends Fragment {
                         }
                     });
 
-                } else {
-                    Toast.makeText(getContext(),"FailtoLoad",Toast.LENGTH_SHORT).show();
                 }
             }catch (JSONException e) {
                 e.printStackTrace();
