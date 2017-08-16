@@ -22,9 +22,9 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:id="@+id/email"
@@ -78,7 +78,6 @@
         android:layout_marginTop="10dp"
         android:layout_below="@+id/signin"
         android:layout_centerHorizontal="true" />
-
 
     <Button
         android:id="@+id/facebookSignIn"
@@ -146,7 +145,5 @@
         android:text="@string/new_member"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
-
-
 
 </RelativeLayout>

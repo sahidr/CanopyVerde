@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,17 +57,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowCloseListener,
         GoogleMap.OnMarkerClickListener {
 
-    private GoogleMap mMap;
-    private MapStyleOptions style;
-    private Context context;
-    private Date m_date;
-    private String m_type, m_size, m_location, m_username, m_profile;
-    private int m_status;
-    private String m_image;
-    private TextView greenIndex, populationDensity;
-    private RelativeLayout stats;
-    private SharedPreferences pref_session;
-
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
     private static int MAX_FRACTION_DIGITS = 1;
     private static final int UNREQUESTED = -1;
@@ -76,8 +67,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static int WIDTH = 32;
     private static int REQUEST_CAMERA = 0;
     private static int REQUEST_GREEN_POINT_REGISTER = 1;
+
+    private GoogleMap mMap;
+    private MapStyleOptions style;
+    private Context context;
+    private Date m_date;
+    private String m_type, m_size, m_location, m_username;
+    private int m_status;
+    private ImageView m_image, m_profile;
+    private TextView greenIndex, populationDensity;
+    private RelativeLayout stats;
+    private SharedPreferences pref_session;
+
+
     private String imageName;
-    private Bitmap imageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +133,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnInfoWindowCloseListener(this);
-
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.setMinZoomPreference(12);
+        mMap.setMaxZoomPreference(20);
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
         GetGreenPoints g = new GetGreenPoints();
         g.execute();
 
@@ -139,22 +148,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat
                 .checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mMap.getUiSettings().setCompassEnabled(false);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.setMinZoomPreference(12);
-        mMap.setMaxZoomPreference(20);
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
 
     }
 
@@ -343,20 +338,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Date date = java.sql.Date.valueOf(points.getString("date"));
                         String image = points.getString("image");
 
+                        ImageView img =  new ImageView(MapsActivity.this);
+                        Picasso.with(MapsActivity.this).load(image).into(img);
+
                         gp = new GreenPoint();
                         gp.setLatitude(latitude);
                         gp.setLongitude(longitude);
                         gp.setId(id);
                         gp.setLocation(location);
                         gp.setDate(date);
-                        gp.setImage(image);
+                        gp.setImage(img);
                         gp.setStatus(status);
 
                         int drawable = R.drawable.p_amarillo;
 
                         if (status == 1 || status == 2){
-                           //int canopy = points.getInt("canopy");
-                           //int stem = points.getInt("stem");
+                            //int canopy = points.getInt("canopy");
+                            //int stem = points.getInt("stem");
                             int height = points.getInt("height");
                             String type = points.getString("type");
                             String user = points.getString("username");
@@ -387,7 +385,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         BitmapDrawable color = (BitmapDrawable) getResources().getDrawable(drawable);
 
                         Bitmap color_scaled = Bitmap
-                               .createScaledBitmap(color.getBitmap(), WIDTH, HEIGHT, false);
+                                .createScaledBitmap(color.getBitmap(), WIDTH, HEIGHT, false);
 
                         Marker m = mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(latitude, longitude))
@@ -472,7 +470,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             m_location = gp.getLocation();
             m_image = gp.getImage();
             m_size = gp.getHeight();
-            m_profile = gp.getProfileImage();
+            //m_profile = gp.getProfileImage();
 
             PorterShapeImageView tree = (PorterShapeImageView) view.findViewById(R.id.treePic);
             PorterShapeImageView profile = (PorterShapeImageView) view.findViewById(R.id.profile);
@@ -483,7 +481,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             TextView status = (TextView) view.findViewById(R.id.p_status);
             TextView location = (TextView) view.findViewById(R.id.location);
 
-            Picasso.with(MapsActivity.this).load(m_profile).into(profile, new InfoWindowRefresher(marker));
+            Drawable image = m_image.getDrawable();
+            tree.setImageDrawable(image);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy",Locale.US);
             String pointDate = dateFormat.format(m_date);
@@ -497,7 +496,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 size.setText("Undefined");
             else size.setText(m_size+"m");
 
-            Picasso.with(MapsActivity.this).load(m_image).into(tree, new InfoWindowRefresher(marker));
 
             if (m_status == UNVERIFIED) {
                 status.setTextColor(getResources().getColor(R.color.yellow));
@@ -506,26 +504,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 status.setTextColor(getResources().getColor(R.color.colorCanopy));
                 status.setText(getString(R.string.verified));
             }
-            view.invalidate();
-            view.requestLayout();
-            view.refreshDrawableState();
+
         }
     }
 
-    private class InfoWindowRefresher implements Callback {
-        private Marker markerToRefresh;
-
-        private InfoWindowRefresher(Marker markerToRefresh) {
-            this.markerToRefresh = markerToRefresh;
-        }
-
-        @Override
-        public void onSuccess() {
-            markerToRefresh.showInfoWindow();
-        }
-
-        @Override
-        public void onError() {}
-    }
 
 }

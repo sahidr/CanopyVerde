@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class UserRegisterActivity extends AppCompatActivity {
     ArrayList<String> countryList = new ArrayList<String>();
     ArrayList<String> citiesList = new ArrayList<String>();
     JSONObject countriesAndCities;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class UserRegisterActivity extends AppCompatActivity {
                 .build()
         );
 
+        progressBar = (ProgressBar) findViewById(R.id.load);
         fullname = (EditText) findViewById(R.id.fullName);
         username = (EditText) findViewById(R.id.username);
         email = (EditText) findViewById(R.id.email);
@@ -82,6 +85,7 @@ public class UserRegisterActivity extends AppCompatActivity {
 
         fullname_field = fullname_text.length() != 0;
         username_field = username_text.length() != 0;
+
         email_field = email_text.length() != 0
                 && android.util.Patterns.EMAIL_ADDRESS.matcher(email_text).matches();
         password_field = password_text.length() >= 8;
@@ -98,15 +102,35 @@ public class UserRegisterActivity extends AppCompatActivity {
     }
 
     public boolean verifyFields(boolean fullname_field, boolean username_field, boolean email_field,
-                                boolean password_field, boolean country_field, boolean city_field){
-        if(!fullname_field)
+                                boolean password_field, boolean country_field, boolean city_field) {
+        if (!fullname_field) {
             fullname.setError(getString(R.string.fullname_valid));
-        if(!username_field)
+            fullname.setBackgroundResource(R.drawable.first_field_error);
+        } else
+            fullname.setBackgroundResource(R.drawable.first_field);
+        if (!username_field){
             username.setError(getString(R.string.username_valid));
-        if(!email_field)
+            username.setBackgroundResource(R.drawable.field_error);
+        } else
+            username.setBackgroundResource(R.drawable.field);
+        if(!email_field) {
             email.setError(getString(R.string.email_valid));
-        //if(!password_field)
-        //    password.setError(getString(R.string.password_valid));
+            email.setBackgroundResource(R.drawable.field_error);
+        } else
+            email.setBackgroundResource(R.drawable.field);
+        if(!password_field) {
+            password.setError(getString(R.string.password_valid));
+            password.setBackgroundResource(R.drawable.field_error);
+        }else
+            password.setBackgroundResource(R.drawable.field);
+        if(!country_field) {
+            country.setBackgroundResource(R.drawable.field_error);
+        }else
+            country.setBackgroundResource(R.drawable.field);
+        if(!city_field) {
+            city.setBackgroundResource(R.drawable.last_field_error);
+        }else
+            city.setBackgroundResource(R.drawable.last_field);
         return (fullname_field && username_field && email_field && password_field && country_field
                 && city_field);
     }
@@ -207,7 +231,7 @@ public class UserRegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            //progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -220,6 +244,7 @@ public class UserRegisterActivity extends AppCompatActivity {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestMethod("POST");
+                urlConnection.setConnectTimeout(10000);
 
                 JSONObject user = new JSONObject();
                 JSONObject profile = new JSONObject();
@@ -262,26 +287,20 @@ public class UserRegisterActivity extends AppCompatActivity {
                 case (-1):
                     message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    finish();
-                    //progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
-
                     message = "¡User Created!";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    finish();
-                    //startActivity(intent);
-                    //progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
                     message = "Invalid Data";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    finish();
-                    //progressBar.setVisibility(View.GONE);
                     break;
                 default:
                     break;
             }
+            progressBar.setVisibility(View.GONE);
+            finish();
         }
     }
 }

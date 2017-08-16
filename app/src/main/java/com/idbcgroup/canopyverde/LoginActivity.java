@@ -75,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,8 @@ public class LoginActivity extends AppCompatActivity {
         );
 
         callbackManager = CallbackManager.Factory.create();
+
+        progressBar = (ProgressBar) findViewById(R.id.load);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         load = (ProgressBar) findViewById(R.id.load);
@@ -307,31 +310,28 @@ public class LoginActivity extends AppCompatActivity {
 
         email_field = email_text.length() != 0
                 && android.util.Patterns.EMAIL_ADDRESS.matcher(email_text).matches();
-
         password_field = password_text.length() >= 8;
+
         verified = verifyFields(email_field, password_field);
 
         if (verified) {
-
             AttemptLogin l = new AttemptLogin();
             l.execute(email_text,password_text);
-
-        } else {
-            //Toast.makeText(getBaseContext(),"Fields must be filled",Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public boolean verifyFields(boolean email_field, boolean password_field){
-        if(!email_field)
+        if(!email_field) {
             email.setError(getString(R.string.email_valid));
-        if(!password_field)
+            email.setBackgroundResource(R.drawable.first_field_error);
+        } else
+            email.setBackgroundResource(R.drawable.first_field);
+        if(!password_field) {
             password.setError(getString(R.string.password_valid));
-        //if(!country_field)
-        // Toast.makeText(getBaseContext(),"Choose a Country",Toast.LENGTH_SHORT).show();
-        //if(!city_field)
-        //Toast.makeText(getBaseContext(),"Choose a City",Toast.LENGTH_SHORT).show();
-        return (email_field);
+            password.setBackgroundResource(R.drawable.last_field_error);
+        }else
+            password.setBackgroundResource(R.drawable.last_field);
+        return (email_field && password_field);
     }
 
     public void fb_login(View view){
@@ -355,7 +355,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            //progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         // Sends validated Log In's data to the server's API and process the response. Returns an
@@ -376,6 +376,7 @@ public class LoginActivity extends AppCompatActivity {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");
+                connection.setConnectTimeout(10000);
 
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
                 writer.write(credentials);
@@ -410,8 +411,6 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("NOT", "FOUND");
                         result = -1;
                     }
-
-
                 }
 
             } catch (MalformedURLException e) {
@@ -432,7 +431,7 @@ public class LoginActivity extends AppCompatActivity {
                 case (-1):
                     message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                    //progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
                     Intent intent = new Intent(getBaseContext(), MapsActivity.class);
@@ -440,12 +439,12 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     finish();
-                    //progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
                     message = "Nombre de usuario y/o contraseña inválidos";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                    //progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     break;
                 default:
                     break;

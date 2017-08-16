@@ -1,5 +1,7 @@
 package com.idbcgroup.canopyverde;
 
+import android.widget.ImageView;
+
 import java.sql.Date;
 
 public class GreenPoint {
@@ -11,10 +13,10 @@ public class GreenPoint {
     private int stemSize;
     private String height;
     private String treeType;
-    private String image;
+    private ImageView image;
     private int status;
     private String username;
-    private String profileImage;
+    private ImageView profileImage;
     private Float latitude, longitude;
 
     public GreenPoint(){}
@@ -65,11 +67,9 @@ public class GreenPoint {
 
     public void setUsername(String username) { this.username = username; }
 
-    public String getImage (){
-        return image;
-    }
+    public ImageView getImage (){ return image; }
 
-    public void setImage(String image){
+    public void setImage(ImageView image){
         this.image = image;
     }
 
@@ -97,11 +97,11 @@ public class GreenPoint {
         this.stemSize = stem;
     }
 
-    public String getProfileImage (){
+    public ImageView getProfileImage (){
         return profileImage;
     }
 
-    public void setProfileImage(String image){
+    public void setProfileImage(ImageView image){
         this.profileImage = image;
     }
 

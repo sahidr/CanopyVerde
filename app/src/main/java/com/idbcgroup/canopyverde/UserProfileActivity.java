@@ -195,7 +195,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                     String password = data.get(2);
                                     String country = data.get(3);
                                     String city = data.get(4);
-                                    p.execute(fullname,country,city);
+                                    p.execute(fullname,country,city,password);
 
                                 }
                             });
@@ -424,6 +424,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                 user.put("username", username);
                 user.put("email", email);
+                user.put("password", strings[3]);
 
                 profile.put("fk_user", user);
                 profile.put("fullname", strings[0]);
@@ -442,9 +443,11 @@ public class UserProfileActivity extends AppCompatActivity {
                         result = 0;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
                         Log.d("BAD", "BAD");
+                        Log.d("OK", response.getBody().toString());
                         result = 1;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
                         Log.d("NOT", "FOUND");
+                        Log.d("OK", response.getBody().toString());
                         result = -1;
                     }
                 }

@@ -53,7 +53,7 @@
     <string name="fullname_valid">Nombre completo requerido</string>
     <string name="username_valid">Nombre de usuario requerido</string>
     <string name="email_valid">Correo válido requerido</string>
-    <string name="password_valid">Contraseña mayor a 8 caracteres</string>
+    <string name="password_valid">Contraseña debe tener al menos caracteres</string>
 
     <!--    Restore Password    -->
     <string name="restore">Recuperar Contraseña</string>
@@ -155,8 +155,5 @@
 
     <string name="google">Sign in with Google</string>
     <string name="title_activity_user_profile">UserProfileActivity</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
