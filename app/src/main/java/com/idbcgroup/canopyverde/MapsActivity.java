@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -24,8 +23,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,21 +35,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 import java.io.File;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -66,7 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Date m_date;
     private String m_type, m_size, m_location, m_username, m_profile;
     private int m_status;
-    private String  m_image;
+    private String m_image;
     private TextView greenIndex, populationDensity;
     private RelativeLayout stats;
     private SharedPreferences pref_session;
@@ -337,7 +332,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     JSONArray pointsArray = response.getJSONArray("body");
                     JSONObject points;
 
-                    GreenPoint gp, rp;
+                    GreenPoint gp;
                     for (int i = 0; i < pointsArray.length(); i++) {
                         points = pointsArray.getJSONObject(i);
                         Float latitude = Float.parseFloat(points.getString("latitude"));
@@ -347,7 +342,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String location = points.getString("location");
                         Date date = java.sql.Date.valueOf(points.getString("date"));
                         String image = points.getString("image");
-                        //Bitmap imageBitmap;
+
                         gp = new GreenPoint();
                         gp.setLatitude(latitude);
                         gp.setLongitude(longitude);
@@ -487,9 +482,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             TextView size = (TextView) view.findViewById(R.id.p_size);
             TextView status = (TextView) view.findViewById(R.id.p_status);
             TextView location = (TextView) view.findViewById(R.id.location);
-            Glide.with(MapsActivity.this).load(m_image).into(tree);
-            //Uri profile_pic = Uri.parse(m_profile);
-            //Picasso.with(MapsActivity.this).load(profile_pic).into(profile);
+
+            Picasso.with(MapsActivity.this).load(m_profile).into(profile, new InfoWindowRefresher(marker));
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy",Locale.US);
             String pointDate = dateFormat.format(m_date);
@@ -503,10 +497,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 size.setText("Undefined");
             else size.setText(m_size+"m");
 
-            //Uri photo = Uri.parse(m_image);//"https://1.bp.blogspot.com/_Jfyk16Y3Lt8/SJjEuTgcJbI/AAAAAAAABZE/kBSPIYp8RrA/s400/roble.jpg");
-            //Glide.with(getBaseContext()).load(photo).into(tree);
+            Picasso.with(MapsActivity.this).load(m_image).into(tree, new InfoWindowRefresher(marker));
 
-            Log.w("I'm still here","AQQQQQQQQQQQQQQQUIIIIIIIIIIIIIIIIIIIIII");
             if (m_status == UNVERIFIED) {
                 status.setTextColor(getResources().getColor(R.color.yellow));
                 status.setText(getString(R.string.not_verified));
@@ -518,6 +510,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             view.requestLayout();
             view.refreshDrawableState();
         }
+    }
+
+    private class InfoWindowRefresher implements Callback {
+        private Marker markerToRefresh;
+
+        private InfoWindowRefresher(Marker markerToRefresh) {
+            this.markerToRefresh = markerToRefresh;
+        }
+
+        @Override
+        public void onSuccess() {
+            markerToRefresh.showInfoWindow();
+        }
+
+        @Override
+        public void onError() {}
     }
 
 }
