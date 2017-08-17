@@ -73,13 +73,12 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
         latitude = Double.longBitsToDouble( pref_marker.getLong( "lat", -1 ));
         longitude = Double.longBitsToDouble( pref_marker.getLong( "long", -1 ));
 
-        imageName = (String) getIntent().getExtras().get("NAME");
+        Bundle extras = getIntent().getExtras();
 
-        if(imageName == null) {
+        if(extras == null) {
             thumbnail= null;
         } else {
-            thumbnail = BitmapFactory.decodeFile(
-                    Environment.getExternalStorageDirectory()+ "/CanopyVerde/"+imageName);
+            thumbnail = (Bitmap) getIntent().getExtras().get("data");
         }
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses = null;
@@ -135,15 +134,6 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "CanopyVerde");
-        imagesFolder.mkdirs(); // <----
-        Calendar calendar = Calendar.getInstance();
-        java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
-        SimpleDateFormat date_name = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
-        imageName = date_name.format(date);
-        File image = new File(imagesFolder, imageName);
-        Uri uriSavedImage = Uri.fromFile(image);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file imageName
         startActivityForResult(intent, 0);
     }
 
@@ -151,8 +141,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
 
-            Bitmap image = BitmapFactory.decodeFile(
-                    Environment.getExternalStorageDirectory()+ "/CanopyVerde/"+imageName);
+            Bitmap image = (Bitmap) data.getExtras().get("data");
             photoCapture.setImageBitmap(image);
         }
     }
@@ -174,7 +163,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         // Must compress the Image to reduce image size to make upload easy
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] byte_arr = stream.toByteArray();
         // Encode Image to String
         encodedString = Base64.encodeToString(byte_arr, 0);

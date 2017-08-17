@@ -9,6 +9,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -25,6 +26,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +43,15 @@ import android.widget.ToggleButton;
 import com.facebook.login.LoginManager;
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -113,30 +121,31 @@ public class UserProfileActivity extends AppCompatActivity {
         edit = (ToggleButton) findViewById(R.id.edit);
         camera = (ImageView) findViewById(R.id.cameraLogo);
 
+
         // User
+        GetUser g = new GetUser();
+        g.execute();
 
         pref_session = getSharedPreferences("Session", 0);
 
         email = pref_session.getString("email",null);
         username = pref_session.getString("username",null);
         String fullname = pref_session.getString("fullname",null);
-        String profilepic = pref_session.getString("photo",null);
-        int game_points = pref_session.getInt("game_points",0);
+        final String profilepic = pref_session.getString("photo",null);
+        Integer game_points = pref_session.getInt("points",0);
         String badge_name = pref_session.getString("badge",null);
 
         id = pref_session.getInt("id",0);
-
         if (profilepic!=null) {
             Uri photo = Uri.parse(profilepic);
             Picasso.with(context).load(photo).into(profilePic);
         }
-
         profileFullname.setText(fullname);
         profileEmail.setText(email);
         profileUsername.setText("@"+username);
 
-        String points = this.getResources().getString(R.string.badge_name, formatter.format(game_points), badge_name);
-        CharSequence styledText = Html.fromHtml(points);
+        String userData = this.getResources().getString(R.string.badge_name, formatter.format(game_points), badge_name);
+        CharSequence styledText = Html.fromHtml(userData);
         badge.setText(styledText);
 
         //Tabs
@@ -195,7 +204,14 @@ public class UserProfileActivity extends AppCompatActivity {
                                     String password = data.get(2);
                                     String country = data.get(3);
                                     String city = data.get(4);
-                                    p.execute(fullname,country,city,password);
+
+                                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                                    assert image != null;
+                                    image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                                    byte[] byte_arr = bytes.toByteArray();
+                                    String encoder = Base64.encodeToString(byte_arr,0);
+
+                                    p.execute(fullname,country,city,password,encoder);
 
                                 }
                             });
@@ -246,16 +262,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //Intent imageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "CanopyVerde/profile");
-        imagesFolder.mkdirs(); // <----
-        Calendar calendar = Calendar.getInstance();
-        java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
-        SimpleDateFormat date_name = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
-        imageName = date_name.format(date);
-        File image = new File(imagesFolder, imageName);
-        Uri uriSavedImage = Uri.fromFile(image);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file imageName
+
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
@@ -270,12 +277,13 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void onCaptureImageResult(Intent data) {
-        /*Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        image = (Bitmap) data.getExtras().get("data");
+        /*ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         assert thumbnail != null;
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        //profilePic.setImageBitmap(thumbnail);
-*/
+        */
+        profilePic.setImageBitmap(image);
+/*
         image = BitmapFactory.decodeFile(
                 Environment.getExternalStorageDirectory()+
                         "/CanopyVerde/profile"+imageName);
@@ -284,17 +292,16 @@ public class UserProfileActivity extends AppCompatActivity {
         //data.getClipData()
         //Uri image = data.getExtras().get(EXTRA_);
         //Picasso.with(context).load(image).into(profilePic);
-
+*/
     }
 
     private void onSelectFromGalleryResult(Intent data) {
 
-        Bitmap bm;
         if (data != null) {
             try {
-                bm = MediaStore.Images.Media.getBitmap(getApplicationContext()
+                image = MediaStore.Images.Media.getBitmap(getApplicationContext()
                         .getContentResolver(), data.getData());
-                profilePic.setImageBitmap(bm);
+                profilePic.setImageBitmap(image);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -412,7 +419,9 @@ public class UserProfileActivity extends AppCompatActivity {
             URL url;
             HttpURLConnection urlConnection = null;
             Integer result = -1;
+
             try {
+
                 url = new URL("http://192.168.1.85:8000/profile/"+id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Content-Type", "application/json");
@@ -430,6 +439,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 profile.put("fullname", strings[0]);
                 profile.put("country", strings[1]);
                 profile.put("city", strings[2]);
+                profile.put("profile_pic",strings[4]);
 
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
                 writer.write(profile.toString());
@@ -451,6 +461,8 @@ public class UserProfileActivity extends AppCompatActivity {
                         result = -1;
                     }
                 }
+
+
             } catch (Exception e) {
                 return result;
             }
@@ -486,4 +498,79 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    public class GetUser extends AsyncTask<String, Integer, JSONObject> {
+
+        @Override
+        protected void onPreExecute(){
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            JSONObject response_body = new JSONObject();
+            URL url;
+            HttpURLConnection urlConnection = null;
+            try {
+                url = new URL("http://192.168.1.85:8000/profile/"+id+"/");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setConnectTimeout(10000);
+
+                APIResponse response = JSONResponseController.getJsonResponse(urlConnection,true);
+
+                if (response != null) {
+                    Log.w("RESPONSE", String.valueOf(response.getBody()));
+                    if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+                        response_body = response.getBody();
+                        response_body.put("status",0);
+                    } else {
+                        response_body.put("status",1);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return response_body;
+        }
+
+        // Process doInBackground() results
+        @Override
+        protected void onPostExecute(JSONObject response) {
+                //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));
+
+            try {
+                if (response.getInt("status") == 0) {
+                    int points_j =  response.getInt("game_points");
+                    String badge_j = response.getString("badge");
+                    String pic = response.getString("profile_pic");
+                    NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ITALIAN);
+                    String userData = getResources().getString(R.string.badge_name, formatter.format(points_j), badge_j);
+                    CharSequence styledText = Html.fromHtml(userData);
+                    badge.setText(styledText);
+                    Picasso.with(UserProfileActivity.this).load(pic).into(profilePic);
+
+                    SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
+                    editor.putString("badge",badge_j);
+                    editor.putInt("game_points",points_j);
+                    editor.apply();
+
+
+                }else {
+                    Toast.makeText(UserProfileActivity.this, "FailtoLoad", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+
+
+
+
+
+
 }

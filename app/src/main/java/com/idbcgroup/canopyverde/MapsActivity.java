@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -91,14 +92,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
-
+/*
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+  */
         context = this;
         stats = (RelativeLayout) findViewById(R.id.stats);
         greenIndex = (TextView) findViewById(R.id.greenViewIndexPercent);
 
+        GetStats s = new GetStats();
+        s.execute("Caracas");
+
+        setupMapIfNeeded();
+
+
+/*
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US); //Italian for Latin
         formatter.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
 
@@ -111,8 +120,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
         String density = getResources().getString(R.string.density, formatter.format(pop_density));
         populationDensity.setText(density);
-
+*/
     }
+
+    private void setupMapIfNeeded() {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        if (mMap == null) {
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MapStateManager mgr = new MapStateManager(this);
+        mgr.saveMapState(mMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupMapIfNeeded();
+    }
+
 
     /**
      * Manipulates the map_circle once available.
@@ -129,7 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         style = MapStyleOptions.loadRawResourceStyle(this, R.raw.canopy_style_map);
         mMap.setMapStyle(style);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnInfoWindowCloseListener(this);
@@ -140,6 +172,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMinZoomPreference(12);
         mMap.setMaxZoomPreference(20);
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+
+        MapStateManager mgr = new MapStateManager(this);
+        CameraPosition position = mgr.getSavedCameraPosition();
+        if (position != null) {
+            CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
+            mMap.moveCamera(update);
+            mMap.setMapType(mgr.getSavedMapType());
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
+        }
+
+
         GetGreenPoints g = new GetGreenPoints();
         g.execute();
 
@@ -240,16 +284,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File imagesFolder = new File(Environment.getExternalStorageDirectory(), "CanopyVerde");
-        imagesFolder.mkdirs(); // <----
-
-        Calendar calendar = Calendar.getInstance();
-        java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
-        SimpleDateFormat date_name = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
-        imageName = date_name.format(date);
-        File image = new File(imagesFolder, imageName);
-        Uri uriSavedImage = Uri.fromFile(image);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage); // set the image file imageName
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
@@ -260,12 +294,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == Activity.RESULT_OK) {
                 Intent i = new Intent(MapsActivity.this, GreenPointRegisterActivity.class);
                 i.putExtras(data);
-                i.putExtra("NAME", imageName);
                 startActivityForResult(i, REQUEST_GREEN_POINT_REGISTER);
             }
             // GREEN POINT REGISTER RESULT
 
         } else if (requestCode == REQUEST_GREEN_POINT_REGISTER) {
+            //GetGreenPoints g = new GetGreenPoints();
+            //g.execute();
+            finish();
+            startActivity(getIntent());
 
             Log.d("RESULT_OK","OK");
         }
@@ -505,6 +542,65 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 status.setText(getString(R.string.verified));
             }
 
+        }
+    }
+    public class GetStats extends AsyncTask<String, Integer, JSONObject> {
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            JSONObject response_body = new JSONObject();
+            URL url;
+            HttpURLConnection urlConnection = null;
+            try {
+                url = new URL("http://192.168.1.85:8000/stats/"+params[0]+"/");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setConnectTimeout(10000);
+
+                APIResponse response = JSONResponseController.getJsonResponse(urlConnection,true);
+
+                if (response != null) {
+                    Log.w("RESPONSE", String.valueOf(response.getBody()));
+                    if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+                        response_body = response.getBody();
+                        response_body.put("status",0);
+                    } else {
+                        response_body.put("status",1);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return response_body;
+        }
+
+        // Process doInBackground() results
+        @Override
+        protected void onPostExecute(JSONObject response) {
+            //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));
+
+            try {
+                if (response.getInt("status") == 0) {
+                    float population = (float) response.getDouble("population_density");
+                    float green_index = (float) response.getDouble("green_index");
+                    int reported_trees = response.getInt("reported_trees");
+
+                    NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US); //Italian for Latin
+                    formatter.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
+
+                    String percent = getResources().getString(R.string.percent, formatter.format(green_index));
+                    greenIndex.setText(percent + "%");
+
+                    populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
+                    String density = getResources().getString(R.string.density, formatter.format(population));
+                    populationDensity.setText(density);
+
+
+                }else {
+                    Toast.makeText(MapsActivity.this, "FailtoLoad", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

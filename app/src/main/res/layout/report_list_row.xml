@@ -33,10 +33,10 @@
         android:id="@+id/locationIcon"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginStart="21dp"
         android:background="@drawable/ciudad_pin"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/treeTypeDisplay" />
+        android:layout_toEndOf="@+id/pointStatus"
+        android:layout_marginStart="120dp" />
 
     <TextView
         android:id="@+id/locationDisplay"
@@ -47,6 +47,7 @@
         android:maxLines="2"
         android:text="Av. San Martin de Caracas"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="5dp"
         android:layout_toEndOf="@+id/locationIcon"
         android:layout_toStartOf="@+id/date"/>
 

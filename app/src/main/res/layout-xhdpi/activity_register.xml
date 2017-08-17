@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/full_name"
-        android:inputType="textPersonName"
+        android:inputType="textCapSentences"
         android:layout_below="@+id/username"
         android:layout_alignStart="@+id/username" />
 
