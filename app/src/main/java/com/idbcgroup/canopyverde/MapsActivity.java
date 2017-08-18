@@ -101,13 +101,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         stats = (RelativeLayout) findViewById(R.id.stats);
         greenIndex = (TextView) findViewById(R.id.greenViewIndexPercent);
 
-        GetStats s = new GetStats();
-        s.execute("Caracas");
+        //GetStats s = new GetStats();
+        //s.execute("Caracas");
 
         setupMapIfNeeded();
 
-
-/*
+        /*
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US); //Italian for Latin
         formatter.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
 
@@ -120,7 +119,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
         String density = getResources().getString(R.string.density, formatter.format(pop_density));
         populationDensity.setText(density);
-*/
+        */
+
     }
 
     private void setupMapIfNeeded() {
@@ -184,8 +184,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
-        GetGreenPoints g = new GetGreenPoints();
-        g.execute();
+        //GetGreenPoints g = new GetGreenPoints();
+        //g.execute();
 
         if (ActivityCompat
                 .checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)

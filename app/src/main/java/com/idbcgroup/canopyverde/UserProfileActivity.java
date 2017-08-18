@@ -132,7 +132,7 @@ public class UserProfileActivity extends AppCompatActivity {
         username = pref_session.getString("username",null);
         String fullname = pref_session.getString("fullname",null);
         final String profilepic = pref_session.getString("photo",null);
-        Integer game_points = pref_session.getInt("points",0);
+        Integer game_points = pref_session.getInt("game_points",0);
         String badge_name = pref_session.getString("badge",null);
 
         id = pref_session.getInt("id",0);
@@ -204,15 +204,13 @@ public class UserProfileActivity extends AppCompatActivity {
                                     String password = data.get(2);
                                     String country = data.get(3);
                                     String city = data.get(4);
-
-                                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                                    assert image != null;
-                                    image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                                    byte[] byte_arr = bytes.toByteArray();
-                                    String encoder = Base64.encodeToString(byte_arr,0);
-
-                                    p.execute(fullname,country,city,password,encoder);
-
+                                    if (image != null) {
+                                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                                        image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                                        byte[] byte_arr = bytes.toByteArray();
+                                        String encoder = Base64.encodeToString(byte_arr, 0);
+                                        p.execute(fullname, country, city, password, encoder);
+                                    }
                                 }
                             });
                     dialog.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
