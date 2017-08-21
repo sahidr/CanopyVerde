@@ -208,9 +208,10 @@ public class UserProfileActivity extends AppCompatActivity {
                                         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                                         image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                                         byte[] byte_arr = bytes.toByteArray();
-                                        String encoder = Base64.encodeToString(byte_arr, 0);
-                                        p.execute(fullname, country, city, password, encoder);
-                                    }
+                                        String image = Base64.encodeToString(byte_arr, 0);
+                                        p.execute(fullname, email, password ,country, city ,image);
+                                    } else
+                                        p.execute(fullname, email, password ,country, city ,null);
                                 }
                             });
                     dialog.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -424,20 +425,21 @@ public class UserProfileActivity extends AppCompatActivity {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setDoOutput(true);
-                urlConnection.setRequestMethod("PUT");
+                urlConnection.setRequestMethod("PATCH");
 
                 JSONObject user = new JSONObject();
                 JSONObject profile = new JSONObject();
 
                 user.put("username", username);
-                user.put("email", email);
-                user.put("password", strings[3]);
+                user.put("email", strings[1]);
+                user.put("password", strings[2]);
 
                 profile.put("fk_user", user);
                 profile.put("fullname", strings[0]);
-                profile.put("country", strings[1]);
-                profile.put("city", strings[2]);
-                profile.put("profile_pic",strings[4]);
+                profile.put("country", strings[3]);
+                profile.put("city", strings[4]);
+                if (strings[5]!= null)
+                    profile.put("profile_pic",strings[5]);
 
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
                 writer.write(profile.toString());
@@ -543,17 +545,19 @@ public class UserProfileActivity extends AppCompatActivity {
                     int points_j =  response.getInt("game_points");
                     String badge_j = response.getString("badge");
                     String pic = response.getString("profile_pic");
+                    String name = response.getString("fullname");
                     NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ITALIAN);
                     String userData = getResources().getString(R.string.badge_name, formatter.format(points_j), badge_j);
                     CharSequence styledText = Html.fromHtml(userData);
                     badge.setText(styledText);
+                    profileFullname.setText(name);
                     Picasso.with(UserProfileActivity.this).load(pic).into(profilePic);
 
                     SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
                     editor.putString("badge",badge_j);
                     editor.putInt("game_points",points_j);
+                    editor.putString("fullname",name);
                     editor.apply();
-
 
                 }else {
                     Toast.makeText(UserProfileActivity.this, "FailtoLoad", Toast.LENGTH_SHORT).show();
@@ -564,11 +568,4 @@ public class UserProfileActivity extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
         }
     }
-
-
-
-
-
-
-
 }

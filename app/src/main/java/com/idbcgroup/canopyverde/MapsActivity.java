@@ -9,6 +9,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -44,12 +47,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 import java.io.File;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -76,10 +82,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String m_type, m_size, m_location, m_username;
     private int m_status;
     private ImageView m_image, m_profile;
-    private TextView greenIndex, populationDensity;
+    private TextView greenIndex, populationDensity,city;
     private RelativeLayout stats;
     private SharedPreferences pref_session;
 
+    private String lastCity;
 
     private String imageName;
 
@@ -92,17 +99,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+        setupMapIfNeeded();
+
 /*
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
   */
+
+        lastCity = "Caracas";
         context = this;
         stats = (RelativeLayout) findViewById(R.id.stats);
         greenIndex = (TextView) findViewById(R.id.greenViewIndexPercent);
+        populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
+        city = (TextView) findViewById(R.id.city);
+        city.setText("-");
 
-        //GetStats s = new GetStats();
-        //s.execute("Caracas");
+        GetStats s = new GetStats();
+        s.execute(lastCity);
 
         setupMapIfNeeded();
 
@@ -135,8 +149,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-        MapStateManager mgr = new MapStateManager(this);
-        mgr.saveMapState(mMap);
+        setupMapIfNeeded();
+        if (mMap != null) {
+            MapStateManager mgr = new MapStateManager(this);
+            mgr.saveMapState(mMap);
+        }
     }
 
     @Override
@@ -170,7 +187,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMinZoomPreference(12);
-        mMap.setMaxZoomPreference(20);
+        mMap.setMaxZoomPreference(22);
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
 
         MapStateManager mgr = new MapStateManager(this);
@@ -183,7 +200,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
         }
 
-
         //GetGreenPoints g = new GetGreenPoints();
         //g.execute();
 
@@ -195,14 +211,78 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
+        /*
+        * OnCameraChange build with AsyncTask for Geocoder
+        * Get current city from camera position
+        * */
+
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+
+                LatLng location = new LatLng(cameraPosition.target.latitude, cameraPosition.target.longitude);
+                new AsyncTask<LatLng, String, String>() {
+                    @Override
+                    protected String doInBackground(LatLng... params) {
+                        Geocoder geocoder = new Geocoder(context);
+                        List<Address> addresses = null;
+                        String currentCity = lastCity;
+                        try {
+                            addresses = geocoder.getFromLocation(params[0].latitude, params[0].longitude, 1);
+                            //String address = addresses.get(0).getAddressLine(0);
+                            // If any additional address line present than only,
+                            // check with max available address lines by getMaxAddressLineIndex()
+                            currentCity = addresses.get(0).getLocality();
+
+                            if (currentCity != null && lastCity!= null) {
+
+                                if (!lastCity.equals(currentCity)) {
+                                    return currentCity;
+                                }
+                            }
+                        } catch(IOException e){
+                            e.printStackTrace();
+                        }
+                        return currentCity;
+                    }
+
+                    @Override
+                    protected void onPostExecute(String city) {
+                        //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));\
+                        Log.w("LAST CITY",lastCity);
+
+                        if (city != null) {
+                            if (!lastCity.equals(city)) {
+                                lastCity = city;
+                                GetStats s = new GetStats();
+                                s.execute(city);
+                            }
+                        }
+                    }
+                }.execute(location);
+
+            }
+        });
+
     }
 
+    /*
+    * Fade Animation for the Stats Layout when Marker is Clicked
+    */
     @Override
     public boolean onMarkerClick(Marker marker) {
         stats.animate().alpha(0.0f);
         return false;
     }
 
+    @Override
+    public void onInfoWindowClose(Marker marker) {
+        stats.animate().alpha(1f);
+    }
+
+
+    /*
+    * Custom info window click at free red points*/
     @Override
     public void onInfoWindowClick(Marker marker) {
         GreenPoint rp = (GreenPoint) marker.getTag();  //RED POINT DATA
@@ -223,11 +303,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    @Override
-    public void onInfoWindowClose(Marker marker) {
-        stats.animate().alpha(1f);
-    }
-
+    /*
+    * Get current location for custom crosseye button
+    * */
     public void currentLocation(View view) {
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
@@ -273,6 +351,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Method to call the Android Camera app for Green Point Register
+     **/
     public void cameraView(View view) {
         CameraPosition cameraPosition = mMap.getCameraPosition();
         SharedPreferences.Editor markerEditor = getSharedPreferences("Marker", 0).edit();
@@ -287,6 +368,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
+    /*
+    * Result of the Camera app or Successful point Register
+    * */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // CAMERA RESULT
@@ -442,8 +526,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    /** Demonstrates customizing the info window and/or its contents. */
-    private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+    /* Demonstrates customizing the info window and/or its contents. *
+    /* Class for the custom info window adapter
+     */
+     private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         private final View greenPointWindow;
         private final View redPointWindow;
@@ -544,6 +630,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+
+    /*
+    * AsyncTask Class to get Stats of the current City *
+    * */
     public class GetStats extends AsyncTask<String, Integer, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
@@ -551,19 +641,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             URL url;
             HttpURLConnection urlConnection = null;
             try {
-                url = new URL("http://192.168.1.85:8000/stats/"+params[0]+"/");
+                String city = URLEncoder.encode(params[0], "UTF-8");
+
+                //url = new URL("http://192.168.1.85:8000/stats/"+params[0]+"/");
+                url = new URL("http://192.168.1.85:8000/city/?search="+city);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 
-                APIResponse response = JSONResponseController.getJsonResponse(urlConnection,true);
+                APIResponse response = JSONResponseController.getJsonResponse(urlConnection,false);
 
                 if (response != null) {
                     Log.w("RESPONSE", String.valueOf(response.getBody()));
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {
-                        response_body = response.getBody();
+//                        response_body = response.getBody();
+  //                      response_body.put("status",0);
                         response_body.put("status",0);
+                        response_body.put("body",response.getBodyArray());
+
                     } else {
+                        //response_body.put("status",1);
                         response_body.put("status",1);
+                        response_body.put("body",response.getBodyArray());
                     }
                 }
 
@@ -579,21 +677,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));
 
             try {
+                city.setText(lastCity);
+                greenIndex.setText("-- %");
+                populationDensity.setText("-- km/^2");
                 if (response.getInt("status") == 0) {
-                    float population = (float) response.getDouble("population_density");
-                    float green_index = (float) response.getDouble("green_index");
-                    int reported_trees = response.getInt("reported_trees");
 
-                    NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US); //Italian for Latin
-                    formatter.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
+                    JSONArray cityStatsArray = response.getJSONArray("body");
 
-                    String percent = getResources().getString(R.string.percent, formatter.format(green_index));
-                    greenIndex.setText(percent + "%");
+                    if (cityStatsArray.length()>0) {
 
-                    populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
-                    String density = getResources().getString(R.string.density, formatter.format(population));
-                    populationDensity.setText(density);
+                        JSONObject cityStats = cityStatsArray.getJSONObject(0);
 
+
+                        float population = (float) cityStats.getDouble("population_density");
+                        float green_index = (float) cityStats.getDouble("green_index");
+                        int reported_trees = cityStats.getInt("reported_trees");
+
+                        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US); //Italian for Latin
+                        formatter.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
+
+                        city.setText(lastCity);
+
+                        String percent = getResources().getString(R.string.percent, formatter.format(green_index));
+                        greenIndex.setText(percent + "%");
+
+                        //populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
+                        String density = getResources().getString(R.string.density, formatter.format(population));
+                        populationDensity.setText(density);
+                    }
 
                 }else {
                     Toast.makeText(MapsActivity.this, "FailtoLoad", Toast.LENGTH_SHORT).show();
@@ -603,6 +714,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
-
 }
