@@ -77,7 +77,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            app:srcCompat="@drawable/btn_locate"/>
+            android:background="@drawable/btn_locate"/>
 
         <ImageView
             android:id="@+id/cameraLogo"
@@ -96,7 +96,6 @@
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:textColor="@android:color/white"
-            android:text="@string/u_name"
             android:layout_marginTop="2dp"
             android:layout_below="@+id/profilepic"
             android:layout_centerHorizontal="true" />
@@ -105,7 +104,6 @@
             android:id="@+id/usernameDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/u_user"
             android:textColor="@android:color/white"
             android:layout_below="@+id/fullNameDisplay"
             android:layout_centerHorizontal="true" />
@@ -114,7 +112,6 @@
             android:id="@+id/emailDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/u_email"
             android:layout_marginTop="2dp"
             android:textColor="@android:color/white"
             android:layout_below="@+id/usernameDisplay"

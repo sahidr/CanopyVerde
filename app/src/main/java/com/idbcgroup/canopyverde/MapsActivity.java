@@ -81,13 +81,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Date m_date;
     private String m_type, m_size, m_location, m_username;
     private int m_status;
-    private ImageView m_image, m_profile;
+    private String m_image, m_profile;
     private TextView greenIndex, populationDensity,city;
     private RelativeLayout stats;
     private SharedPreferences pref_session;
-
     private String lastCity;
-
     private String imageName;
 
     @Override
@@ -106,6 +104,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
   */
+        //pref_session = getSharedPreferences("Session", 0);
+        //lastCity = pref_session.getString("city",null);
 
         lastCity = "Caracas";
         context = this;
@@ -114,7 +114,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
         city = (TextView) findViewById(R.id.city);
         city.setText("-");
-
+        greenIndex.setText("-- %");
+        populationDensity.setText("-- /km^2");
         GetStats s = new GetStats();
         s.execute(lastCity);
 
@@ -162,7 +163,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setupMapIfNeeded();
     }
 
-
     /**
      * Manipulates the map_circle once available.
      * This callback is triggered when the map_circle is ready to be used.
@@ -200,8 +200,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
         }
 
-        //GetGreenPoints g = new GetGreenPoints();
-        //g.execute();
+        GetGreenPoints g = new GetGreenPoints();
+        g.execute();
 
         if (ActivityCompat
                 .checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -212,9 +212,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         /*
-        * OnCameraChange build with AsyncTask for Geocoder
-        * Get current city from camera position
-        * */
+         OnCameraChange build with AsyncTask for Geocoder
+         Get current city from camera position
+        */
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -248,8 +248,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     @Override
                     protected void onPostExecute(String city) {
-                        //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));\
-                        Log.w("LAST CITY",lastCity);
 
                         if (city != null) {
                             if (!lastCity.equals(city)) {
@@ -383,8 +381,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // GREEN POINT REGISTER RESULT
 
         } else if (requestCode == REQUEST_GREEN_POINT_REGISTER) {
-            //GetGreenPoints g = new GetGreenPoints();
-            //g.execute();
+            GetGreenPoints g = new GetGreenPoints();
+            g.execute();
             finish();
             startActivity(getIntent());
 
@@ -459,8 +457,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Date date = java.sql.Date.valueOf(points.getString("date"));
                         String image = points.getString("image");
 
-                        ImageView img =  new ImageView(MapsActivity.this);
-                        Picasso.with(MapsActivity.this).load(image).into(img);
+                        //ImageView img =  new ImageView(MapsActivity.this);
+                        //Picasso.with(MapsActivity.this).load(image).into(img);
 
                         gp = new GreenPoint();
                         gp.setLatitude(latitude);
@@ -468,7 +466,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         gp.setId(id);
                         gp.setLocation(location);
                         gp.setDate(date);
-                        gp.setImage(img);
+                        gp.setImage(image);
                         gp.setStatus(status);
 
                         int drawable = R.drawable.p_amarillo;
@@ -604,8 +602,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             TextView status = (TextView) view.findViewById(R.id.p_status);
             TextView location = (TextView) view.findViewById(R.id.location);
 
-            Drawable image = m_image.getDrawable();
-            tree.setImageDrawable(image);
+            //Drawable image = m_image.getDrawable();
+            //tree.setImageDrawable(image);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy",Locale.US);
             String pointDate = dateFormat.format(m_date);
@@ -679,7 +677,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             try {
                 city.setText(lastCity);
                 greenIndex.setText("-- %");
-                populationDensity.setText("-- km/^2");
+                populationDensity.setText("-- /km^2");
                 if (response.getInt("status") == 0) {
 
                     JSONArray cityStatsArray = response.getJSONArray("body");
@@ -706,8 +704,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         populationDensity.setText(density);
                     }
 
-                }else {
-                    Toast.makeText(MapsActivity.this, "FailtoLoad", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

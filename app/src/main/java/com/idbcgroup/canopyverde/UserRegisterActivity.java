@@ -262,6 +262,7 @@ public class UserRegisterActivity extends AppCompatActivity {
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection, true);
 
                 if (response != null) {
+                    Log.w("RESPONSE BODY REQUEST",response.getBody().toString());
                     if (response.getStatus() == HttpURLConnection.HTTP_OK || response.getStatus() == HttpURLConnection.HTTP_CREATED) {
                         Log.d("OK", response.getBody().toString());
                         result = 0;
@@ -291,6 +292,7 @@ public class UserRegisterActivity extends AppCompatActivity {
                 case (0):
                     message = "¡User Created!";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                    finish();
                     break;
                 case (1):
                     message = "Invalid Data";
@@ -300,7 +302,7 @@ public class UserRegisterActivity extends AppCompatActivity {
                     break;
             }
             progressBar.setVisibility(View.GONE);
-            finish();
+            //finish();
         }
     }
 }

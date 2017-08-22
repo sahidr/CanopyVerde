@@ -202,6 +202,10 @@ public class UserProfileActivity extends AppCompatActivity {
                                     String fullname = data.get(0);
                                     String email = data.get(1);
                                     String password = data.get(2);
+
+                                    if (password.length()< 8)
+                                        password = "1234";
+
                                     String country = data.get(3);
                                     String city = data.get(4);
                                     if (image != null) {
@@ -557,6 +561,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     editor.putString("badge",badge_j);
                     editor.putInt("game_points",points_j);
                     editor.putString("fullname",name);
+                    editor.putString("photo",pic);
                     editor.apply();
 
                 }else {
