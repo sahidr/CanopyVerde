@@ -8,27 +8,22 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,10 +38,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
-import java.io.File;
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -54,7 +51,6 @@ import java.net.URLEncoder;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -65,15 +61,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleMap.OnMarkerClickListener {
 
     private static final LatLng CARACAS = new LatLng(10.4806, -66.9036);
-    private static int MAX_FRACTION_DIGITS = 1;
+    private static final int MAX_FRACTION_DIGITS = 1;
     private static final int UNREQUESTED = -1;
     private static final int REQUESTED = 0;
     private static final int UNVERIFIED = 1;
     private static final int VERIFIED = 2;
-    private static int HEIGHT = 32;
-    private static int WIDTH = 32;
-    private static int REQUEST_CAMERA = 0;
-    private static int REQUEST_GREEN_POINT_REGISTER = 1;
+    private static final int HEIGHT = 32;
+    private static final int WIDTH = 32;
+    private static final int REQUEST_CAMERA = 0;
+    private static final int REQUEST_POINT_REGISTER = 1;
 
     private GoogleMap mMap;
     private MapStyleOptions style;
@@ -87,6 +83,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private SharedPreferences pref_session;
     private String lastCity;
     private String imageName;
+    private boolean isClicked =true;
+    private boolean first_time = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,14 +96,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .build()
         );
         setupMapIfNeeded();
-
-/*
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-  */
-        //pref_session = getSharedPreferences("Session", 0);
-        //lastCity = pref_session.getString("city",null);
 
         lastCity = "Caracas";
         context = this;
@@ -120,26 +110,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         s.execute(lastCity);
 
         setupMapIfNeeded();
-
-        /*
-        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US); //Italian for Latin
-        formatter.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
-
-        float green_index = (float) 100.001;
-        float pop_density = (float) 100000;
-
-        String percent = getResources().getString(R.string.percent, formatter.format(green_index));
-        greenIndex.setText(percent + "%");
-
-        populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
-        String density = getResources().getString(R.string.density, formatter.format(pop_density));
-        populationDensity.setText(density);
-        */
-
     }
 
+
+    /**
+     * Obtain the SupportMapFragment and get notified when the map is ready to be used.
+     */
     private void setupMapIfNeeded() {
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         if (mMap == null) {
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
@@ -152,6 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onPause();
         setupMapIfNeeded();
         if (mMap != null) {
+            // save last state of the Map
             MapStateManager mgr = new MapStateManager(this);
             mgr.saveMapState(mMap);
         }
@@ -178,7 +156,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         style = MapStyleOptions.loadRawResourceStyle(this, R.raw.canopy_style_map);
         mMap.setMapStyle(style);
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         mMap.setOnInfoWindowCloseListener(this);
@@ -186,10 +163,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.setMinZoomPreference(12);
-        mMap.setMaxZoomPreference(22);
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+        mMap.setMinZoomPreference(11);
+        mMap.setMaxZoomPreference(18);
+        mMap.setInfoWindowAdapter(new PointWindow());
 
+        // Load last state of the Map
         MapStateManager mgr = new MapStateManager(this);
         CameraPosition position = mgr.getSavedCameraPosition();
         if (position != null) {
@@ -197,7 +175,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(update);
             mMap.setMapType(mgr.getSavedMapType());
         } else {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS)); //CARACAS
+            // if Map is new load in Caracas
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS));
         }
 
         GetGreenPoints g = new GetGreenPoints();
@@ -212,15 +191,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         /*
-         OnCameraChange build with AsyncTask for Geocoder
-         Get current city from camera position
-        */
-
+         * OnCameraChange build with AsyncTask for Geocoder
+         * Get current city from camera position
+         */
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
 
-                LatLng location = new LatLng(cameraPosition.target.latitude, cameraPosition.target.longitude);
+                LatLng location = new LatLng(cameraPosition.target.latitude,
+                        cameraPosition.target.longitude);
                 new AsyncTask<LatLng, String, String>() {
                     @Override
                     protected String doInBackground(LatLng... params) {
@@ -228,14 +207,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         List<Address> addresses = null;
                         String currentCity = lastCity;
                         try {
-                            addresses = geocoder.getFromLocation(params[0].latitude, params[0].longitude, 1);
-                            //String address = addresses.get(0).getAddressLine(0);
-                            // If any additional address line present than only,
-                            // check with max available address lines by getMaxAddressLineIndex()
-                            currentCity = addresses.get(0).getLocality();
+                            addresses = geocoder.getFromLocation(params[0].latitude,
+                                    params[0].longitude, 1);
+                            if (addresses != null)
+                                currentCity = addresses.get(0).getLocality();
 
                             if (currentCity != null && lastCity!= null) {
-
                                 if (!lastCity.equals(currentCity)) {
                                     return currentCity;
                                 }
@@ -258,18 +235,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     }
                 }.execute(location);
-
             }
         });
-
     }
 
-    /*
-    * Fade Animation for the Stats Layout when Marker is Clicked
-    */
+    /**
+     * Fade Animation for the Stats Layout and info window reload when Marker is clicked
+     * @param marker
+     * @return boolean
+     * false for default marker behaviour wich is center camera at marker position and open info window
+     */
     @Override
     public boolean onMarkerClick(Marker marker) {
         stats.animate().alpha(0.0f);
+        marker.hideInfoWindow();
+        marker.showInfoWindow();
         return false;
     }
 
@@ -278,9 +258,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         stats.animate().alpha(1f);
     }
 
-
-    /*
-    * Custom info window click at free red points*/
+    /**
+     * Custom info window click at free red points
+     * @param marker
+     */
     @Override
     public void onInfoWindowClick(Marker marker) {
         GreenPoint rp = (GreenPoint) marker.getTag();  //RED POINT DATA
@@ -297,13 +278,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             i.putExtra("latitude",lat);
             i.putExtra("longitude",lng);
             i.putExtra("location",rp_location);
-            startActivity(i);
+            startActivityForResult(i,REQUEST_POINT_REGISTER);
         }
     }
 
-    /*
-    * Get current location for custom crosseye button
-    * */
+    /**
+     * Get current location for custom crosseye button
+     * @param view
+     */
     public void currentLocation(View view) {
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
@@ -351,7 +333,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Method to call the Android Camera app for Green Point Register
-     **/
+     * @param view
+     */
     public void cameraView(View view) {
         CameraPosition cameraPosition = mMap.getCameraPosition();
         SharedPreferences.Editor markerEditor = getSharedPreferences("Marker", 0).edit();
@@ -366,40 +349,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
-    /*
-    * Result of the Camera app or Successful point Register
-    * */
+    /**
+     * Result of the Camera app or Successful point Register or Update
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // CAMERA RESULT
+        // Result from camera app
         if (requestCode == REQUEST_CAMERA) {
             if (resultCode == Activity.RESULT_OK) {
                 Intent i = new Intent(MapsActivity.this, GreenPointRegisterActivity.class);
                 i.putExtras(data);
-                startActivityForResult(i, REQUEST_GREEN_POINT_REGISTER);
+                startActivityForResult(i, REQUEST_POINT_REGISTER);
             }
-            // GREEN POINT REGISTER RESULT
-
-        } else if (requestCode == REQUEST_GREEN_POINT_REGISTER) {
+        } else {
+            // Result from Yellow or Red Point Register
             GetGreenPoints g = new GetGreenPoints();
             g.execute();
             finish();
             startActivity(getIntent());
-
-            Log.d("RESULT_OK","OK");
         }
     }
 
+    /**
+     * Intent to User Profile
+     * @param view
+     */
     public void profileView(View view) {
         startActivity(new Intent(MapsActivity.this, UserProfileActivity.class));
     }
 
+    /**
+     *
+     * @param newBase
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public class GetGreenPoints extends AsyncTask<String, Integer, JSONObject> {
+    /**
+     * Points Loader AsyncTask
+     */
+    private class GetGreenPoints extends AsyncTask<String, Integer, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
             JSONObject apiResponse = new JSONObject();
@@ -428,7 +422,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         apiResponse.put("status",-2);
                     }
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -440,8 +433,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected void onPostExecute(JSONObject response) {
 
             try {
-                //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));
-
                 if (response.getInt("status") == 0) {
                     JSONArray pointsArray = response.getJSONArray("body");
                     JSONObject points;
@@ -457,9 +448,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Date date = java.sql.Date.valueOf(points.getString("date"));
                         String image = points.getString("image");
 
-                        //ImageView img =  new ImageView(MapsActivity.this);
-                        //Picasso.with(MapsActivity.this).load(image).into(img);
-
                         gp = new GreenPoint();
                         gp.setLatitude(latitude);
                         gp.setLongitude(longitude);
@@ -472,8 +460,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         int drawable = R.drawable.p_amarillo;
 
                         if (status == 1 || status == 2){
-                            //int canopy = points.getInt("canopy");
-                            //int stem = points.getInt("stem");
                             int height = points.getInt("height");
                             String type = points.getString("type");
                             String user = points.getString("username");
@@ -502,10 +488,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 break;
                         }
                         BitmapDrawable color = (BitmapDrawable) getResources().getDrawable(drawable);
-
                         Bitmap color_scaled = Bitmap
                                 .createScaledBitmap(color.getBitmap(), WIDTH, HEIGHT, false);
-
                         Marker m = mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(latitude, longitude))
                                 .icon(BitmapDescriptorFactory.fromBitmap(color_scaled))
@@ -519,120 +503,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
-
-    /* Demonstrates customizing the info window and/or its contents. *
-    /* Class for the custom info window adapter
+    /**
+     * AsyncTask Class to get Stats of the current City
      */
-     private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
-        private final View greenPointWindow;
-        private final View redPointWindow;
-
-        CustomInfoWindowAdapter() {
-            greenPointWindow = getLayoutInflater().inflate(R.layout.custom_info_window, null);
-            redPointWindow = getLayoutInflater().inflate(R.layout.red_points_dialog, null);
-        }
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-            View markerView;
-            GreenPoint gp = (GreenPoint) marker.getTag();  //GREEN POINT DATA
-            assert gp != null;
-            m_status = gp.getStatus();
-
-            if (m_status == UNREQUESTED || m_status == REQUESTED) {
-                renderRedPoint(marker, redPointWindow);
-                markerView = redPointWindow;
-            } else {
-                renderGreenPoint(marker, greenPointWindow);
-                markerView = greenPointWindow;
-            }
-            return markerView;
-        }
-
-
-        @Override
-        public View getInfoContents(Marker marker) {
-            return null;
-        }
-
-        private void renderRedPoint(Marker marker, View view){
-            GreenPoint rp = (GreenPoint) marker.getTag();  //RED POINT DATA
-            assert rp != null;
-            m_status = rp.getStatus();
-            m_location = rp.getLocation();
-
-            TextView available = (TextView) view.findViewById(R.id.available);
-            TextView plant = (TextView) view.findViewById(R.id.plant);
-
-            if (m_status == -1){
-                available.setText(R.string.available);
-                plant.setText(R.string.plant);
-
-            } else {
-                available.setText(R.string.occupied);
-                m_username = rp.getUsername();
-                plant.setText("@"+m_username);
-            }
-        }
-
-        private void renderGreenPoint(Marker marker, View view) {
-
-            GreenPoint gp = (GreenPoint) marker.getTag();  //GREEN POINT DATA
-            assert gp != null;
-            m_status = gp.getStatus();
-            m_date = gp.getDate();
-            m_type = gp.getTreeType();
-            m_username = gp.getUsername();
-            m_location = gp.getLocation();
-            m_image = gp.getImage();
-            m_size = gp.getHeight();
-            //m_profile = gp.getProfileImage();
-
-            PorterShapeImageView tree = (PorterShapeImageView) view.findViewById(R.id.treePic);
-            PorterShapeImageView profile = (PorterShapeImageView) view.findViewById(R.id.profile);
-            TextView user = (TextView) view.findViewById(R.id.user);
-            TextView date = (TextView) view.findViewById(R.id.p_date);
-            TextView type = (TextView) view.findViewById(R.id.p_type);
-            TextView size = (TextView) view.findViewById(R.id.p_size);
-            TextView status = (TextView) view.findViewById(R.id.p_status);
-            TextView location = (TextView) view.findViewById(R.id.location);
-
-            //Drawable image = m_image.getDrawable();
-            //tree.setImageDrawable(image);
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy",Locale.US);
-            String pointDate = dateFormat.format(m_date);
-            date.setText(pointDate);
-
-            type.setText(m_type);
-            location.setText(m_location);
-            user.setText("@"+m_username);
-
-            if (m_size.equals("Altura Aproximada"))
-                size.setText("Undefined");
-            else size.setText(m_size+"m");
-
-
-            if (m_status == UNVERIFIED) {
-                status.setTextColor(getResources().getColor(R.color.yellow));
-                status.setText(getString(R.string.not_verified));
-            } else if (m_status == VERIFIED){
-                status.setTextColor(getResources().getColor(R.color.colorCanopy));
-                status.setText(getString(R.string.verified));
-            }
-
-        }
-    }
-
-    /*
-    * AsyncTask Class to get Stats of the current City *
-    * */
-    public class GetStats extends AsyncTask<String, Integer, JSONObject> {
+    private class GetStats extends AsyncTask<String, Integer, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
             JSONObject response_body = new JSONObject();
@@ -640,8 +517,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             HttpURLConnection urlConnection = null;
             try {
                 String city = URLEncoder.encode(params[0], "UTF-8");
-
-                //url = new URL("http://192.168.1.85:8000/stats/"+params[0]+"/");
                 url = new URL("http://192.168.1.85:8000/city/?search="+city);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
@@ -649,7 +524,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection,false);
 
                 if (response != null) {
-                    Log.w("RESPONSE", String.valueOf(response.getBody()));
+                    //Log.w("RESPONSE", String.valueOf(response.getBody()));
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {
 //                        response_body = response.getBody();
   //                      response_body.put("status",0);
@@ -662,7 +537,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         response_body.put("body",response.getBodyArray());
                     }
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -672,7 +546,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Process doInBackground() results
         @Override
         protected void onPostExecute(JSONObject response) {
-            //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));
 
             try {
                 city.setText(lastCity);
@@ -686,7 +559,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         JSONObject cityStats = cityStatsArray.getJSONObject(0);
 
-
                         float population = (float) cityStats.getDouble("population_density");
                         float green_index = (float) cityStats.getDouble("green_index");
                         int reported_trees = cityStats.getInt("reported_trees");
@@ -699,7 +571,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String percent = getResources().getString(R.string.percent, formatter.format(green_index));
                         greenIndex.setText(percent + "%");
 
-                        //populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
                         String density = getResources().getString(R.string.density, formatter.format(population));
                         populationDensity.setText(density);
                     }
@@ -709,5 +580,106 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 e.printStackTrace();
             }
         }
+    }
+
+    private class PointWindow implements GoogleMap.InfoWindowAdapter{
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            View window;
+
+            GreenPoint point = (GreenPoint) marker.getTag();
+            assert point != null;
+            m_location = point.getLocation();
+            m_status = point.getStatus();
+
+            if (m_status == UNREQUESTED || m_status == REQUESTED ) {
+                window = getLayoutInflater().inflate(R.layout.red_info_window, null);
+
+                TextView location = (TextView) window.findViewById(R.id.location);
+                TextView available = (TextView) window.findViewById(R.id.available);
+                TextView plant = (TextView) window.findViewById(R.id.plant);
+
+                location.setText(m_location);
+
+                if (point.getStatus() == UNREQUESTED ){
+                    available.setText(R.string.available);
+                    plant.setText(R.string.plant);
+
+                } else {
+                    m_username = point.getUsername();
+                    available.setText(R.string.occupied);
+                    m_username = point.getUsername();
+                    plant.setText("@"+m_username);
+                }
+
+            } else {
+
+                m_date = point.getDate();
+                m_type = point.getTreeType();
+                m_username = point.getUsername();
+                m_image = point.getImage();
+                m_size = point.getHeight();
+                //m_profile = gp.getProfileImage();
+
+                window = getLayoutInflater().inflate(R.layout.green_info_window, null);
+                PorterShapeImageView tree = (PorterShapeImageView) window.findViewById(R.id.treePic);
+                PorterShapeImageView profile = (PorterShapeImageView) window.findViewById(R.id.profile);
+                TextView user = (TextView) window.findViewById(R.id.user);
+                TextView date = (TextView) window.findViewById(R.id.p_date);
+                TextView type = (TextView) window.findViewById(R.id.p_type);
+                TextView size = (TextView) window.findViewById(R.id.p_size);
+                TextView status = (TextView) window.findViewById(R.id.p_status);
+                TextView location = (TextView) window.findViewById(R.id.location);
+
+                if (first_time) {
+                    first_time = false;
+                    Picasso.with(MapsActivity.this).load(m_image).into(tree,new MarkerCallback(marker));
+                } else {
+                    Picasso.with(MapsActivity.this).load(m_image).into(tree);
+                }
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy",Locale.US);
+                String pointDate = dateFormat.format(m_date);
+                date.setText(pointDate);
+
+                type.setText(m_type);
+                location.setText(m_location);
+                user.setText("@"+m_username);
+
+                if (m_size.equals("Altura Aproximada"))
+                    size.setText("Undefined");
+                else size.setText(m_size+"m");
+
+                if (m_status == UNVERIFIED) {
+                    status.setTextColor(getResources().getColor(R.color.yellow));
+                    status.setText(getString(R.string.not_verified));
+                } else if (m_status == VERIFIED){
+                    status.setTextColor(getResources().getColor(R.color.colorCanopy));
+                    status.setText(getString(R.string.verified));
+                }
+            }
+            return window;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            return null;
+        }
+    }
+    private static class MarkerCallback implements Callback {
+        private Marker markerToRefresh;
+
+        private MarkerCallback(Marker markerToRefresh) {
+            this.markerToRefresh = markerToRefresh;
+        }
+
+        @Override
+        public void onSuccess() {
+            markerToRefresh.showInfoWindow();
+        }
+
+        @Override
+        public void onError() {}
     }
 }
