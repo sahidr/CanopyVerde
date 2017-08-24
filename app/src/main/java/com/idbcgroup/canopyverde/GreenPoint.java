@@ -16,7 +16,7 @@ public class GreenPoint {
     private String image;
     private int status;
     private String username;
-    private ImageView profileImage;
+    private String profileImage;
     private Float latitude, longitude;
 
     public GreenPoint(){}
@@ -97,11 +97,11 @@ public class GreenPoint {
         this.stemSize = stem;
     }
 
-    public ImageView getProfileImage (){
+    public String getProfileImage (){
         return profileImage;
     }
 
-    public void setProfileImage(ImageView image){
+    public void setProfileImage(String image){
         this.profileImage = image;
     }
 

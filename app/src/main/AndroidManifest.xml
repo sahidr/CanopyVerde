@@ -70,7 +70,7 @@
             android:name=".LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
-        <activity android:name=".PasswordRestoreActivity" />
+        <activity android:name=".PasswordRestoreActivity"/>
         <activity
             android:name=".CustomCameraActivity"
             android:configChanges="orientation"
@@ -91,7 +91,22 @@
         <activity
             android:name=".PasswordChangeActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="192.168.1.85"
+                    android:port="8000"
+                    android:path="/"
+                    android:scheme="http"/>
+
+            </intent-filter>
+
+        </activity>
         <activity android:name=".GameProfileActivity" />
         <activity android:name=".RedPointRegisterActivity" />
     </application>

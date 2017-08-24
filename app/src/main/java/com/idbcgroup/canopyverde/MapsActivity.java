@@ -80,10 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String m_image, m_profile;
     private TextView greenIndex, populationDensity,city;
     private RelativeLayout stats;
-    private SharedPreferences pref_session;
     private String lastCity;
-    private String imageName;
-    private boolean isClicked =true;
     private boolean first_time = true;
 
     @Override
@@ -247,9 +244,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public boolean onMarkerClick(Marker marker) {
-        stats.animate().alpha(0.0f);
+
         marker.hideInfoWindow();
         marker.showInfoWindow();
+        marker.hideInfoWindow();
+        marker.showInfoWindow();
+        stats.animate().alpha(0.0f);
         return false;
     }
 
@@ -273,7 +273,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String rp_location = rp.getLocation();
 
         if (m_status == -1) {
-            Intent i =new Intent(MapsActivity.this, RedPointRegisterActivity.class);
+            Intent i = new Intent(MapsActivity.this, RedPointRegisterActivity.class);
             i.putExtra("id",rp_id);
             i.putExtra("latitude",lat);
             i.putExtra("longitude",lng);
@@ -445,16 +445,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         int status = points.getInt("status");
                         int id = points.getInt("id");
                         String location = points.getString("location");
-                        Date date = java.sql.Date.valueOf(points.getString("date"));
-                        String image = points.getString("image");
+
 
                         gp = new GreenPoint();
                         gp.setLatitude(latitude);
                         gp.setLongitude(longitude);
                         gp.setId(id);
                         gp.setLocation(location);
-                        gp.setDate(date);
-                        gp.setImage(image);
                         gp.setStatus(status);
 
                         int drawable = R.drawable.p_amarillo;
@@ -463,9 +460,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             int height = points.getInt("height");
                             String type = points.getString("type");
                             String user = points.getString("username");
+                            String image = points.getString("image");
+                            String profile = points.getString("profile_pic");
+                            Date date = java.sql.Date.valueOf(points.getString("date"));
                             gp.setUsername(user);
                             gp.setTreeType(type);
                             gp.setHeight(String.valueOf(height));
+                            gp.setDate(date);
+                            gp.setImage(image);
+                            gp.setProfileImage(profile);
                         } else if (status == 0){
                             String type = points.getString("type");
                             String user = points.getString("username");
@@ -620,7 +623,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 m_username = point.getUsername();
                 m_image = point.getImage();
                 m_size = point.getHeight();
-                //m_profile = gp.getProfileImage();
+                m_profile = point.getProfileImage();
 
                 window = getLayoutInflater().inflate(R.layout.green_info_window, null);
                 PorterShapeImageView tree = (PorterShapeImageView) window.findViewById(R.id.treePic);
@@ -634,9 +637,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 if (first_time) {
                     first_time = false;
-                    Picasso.with(MapsActivity.this).load(m_image).into(tree,new MarkerCallback(marker));
+                    Picasso.with(context).load(m_image).into(tree,new MarkerCallback(marker));
+                    Picasso.with(context).load(m_profile).into(profile,new MarkerCallback(marker));
                 } else {
                     Picasso.with(MapsActivity.this).load(m_image).into(tree);
+                    Picasso.with(context).load(m_profile).into(profile);
                 }
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy",Locale.US);
