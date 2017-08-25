@@ -30,14 +30,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id_test" />
-
         <activity
             android:name=".MapsActivity"
             android:configChanges="orientation"
@@ -51,10 +49,8 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
@@ -70,7 +66,10 @@
             android:name=".LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
-        <activity android:name=".PasswordRestoreActivity"/>
+        <activity
+            android:name=".PasswordRestoreActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".CustomCameraActivity"
             android:configChanges="orientation"
@@ -94,21 +93,23 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-
                 <data
                     android:host="192.168.1.85"
                     android:port="8000"
-                    android:path="/"
+                    android:pathPrefix="/reset/"
                     android:scheme="http"/>
-
             </intent-filter>
-
         </activity>
-        <activity android:name=".GameProfileActivity" />
-        <activity android:name=".RedPointRegisterActivity" />
+        <activity
+            android:name=".GameProfileActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".RedPointRegisterActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
