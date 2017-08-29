@@ -8,12 +8,12 @@ import java.sql.Date;
  * Created by Rogelio on 1/8/2017.
  */
 
+/**
+ * Class for User Badges
+ */
 public class Badge {
 
     private int status;
-    //RED 0
-    //YELLOW 1
-    //GREEN 2
     private String reportType;
     private int point;
     private Date date;

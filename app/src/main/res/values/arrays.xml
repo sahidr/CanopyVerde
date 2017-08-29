@@ -11,31 +11,45 @@
     <string-array name="canopy_array">
         <item>Tamaño de Copa</item>
         <item>1</item>
+        <item>2</item>
         <item>3</item>
+        <item>4</item>
         <item>5</item>
+        <item>6</item>
         <item>7</item>
+        <item>8</item>
     </string-array>
 
     <string-array name="stem_array">
         <item>Tamaño de Tronco</item>
         <item>1</item>
+        <item>2</item>
         <item>3</item>
+        <item>4</item>
         <item>5</item>
+        <item>6</item>
         <item>7</item>
+        <item>8</item>
     </string-array>
 
     <string-array name="height_array">
         <item>Altura Aproximada</item>
         <item>1</item>
+        <item>2</item>
         <item>3</item>
+        <item>4</item>
         <item>5</item>
+        <item>6</item>
         <item>7</item>
+        <item>8</item>
     </string-array>
 
     <string-array name="type_array">
         <item>Tipo de Árbol</item>
         <item>Araguaney</item>
         <item>Caobo</item>
+        <item>Bonsai</item>
+        <item>Palmera</item>
         <item>Roble</item>
         <item>Samán</item>
     </string-array>

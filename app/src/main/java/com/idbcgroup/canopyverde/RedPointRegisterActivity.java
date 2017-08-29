@@ -29,7 +29,7 @@ public class RedPointRegisterActivity extends AppCompatActivity {
 
     private static final int REQUESTED = 0;
     private int rp_id, user_id;
-    private String location;
+    private String location, city;
     private Float lat, lng;
     private Spinner treeType;
     private TextView location_form;
@@ -53,6 +53,7 @@ public class RedPointRegisterActivity extends AppCompatActivity {
         location = getIntent().getExtras().getString("location");
         lat = getIntent().getExtras().getFloat("latitude");
         lng = getIntent().getExtras().getFloat("longitude");
+        city = getIntent().getExtras().getString("city");
 
         location_form = (TextView) findViewById(R.id.location);
         location_form.setText(location);
@@ -101,6 +102,7 @@ public class RedPointRegisterActivity extends AppCompatActivity {
                 form += "&" + URLEncoder.encode("location", "UTF-8") + "=" + URLEncoder.encode(strings[3], "UTF-8");
                 form += "&" + URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode(strings[4], "UTF-8");
                 form += "&" + URLEncoder.encode("user", "UTF-8") + "=" + URLEncoder.encode(strings[5], "UTF-8");
+                form += "&" + URLEncoder.encode("city", "UTF-8") + "=" + URLEncoder.encode(strings[6], "UTF-8");
 
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
                 writer.write(String.valueOf(form));

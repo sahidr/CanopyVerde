@@ -565,7 +565,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     editor.apply();
 
                 }else {
-                    Toast.makeText(UserProfileActivity.this, "FailtoLoad", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserProfileActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

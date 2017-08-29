@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -29,7 +30,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class PasswordRestoreActivity extends AppCompatActivity {
 
     private EditText email;
-
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +42,7 @@ public class PasswordRestoreActivity extends AppCompatActivity {
                 .build()
         );
         email = (EditText) findViewById(R.id.email);
+        progressBar = (ProgressBar) findViewById(R.id.load);
     }
 
     public void newPassword (View view){
@@ -59,7 +61,7 @@ public class PasswordRestoreActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-         //   progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         // Sends validated Log In's data to the server's API and process the response. Returns an
@@ -120,7 +122,7 @@ public class PasswordRestoreActivity extends AppCompatActivity {
                 case (-1):
                     message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                    //progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
                     //Intent intent = new Intent(getBaseContext(), MapsActivity.class);
@@ -128,12 +130,12 @@ public class PasswordRestoreActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     //startActivity(intent);
                     finish();
-                    //progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
                     message = "Account Doesn't Exists";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                    //progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     break;
                 default:
                     break;

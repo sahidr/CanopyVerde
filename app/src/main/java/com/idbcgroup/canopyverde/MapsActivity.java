@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,12 +37,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -66,18 +62,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int REQUESTED = 0;
     private static final int UNVERIFIED = 1;
     private static final int VERIFIED = 2;
-    private static final int HEIGHT = 32;
-    private static final int WIDTH = 32;
+    private static final int HEIGHT = 32;           // Height of the bitmap for the markers
+    private static final int WIDTH = 32;            // Width of the bitmap for the markers
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_POINT_REGISTER = 1;
 
     private GoogleMap mMap;
-    private MapStyleOptions style;
     private Context context;
-    private Date m_date;
-    private String m_type, m_size, m_location, m_username;
     private int m_status;
-    private String m_image, m_profile;
     private TextView greenIndex, populationDensity,city;
     private RelativeLayout stats;
     private String lastCity;
@@ -92,6 +84,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+
         setupMapIfNeeded();
 
         lastCity = "Caracas";
@@ -103,12 +96,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         city.setText("-");
         greenIndex.setText("-- %");
         populationDensity.setText("-- /km^2");
+
         GetStats s = new GetStats();
         s.execute(lastCity);
-
-        setupMapIfNeeded();
     }
-
 
     /**
      * Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -151,7 +142,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-        style = MapStyleOptions.loadRawResourceStyle(this, R.raw.canopy_style_map);
+        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, R.raw.canopy_style_map);
         mMap.setMapStyle(style);
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
@@ -278,6 +269,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             i.putExtra("latitude",lat);
             i.putExtra("longitude",lng);
             i.putExtra("location",rp_location);
+            i.putExtra("city",lastCity);
             startActivityForResult(i,REQUEST_POINT_REGISTER);
         }
     }
@@ -501,7 +493,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         m.setTag(gp);
                     }
                 } else {
-                    Toast.makeText(MapsActivity.this, "FailtoLoad", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
                 }
             }catch (JSONException e) {
                 e.printStackTrace();
@@ -527,15 +519,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection,false);
 
                 if (response != null) {
-                    //Log.w("RESPONSE", String.valueOf(response.getBody()));
+
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {
-//                        response_body = response.getBody();
-  //                      response_body.put("status",0);
                         response_body.put("status",0);
                         response_body.put("body",response.getBodyArray());
 
                     } else {
-                        //response_body.put("status",1);
                         response_body.put("status",1);
                         response_body.put("body",response.getBodyArray());
                     }
@@ -576,6 +565,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         String density = getResources().getString(R.string.density, formatter.format(population));
                         populationDensity.setText(density);
+
+                        //Reported Trees in View
+
                     }
 
                 }
@@ -593,9 +585,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             GreenPoint point = (GreenPoint) marker.getTag();
             assert point != null;
-            m_location = point.getLocation();
+            String m_location = point.getLocation();
             m_status = point.getStatus();
 
+            String m_username;
             if (m_status == UNREQUESTED || m_status == REQUESTED ) {
                 window = getLayoutInflater().inflate(R.layout.red_info_window, null);
 
@@ -610,20 +603,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     plant.setText(R.string.plant);
 
                 } else {
-                    m_username = point.getUsername();
                     available.setText(R.string.occupied);
                     m_username = point.getUsername();
-                    plant.setText("@"+m_username);
+                    plant.setText("@"+ m_username);
                 }
 
             } else {
 
-                m_date = point.getDate();
-                m_type = point.getTreeType();
+                Date m_date = point.getDate();
+                String m_type = point.getTreeType();
                 m_username = point.getUsername();
-                m_image = point.getImage();
-                m_size = point.getHeight();
-                m_profile = point.getProfileImage();
+                String m_image = point.getImage();
+                String m_size = point.getHeight();
+                String m_profile = point.getProfileImage();
 
                 window = getLayoutInflater().inflate(R.layout.green_info_window, null);
                 PorterShapeImageView tree = (PorterShapeImageView) window.findViewById(R.id.treePic);
@@ -650,11 +642,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 type.setText(m_type);
                 location.setText(m_location);
-                user.setText("@"+m_username);
+                user.setText("@"+ m_username);
 
                 if (m_size.equals("Altura Aproximada"))
                     size.setText("Undefined");
-                else size.setText(m_size+"m");
+                else size.setText(m_size +"m");
 
                 if (m_status == UNVERIFIED) {
                     status.setTextColor(getResources().getColor(R.color.yellow));

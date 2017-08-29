@@ -131,6 +131,7 @@
     <string name="u_country">Venezuela</string>
     <string name="u_city">Caracas</string>
     <string name="u_bagde">Maestro</string>
+
     <string name="gps_network_not_enabled">Ubicación Desactivada</string>
     <string name="enable_location">\nVerifica que la ubicación del GPS está activada</string>
     <string name="open_location_settings">Configuración del GPS</string>
@@ -155,5 +156,9 @@
 
     <string name="google">Sign in with Google</string>
     <string name="title_activity_user_profile">UserProfileActivity</string>
+
+    <string name="invalid_credentials">Datos inválidos, intente de nuevo</string>
+    <string name="user_created">¡Usuario Creado!</string>
+    <string name="error">Error en la conexión con el servidor intente más tarde</string>
 
 </resources>

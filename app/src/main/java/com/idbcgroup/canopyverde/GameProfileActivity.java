@@ -229,7 +229,7 @@ public class GameProfileActivity extends AppCompatActivity {
                     });
 
                 } else {
-                    Toast.makeText(GameProfileActivity.this,"FailtoLoad",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameProfileActivity.this,R.string.error,Toast.LENGTH_SHORT).show();
                 }
             }catch (JSONException e) {
                 e.printStackTrace();

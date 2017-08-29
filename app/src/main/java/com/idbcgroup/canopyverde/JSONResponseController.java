@@ -15,7 +15,17 @@ import java.net.HttpURLConnection;
 
 public class JSONResponseController {
 
-    public static APIResponse getJsonResponse(HttpURLConnection connection, boolean object) throws IOException, JSONException {
+    /**
+     *
+     * @param connection
+     * @param is_JSONobject represents the data type of the response
+     *                      true if it's a JSONObject
+     *                      false if it's a JSONArray
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
+    public static APIResponse getJsonResponse(HttpURLConnection connection, boolean is_JSONobject) throws IOException, JSONException {
 
         /**
          * Initializes an APIResponse instance with the connection's response code in order to check
@@ -40,7 +50,7 @@ public class JSONResponseController {
                     responseBody.append(line);
                 }
 
-                if (object) {
+                if (is_JSONobject) {
                     response.setBody(new JSONObject(responseBody.toString()));
                 } else {
                     response.setBody(new JSONArray(responseBody.toString()));

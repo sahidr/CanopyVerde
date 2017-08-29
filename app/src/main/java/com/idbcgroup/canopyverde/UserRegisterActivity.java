@@ -283,19 +283,19 @@ public class UserRegisterActivity extends AppCompatActivity {
         // Process doInBackground() results
         @Override
         protected void onPostExecute(Integer anInt) {
-            String message;
+            int message;
             switch (anInt) {
                 case (-1):
-                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    message = R.string.error;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     break;
                 case (0):
-                    message = "¡User Created!";
+                    message = R.string.user_created;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     finish();
                     break;
                 case (1):
-                    message = "Invalid Data";
+                    message = R.string.invalid_credentials;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     break;
                 default:

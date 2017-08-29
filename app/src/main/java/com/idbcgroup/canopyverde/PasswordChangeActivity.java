@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONException;
@@ -27,6 +28,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
     private Uri data;
     private TextView password, confirm_password;
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+
+        progressBar = (ProgressBar) findViewById(R.id.load);
 
         data = getIntent().getData();
         password = (TextView) findViewById(R.id.newPassword);
@@ -63,7 +68,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            //   progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         // Sends validated Log In's data to the server's API and process the response. Returns an
@@ -97,12 +102,15 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
                     if (response.getStatus()==HttpURLConnection.HTTP_OK) {
                         JSONObject response_body = response.getBody();
-                        result = 0;
-                        Log.d("OK", "OK");
-                        return 0;
+                        Log.d("OK", response_body.toString());
+                        int status = response_body.getInt("status");
+                        if (status == 200)
+                            result = 0;
+                        else
+                            result = -1;
+                        return result;
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.w("AJA BAD",String.valueOf(response.getBody()));
                         Log.d("BAD", "BAD");
                         result = 1;
                     } else {
@@ -129,28 +137,25 @@ public class PasswordChangeActivity extends AppCompatActivity {
                 case (-1):
                     message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                    //progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
-                    //Intent intent = new Intent(getBaseContext(), MapsActivity.class);
                     message = "¡Password Restored!";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                    //startActivity(intent);
                     startActivity(new Intent(PasswordChangeActivity.this,LoginActivity.class)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
                     finish();
-                    //progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
-                    message = "Nombre de usuario y/o contraseña inválidos";
+                    message = "Contraseñas deben ser iguales y de al menos 8 caracteres";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                    //progressBar.setVisibility(View.GONE);
+
                     break;
                 default:
                     break;
             }
+            progressBar.setVisibility(View.GONE);
         }
     }
 
