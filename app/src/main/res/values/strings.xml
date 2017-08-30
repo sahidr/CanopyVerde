@@ -51,7 +51,7 @@
 
     <!--    Validations -->
     <string name="fullname_valid">Nombre completo requerido</string>
-    <string name="username_valid">Nombre de usuario requerido</string>
+    <string name="username_valid">Nombre de usuario válido requerido</string>
     <string name="email_valid">Correo válido requerido</string>
     <string name="password_valid">Contraseña debe tener al menos caracteres</string>
 
@@ -75,6 +75,7 @@
     <string name="percent">%1$s</string>
     <string name="city_example">Caracas</string>
     <string name="density">%1$s/km^2</string>
+    <string name="reported_trees">Árboles Reportados</string>
 
     <!--    Red Points    -->
     <string name="available">Espacio Disponible</string>

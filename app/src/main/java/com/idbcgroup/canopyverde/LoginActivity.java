@@ -53,8 +53,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private ProgressBar load;
-
     // Normal Sign In
     private EditText email,password;
     private boolean email_field, password_field;
@@ -62,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Google Sign in
     private static final String TAG = "SignInActivity";
-    private static final int RC_SIGN_IN = 9001; //9001;
+    private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
     private Button googleBtn;
 
@@ -90,10 +88,9 @@ public class LoginActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
 
-        progressBar = (ProgressBar) findViewById(R.id.load);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
-        load = (ProgressBar) findViewById(R.id.load);
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(
                 "public_profile", "email", "user_birthday", "user_friends"));
@@ -110,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    load.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
                     Intent i = new Intent(LoginActivity.this,MapsActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
@@ -136,13 +133,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
-                load.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
-                load.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
         });
@@ -195,6 +192,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
+                            Log.w("TASK", String.valueOf(task.getResult().getUser()));
                             String personId =task.getResult().getUser().getUid();
                             String personName=task.getResult().getUser().getDisplayName();
                             String personEmail=task.getResult().getUser().getEmail();
@@ -203,6 +201,7 @@ public class LoginActivity extends AppCompatActivity {
                             String[] emailParts = personEmail.split("@");
                             String username =  emailParts[0];
 
+                            Log.w("DATAAA", personName+personEmail+personId+personPhoto);
                             SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
                             editor.putBoolean("logged",true);
                             editor.putString("name",personName);
@@ -247,7 +246,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        load.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         //callbackManager.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {

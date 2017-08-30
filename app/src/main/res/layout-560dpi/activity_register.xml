@@ -50,7 +50,7 @@
         android:ems="12"
         android:padding="22dp"
         android:hint="@string/full_name"
-        android:inputType="textCapSentences"
+        android:inputType="textCapWords"
         android:layout_below="@+id/username"
         android:layout_alignStart="@+id/username"
         android:layout_alignEnd="@+id/username" />

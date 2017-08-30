@@ -84,8 +84,7 @@ public class UserRegisterActivity extends AppCompatActivity {
         city_text = city.getSelectedItem().toString();
 
         fullname_field = fullname_text.length() != 0;
-        username_field = username_text.length() != 0;
-
+        username_field = username_text.length() != 0 && username_text.matches("\\S+");
         email_field = email_text.length() != 0
                 && android.util.Patterns.EMAIL_ADDRESS.matcher(email_text).matches();
         password_field = password_text.length() >= 8;
@@ -263,11 +262,11 @@ public class UserRegisterActivity extends AppCompatActivity {
 
                 if (response != null) {
                     Log.w("RESPONSE BODY REQUEST",response.getBody().toString());
-                    if (response.getStatus() == HttpURLConnection.HTTP_OK || response.getStatus() == HttpURLConnection.HTTP_CREATED) {
+                    if (response.getStatus() == HttpURLConnection.HTTP_CREATED) {
                         Log.d("OK", response.getBody().toString());
                         result = 0;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.d("BAD", "BAD");
+                        Log.d("BAD",response.getBody().toString());
                         result = 1;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
                         Log.d("NOT", "FOUND");

@@ -22,15 +22,6 @@
         android:background="?attr/colorPrimary"
         android:theme="?attr/actionBarTheme">
 
-        <!--ImageButton
-            android:id="@+id/menu"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@android:drawable/ic_menu_mapmode"
-            android:onClick="backToMap"
-            android:layout_alignTop="@+id/logo"
-            android:layout_alignParentStart="true" /-->
-
         <ImageView
             android:id="@+id/logo"
             android:layout_width="145dp"
@@ -92,7 +83,7 @@
     <RelativeLayout
         android:id="@+id/stats"
         android:layout_width="187dp"
-        android:layout_height="80dp"
+        android:layout_height="110dp"
         android:padding="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
@@ -180,6 +171,35 @@
             android:id="@+id/view2"
             android:layout_alignEnd="@+id/populationDensityUnits"
             android:layout_alignStart="@+id/populationDensity" />
+
+        <TextView
+            android:id="@+id/reportedTrees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reported_trees"
+            android:textSize="11sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorGray"
+            android:layout_below="@+id/populationDensity"
+            android:layout_alignStart="@+id/greenViewIndex" />
+
+        <TextView
+            android:id="@+id/reportedTreesUnits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:layout_above="@+id/view4"
+            android:layout_alignParentEnd="true" />
+
+        <View android:layout_height="0.5dp"
+            android:layout_width="150dp"
+            android:background="@color/colorGray"
+            android:layout_marginTop="3dp"
+            android:layout_below="@id/reportedTrees"
+            android:id="@+id/view4"
+            android:layout_alignEnd="@+id/reportedTreesUnits"
+            android:layout_alignStart="@+id/reportedTrees" />
 
     </RelativeLayout>
 

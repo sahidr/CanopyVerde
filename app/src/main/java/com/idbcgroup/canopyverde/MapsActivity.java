@@ -70,7 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private Context context;
     private int m_status;
-    private TextView greenIndex, populationDensity,city;
+    private TextView greenIndex, populationDensity,city, reportedTrees;
     private RelativeLayout stats;
     private String lastCity;
     private boolean first_time = true;
@@ -92,10 +92,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         stats = (RelativeLayout) findViewById(R.id.stats);
         greenIndex = (TextView) findViewById(R.id.greenViewIndexPercent);
         populationDensity = (TextView) findViewById(R.id.populationDensityUnits);
+        reportedTrees = (TextView) findViewById(R.id.reportedTreesUnits);
         city = (TextView) findViewById(R.id.city);
         city.setText("-");
         greenIndex.setText("-- %");
         populationDensity.setText("-- /km^2");
+        reportedTrees.setText("--");
 
         GetStats s = new GetStats();
         s.execute(lastCity);
@@ -269,7 +271,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             i.putExtra("latitude",lat);
             i.putExtra("longitude",lng);
             i.putExtra("location",rp_location);
-            i.putExtra("city",lastCity);
             startActivityForResult(i,REQUEST_POINT_REGISTER);
         }
     }
@@ -543,6 +544,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 city.setText(lastCity);
                 greenIndex.setText("-- %");
                 populationDensity.setText("-- /km^2");
+                reportedTrees.setText("--");
                 if (response.getInt("status") == 0) {
 
                     JSONArray cityStatsArray = response.getJSONArray("body");
@@ -566,7 +568,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String density = getResources().getString(R.string.density, formatter.format(population));
                         populationDensity.setText(density);
 
-                        //Reported Trees in View
+                        reportedTrees.setText(String.valueOf(reported_trees));
 
                     }
 
