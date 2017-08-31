@@ -6,12 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,20 +25,16 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class GreenPointRegisterActivity extends AppCompatActivity {
+public class TreePointRegisterActivity extends AppCompatActivity {
 
     private static final int UNVERIFIED = 1;
     private static final int MAX_LINES = 2;
@@ -106,7 +99,7 @@ public class GreenPointRegisterActivity extends AppCompatActivity {
 
     public void imagePreview (View view){
 
-        final Dialog dialog = new Dialog(GreenPointRegisterActivity.this);
+        final Dialog dialog = new Dialog(TreePointRegisterActivity.this);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(getLayoutInflater().inflate(R.layout.image_preview,null));
 

@@ -1,9 +1,9 @@
 package com.idbcgroup.canopyverde;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -34,13 +33,11 @@ import static java.util.Collections.sort;
 
 public class UserRegisterActivity extends AppCompatActivity {
 
-    private EditText fullname, username, email;
+    private EditText full_name, username, email;
     TextInputEditText password;
     private Spinner country, city;
-    private boolean verified,fullname_field,username_field,email_field, password_field,
-            country_field,city_field;
-    ArrayList<String> countryList = new ArrayList<String>();
-    ArrayList<String> citiesList = new ArrayList<String>();
+    ArrayList<String> countryList = new ArrayList<>();
+    ArrayList<String> citiesList = new ArrayList<>();
     JSONObject countriesAndCities;
     private ProgressBar progressBar;
 
@@ -55,18 +52,21 @@ public class UserRegisterActivity extends AppCompatActivity {
         );
 
         progressBar = (ProgressBar) findViewById(R.id.load);
-        fullname = (EditText) findViewById(R.id.fullName);
+        full_name = (EditText) findViewById(R.id.fullName);
         username = (EditText) findViewById(R.id.username);
         email = (EditText) findViewById(R.id.email);
         password = (TextInputEditText) findViewById(R.id.passwordedit);
         country = (Spinner) findViewById(R.id.country);
         city = (Spinner) findViewById(R.id.city);
 
-        GetCountries json = new GetCountries();
-        json.execute();
-
+        GetCountriesAndCities countries_and_cities = new GetCountriesAndCities();
+        countries_and_cities.execute();
     }
 
+    /**
+     * Method of the Calligraphy Library to insert the font family in the context of the Activity
+     * @param newBase the new base context of the Activity
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -75,24 +75,23 @@ public class UserRegisterActivity extends AppCompatActivity {
     public void userRegister(View view){
 
         String fullname_text,username_text,email_text,password_text,country_text, city_text;
-
-        fullname_text = fullname.getText().toString();
+        fullname_text = full_name.getText().toString();
         username_text = username.getText().toString();
         email_text = email.getText().toString();
         password_text = password.getText().toString();
         country_text = country.getSelectedItem().toString();
         city_text = city.getSelectedItem().toString();
 
-        fullname_field = fullname_text.length() != 0;
-        username_field = username_text.length() != 0 && username_text.matches("\\S+");
-        email_field = email_text.length() != 0
+        boolean full_name_field = fullname_text.length() != 0;
+        boolean username_field = username_text.length() != 0 && username_text.matches("\\S+");
+        boolean email_field = email_text.length() != 0
                 && android.util.Patterns.EMAIL_ADDRESS.matcher(email_text).matches();
-        password_field = password_text.length() >= 8;
-        country_field = !country_text.equals("País");
-        city_field = !city_text.equals("Ciudad");
+        boolean password_field = password_text.length() >= 8;
+        boolean country_field = !country_text.equals("País");
+        boolean city_field = !city_text.equals("Ciudad");
 
-        verified = verifyFields(fullname_field,username_field,email_field,password_field,
-                country_field,city_field);
+        boolean verified = verifyFields(full_name_field, username_field, email_field, password_field,
+                country_field, city_field);
 
         if (verified) {
             PostUser postUser = new PostUser();
@@ -100,13 +99,23 @@ public class UserRegisterActivity extends AppCompatActivity {
         }
     }
 
-    public boolean verifyFields(boolean fullname_field, boolean username_field, boolean email_field,
+    /**
+     * Method for the validations of the user data
+     * @param full_name_field boolean that represent if Fullname is valid
+     * @param username_field boolean that represent if Username is valid
+     * @param email_field boolean that represent if Email is valid
+     * @param password_field boolean that represent if Password is valid
+     * @param country_field boolean that represent if Country is valid
+     * @param city_field boolean that represent if City is valid
+     * @return boolean that represent if all of the fields are valid or invalid
+     */
+    public boolean verifyFields(boolean full_name_field, boolean username_field, boolean email_field,
                                 boolean password_field, boolean country_field, boolean city_field) {
-        if (!fullname_field) {
-            fullname.setError(getString(R.string.fullname_valid));
-            fullname.setBackgroundResource(R.drawable.first_field_error);
+        if (!full_name_field) {
+            full_name.setError(getString(R.string.fullname_valid));
+            full_name.setBackgroundResource(R.drawable.first_field_error);
         } else
-            fullname.setBackgroundResource(R.drawable.first_field);
+            full_name.setBackgroundResource(R.drawable.first_field);
         if (!username_field){
             username.setError(getString(R.string.username_valid));
             username.setBackgroundResource(R.drawable.field_error);
@@ -130,12 +139,14 @@ public class UserRegisterActivity extends AppCompatActivity {
             city.setBackgroundResource(R.drawable.last_field_error);
         }else
             city.setBackgroundResource(R.drawable.last_field);
-        return (fullname_field && username_field && email_field && password_field && country_field
+        return (full_name_field && username_field && email_field && password_field && country_field
                 && city_field);
     }
 
-
-    private class GetCountries extends AsyncTask <Void, Void, ArrayList<String>> {
+    /**
+     * AsyncTask class who reads the Countries and Cities XML in the resourses for the Spinners
+     */
+    private class GetCountriesAndCities extends AsyncTask <Void, Void, ArrayList<String>> {
 
         @Override
         protected ArrayList<String> doInBackground(Void... params) {
@@ -143,12 +154,12 @@ public class UserRegisterActivity extends AppCompatActivity {
             InputStream inputStream = getResources().openRawResource(R.raw.countries_to_cities);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-            int ctr;
+            int control;
             try {
-                ctr = inputStream.read();
-                while (ctr != -1) {
-                    byteArrayOutputStream.write(ctr);
-                    ctr = inputStream.read();
+                control = inputStream.read();
+                while (control != -1) {
+                    byteArrayOutputStream.write(control);
+                    control = inputStream.read();
                 }
                 inputStream.close();
                 countriesAndCities = new JSONObject(byteArrayOutputStream.toString());
@@ -170,51 +181,45 @@ public class UserRegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<String> result) {
 
-            final ArrayAdapter<String> countryAdapter = new ArrayAdapter<String>(UserRegisterActivity.this,
+            final ArrayAdapter<String> countryAdapter = new ArrayAdapter<>(UserRegisterActivity.this,
                     R.layout.spinner_item, result);
             countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             country.setAdapter(countryAdapter);
             country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                    final int font_color = ResourcesCompat.getColor(getResources(), R.color.fontColor, null);
                     try {
                         if (position!=0){
-                            ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.fontColor));
+
+                            ((TextView) parent.getChildAt(0)).setTextColor(font_color);
                         }
 
                         JSONArray cities = countriesAndCities.getJSONArray(countryList.get(position));
-
                         if (!citiesList.isEmpty()) citiesList.clear();
-
                         for (int i = 0; i < cities.length(); i++) {
                             String city = cities.get(i).toString();
                             citiesList.add(city);
                         }
                         sort(citiesList);
-
-                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(UserRegisterActivity.this,
+                        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(UserRegisterActivity.this,
                                 R.layout.spinner_item, citiesList);
-
                         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         city.setAdapter(cityAdapter);
                         city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 if (!parent.getItemAtPosition(position).toString().equals("Ciudad")){
-                                    ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.fontColor));
+                                    ((TextView) parent.getChildAt(0)).setTextColor(font_color);
                                 }
                             }
-
                             @Override
                             public void onNothingSelected(AdapterView<?> parent) {
-
                             }
                         });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
 
                 @Override
@@ -226,6 +231,9 @@ public class UserRegisterActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * AsyncTask class for the user register
+     */
     private class PostUser extends AsyncTask<String, Integer, Integer> {
 
         @Override
@@ -236,7 +244,7 @@ public class UserRegisterActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(String... strings) {
             URL url;
-            HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection;
             Integer result = -1;
             try {
                 url = new URL("http://192.168.1.85:8000/profile/");
@@ -245,11 +253,15 @@ public class UserRegisterActivity extends AppCompatActivity {
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setConnectTimeout(10000);
 
+                // The User Serializer in the server is based on a Nested Serializer
+                // The user represents the UserSerializer
                 JSONObject user = new JSONObject();
-                JSONObject profile = new JSONObject();
                 user.put("username",strings[0]);
                 user.put("email",strings[1]);
                 user.put("password",strings[2]);
+
+                // The profile is nested to the user, it requires the user associated
+                JSONObject profile = new JSONObject();
                 profile.put("fk_user",user);
                 profile.put("fullname",strings[3]);
                 profile.put("country",strings[4]);
@@ -301,7 +313,6 @@ public class UserRegisterActivity extends AppCompatActivity {
                     break;
             }
             progressBar.setVisibility(View.GONE);
-            //finish();
         }
     }
 }

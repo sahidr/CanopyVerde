@@ -3,53 +3,22 @@ package com.idbcgroup.canopyverde;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TourActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
-    private ImageView page0;
-    private ImageView page1;
-    private ImageView page2;
-    private ImageView page3;
     private ImageView[] dots;
 
     @Override
@@ -62,21 +31,31 @@ public class TourActivity extends AppCompatActivity {
                 .build()
         );
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        //
+        /*
+         * Create the adapter that will return a fragment for each of the three
+           primary sections of the activity.
+         * The {@link android.support.v4.view.PagerAdapter} that will provide
+           fragments for each of the sections. We use a
+           {@link FragmentPagerAdapter} derivative, which will keep every
+           loaded fragment in memory. If this becomes too memory intensive, it
+           may be best to switch to a
+           {@link android.support.v4.app.FragmentStatePagerAdapter}.
+         */
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        page0 = (ImageView) findViewById(R.id.page0);
-        page1 = (ImageView) findViewById(R.id.page1);
-        page2 = (ImageView) findViewById(R.id.page2);
-        page3 = (ImageView) findViewById(R.id.page3);
-        dots = new ImageView[]{page0, page1, page2,page3};
+        ImageView page0 = (ImageView) findViewById(R.id.page0);
+        ImageView page1 = (ImageView) findViewById(R.id.page1);
+        ImageView page2 = (ImageView) findViewById(R.id.page2);
+        ImageView page3 = (ImageView) findViewById(R.id.page3);
+        dots = new ImageView[]{page0, page1, page2, page3};
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        //mViewPager.setBackground(getDrawable(R.drawable.bg_tour));
+        /*
+         * Set up the ViewPager with the sections adapter.
+         * The {@link ViewPager} that will host the section contents.
+         */
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        //  mViewPager.setBackgroundColor(getResources().getColor(R.color.colorTransparent));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -85,6 +64,7 @@ public class TourActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 for (int i = 0; i < dots.length; i++) {
+                    // Change the view indicators depending of the position
                     dots[i].setImageResource(
                             i == position ? R.drawable.dot_active : R.drawable.dot_inactive
                     );
@@ -142,9 +122,7 @@ public class TourActivity extends AppCompatActivity {
                     .build()
             );
 
-
             View rootView = inflater.inflate(R.layout.fragment_tour, container, false);
-
             Integer argSectionNumber = getArguments().getInt(ARG_SECTION_NUMBER) - 1;
 
             img = (ImageView) rootView.findViewById(R.id.app_img);
@@ -163,9 +141,9 @@ public class TourActivity extends AppCompatActivity {
     /*
     * Class to manage the position of the fragment
     * */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -181,21 +159,23 @@ public class TourActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    * End of the tour
-    * */
+    /**
+     * Method to go to the LoginActivity
+     * @param view button in the view
+     */
     public void toRegister(View view){
         SharedPreferences.Editor editor = getSharedPreferences("Tour", 0).edit();
         editor.putBoolean("visited", true);
         editor.apply();
-        startActivity(new Intent(TourActivity.this, LoginActivity.class) // To Register
+        startActivity(new Intent(TourActivity.this, LoginActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         finish();
     }
 
-    /*
-    * Base Context for fontPath
-    * */
+    /**
+     * Method of the Calligraphy Library to insert the font family in the context of the Activity
+     * @param newBase the new base context of the Activity
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));

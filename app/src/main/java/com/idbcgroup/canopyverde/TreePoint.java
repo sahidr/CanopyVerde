@@ -4,7 +4,7 @@ import android.widget.ImageView;
 
 import java.sql.Date;
 
-public class GreenPoint {
+public class TreePoint {
 
     private int id;
     private String location;
@@ -19,7 +19,7 @@ public class GreenPoint {
     private String profileImage;
     private Float latitude, longitude;
 
-    public GreenPoint(){}
+    public TreePoint(){}
 
     public int getId (){
         return id;

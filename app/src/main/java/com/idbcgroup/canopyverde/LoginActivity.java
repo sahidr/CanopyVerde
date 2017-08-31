@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.load);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         loginButton = (LoginButton) findViewById(R.id.login_button);
@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     progressBar.setVisibility(View.INVISIBLE);
-                    Intent i = new Intent(LoginActivity.this,MapsActivity.class);
+                    Intent i = new Intent(LoginActivity.this,MapActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                     finish();
@@ -433,7 +433,7 @@ public class LoginActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
-                    Intent intent = new Intent(getBaseContext(), MapsActivity.class);
+                    Intent intent = new Intent(getBaseContext(), MapActivity.class);
                     message = "¡Bienvenido!";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     startActivity(intent);

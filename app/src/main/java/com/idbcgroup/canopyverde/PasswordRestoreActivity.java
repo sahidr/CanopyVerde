@@ -125,7 +125,7 @@ public class PasswordRestoreActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
-                    //Intent intent = new Intent(getBaseContext(), MapsActivity.class);
+                    //Intent intent = new Intent(getBaseContext(), MapActivity.class);
                     message = "Email Confirmation Sended";
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     //startActivity(intent);

@@ -1,15 +1,12 @@
 package com.idbcgroup.canopyverde;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MapStateManager {
+class MapStateManager {
     private static final String LONGITUDE = "longitude";
     private static final String LATITUDE = "latitude";
     private static final String ZOOM = "zoom";
@@ -20,11 +17,11 @@ public class MapStateManager {
 
     private SharedPreferences mapStatePrefs;
 
-    public MapStateManager(Context context) {
+    MapStateManager(Context context) {
         mapStatePrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    public void saveMapState(GoogleMap mapMie) {
+    void saveMapState(GoogleMap mapMie) {
         SharedPreferences.Editor editor = mapStatePrefs.edit();
         CameraPosition position = mapMie.getCameraPosition();
 
@@ -37,21 +34,18 @@ public class MapStateManager {
         editor.apply();
     }
 
-    public CameraPosition getSavedCameraPosition() {
+    CameraPosition getSavedCameraPosition() {
 
-        double latitude = mapStatePrefs.getFloat(LATITUDE, (float) 10.4806);
-
-        double longitude = mapStatePrefs.getFloat(LONGITUDE, (float) -66.9036);
+        double latitude = mapStatePrefs.getFloat(LATITUDE, (float) 10.4806); // Caracas Latitude
+        double longitude = mapStatePrefs.getFloat(LONGITUDE, (float) -66.9036); // Caracas Longitude
         LatLng target = new LatLng(latitude, longitude);
-
         float zoom = mapStatePrefs.getFloat(ZOOM, 0);
         float bearing = mapStatePrefs.getFloat(BEARING, 0);
         float tilt = mapStatePrefs.getFloat(TILT, 0);
-
         return new CameraPosition(target, zoom, tilt, bearing);
     }
 
-    public int getSavedMapType() {
+    int getSavedMapType() {
         return mapStatePrefs.getInt(MAPTYPE, GoogleMap.MAP_TYPE_NORMAL);
     }
 

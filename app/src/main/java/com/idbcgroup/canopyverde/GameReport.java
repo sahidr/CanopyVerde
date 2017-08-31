@@ -1,26 +1,22 @@
 package com.idbcgroup.canopyverde;
 
-import org.xml.sax.DTDHandler;
-
 import java.sql.Date;
 
 /**
- * Created by Rogelio on 1/8/2017.
+ * Class for de management of the user's Game Report
+ * Status
+ * report
  */
-
-/**
- * Class for User Badges
- */
-public class Badge {
+class GameReport {
 
     private int status;
     private String reportType;
     private int point;
     private Date date;
 
-    public Badge(){}
+    public GameReport(){}
 
-    public Badge(int status, String reportType, int point, Date date) {
+    GameReport(int status, String reportType, int point, Date date) {
         this.status = status;
         this.reportType = reportType;
         this.point = point;
@@ -35,7 +31,7 @@ public class Badge {
         this.status = status;
     }
 
-    public String getReportType (){
+    String getReportType(){
         return reportType;
     }
 
@@ -43,7 +39,7 @@ public class Badge {
         this.reportType = reportType;
     }
 
-    public int getPoints (){
+    int getPoints(){
         return point;
     }
 

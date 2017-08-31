@@ -39,7 +39,7 @@
             android:value="@string/facebook_app_id_test" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".MapActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
@@ -75,11 +75,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".EditProfileActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".GreenPointRegisterActivity"
+            android:name=".TreePointRegisterActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity

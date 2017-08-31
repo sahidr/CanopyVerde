@@ -52,7 +52,10 @@ import java.util.Locale;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+/**
+ * MapActivity
+ */
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener, GoogleMap.OnInfoWindowCloseListener,
         GoogleMap.OnMarkerClickListener {
 
@@ -114,6 +117,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     *
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -125,6 +131,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     *
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -169,7 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLng(CARACAS));
         }
 
-        GetGreenPoints g = new GetGreenPoints();
+        GetTreePointMarkers g = new GetTreePointMarkers();
         g.execute();
 
         if (ActivityCompat
@@ -219,8 +228,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (city != null) {
                             if (!lastCity.equals(city)) {
                                 lastCity = city;
-                                GetStats s = new GetStats();
-                                s.execute(city);
+                                GetStats stats = new GetStats();
+                                stats.execute(city);
                             }
                         }
                     }
@@ -231,42 +240,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Fade Animation for the Stats Layout and info window reload when Marker is clicked
-     * @param marker
+     * Implements the GoogleMap.OnMarkerClickListener Interface
+     * Reloads the infoWindow for the images
+     * @param marker the marker to be clicked
      * @return boolean
      * false for default marker behaviour wich is center camera at marker position and open info window
      */
     @Override
     public boolean onMarkerClick(Marker marker) {
-
-        marker.hideInfoWindow();
-        marker.showInfoWindow();
         marker.hideInfoWindow();
         marker.showInfoWindow();
         stats.animate().alpha(0.0f);
         return false;
     }
 
+    /**
+     * Method that implements the OnInfoWindowClickListener interface
+     * Fades in the Stats and close the infoWindow
+     * @param marker the marker of the window to be close
+     */
     @Override
     public void onInfoWindowClose(Marker marker) {
         stats.animate().alpha(1f);
     }
 
     /**
-     * Custom info window click at free red points
-     * @param marker
+     * Implements the interface GoogleMap.OnInfoWindowCloseListener
+     * Allows the user to register a Red point if it's available
+     * @param marker the red point to register if it's available
      */
     @Override
     public void onInfoWindowClick(Marker marker) {
-        GreenPoint rp = (GreenPoint) marker.getTag();  //RED POINT DATA
-        assert rp != null;
-        m_status = rp.getStatus();
-        int rp_id = rp.getId();
-        Float lat = rp.getLatitude();
-        Float lng = rp.getLongitude();
-        String rp_location = rp.getLocation();
+        TreePoint red_point = (TreePoint) marker.getTag();
+        assert red_point != null;
+        m_status = red_point.getStatus();
+        int rp_id = red_point.getId();
+        Float lat = red_point.getLatitude();
+        Float lng = red_point.getLongitude();
+        String rp_location = red_point.getLocation();
 
         if (m_status == -1) {
-            Intent i = new Intent(MapsActivity.this, RedPointRegisterActivity.class);
+            Intent i = new Intent(MapActivity.this, RedPointRegisterActivity.class);
             i.putExtra("id",rp_id);
             i.putExtra("latitude",lat);
             i.putExtra("longitude",lng);
@@ -277,7 +291,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Get current location for custom crosseye button
-     * @param view
+     * @param view Button that sets the camera of the Map and Locate the user in the current
+     *             position of the GPS
      */
     public void currentLocation(View view) {
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -326,7 +341,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Method to call the Android Camera app for Green Point Register
-     * @param view
+     * @param view The Button that triggers the TreePointRegister starting with the
+     *             cameraView
      */
     public void cameraView(View view) {
         CameraPosition cameraPosition = mMap.getCameraPosition();
@@ -337,6 +353,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         cameraIntent();
     }
 
+    /**
+     * Method that calls the Camera App of the device
+     */
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
@@ -344,23 +363,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Result of the Camera app or Successful point Register or Update
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode identifies who's calling the Intent
+     * @param resultCode identifies the result of the called Intent
+     * @param data the data retireved from the called Intent
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result from camera app
         if (requestCode == REQUEST_CAMERA) {
             if (resultCode == Activity.RESULT_OK) {
-                Intent i = new Intent(MapsActivity.this, GreenPointRegisterActivity.class);
+                Intent i = new Intent(MapActivity.this, TreePointRegisterActivity.class);
                 i.putExtras(data);
                 startActivityForResult(i, REQUEST_POINT_REGISTER);
             }
         } else {
             // Result from Yellow or Red Point Register
-            GetGreenPoints g = new GetGreenPoints();
-            g.execute();
+            GetTreePointMarkers trees = new GetTreePointMarkers();
+            trees.execute();
             finish();
             startActivity(getIntent());
         }
@@ -368,15 +387,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Intent to User Profile
-     * @param view
+     * @param view Button in the view who calls the UserProfileActivity
      */
     public void profileView(View view) {
-        startActivity(new Intent(MapsActivity.this, UserProfileActivity.class));
+        startActivity(new Intent(MapActivity.this, UserProfileActivity.class));
     }
 
     /**
-     *
-     * @param newBase
+     * Method of the Calligraphy Library to insert the font family in the context of the Activity
+     * @param newBase the new base context of the Activity
      */
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -384,14 +403,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     * Points Loader AsyncTask
+     * AsyncTasks that gets the registered tree points in the server
      */
-    private class GetGreenPoints extends AsyncTask<String, Integer, JSONObject> {
+    private class GetTreePointMarkers extends AsyncTask<String, Integer, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
             JSONObject apiResponse = new JSONObject();
             URL url;
-            HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection;
 
             try {
                 url = new URL("http://192.168.1.85:8000/greenpoint/");
@@ -430,7 +449,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     JSONArray pointsArray = response.getJSONArray("body");
                     JSONObject points;
 
-                    GreenPoint gp;
+                    TreePoint tree_point;
                     for (int i = 0; i < pointsArray.length(); i++) {
                         points = pointsArray.getJSONObject(i);
                         Float latitude = Float.parseFloat(points.getString("latitude"));
@@ -439,13 +458,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         int id = points.getInt("id");
                         String location = points.getString("location");
 
-
-                        gp = new GreenPoint();
-                        gp.setLatitude(latitude);
-                        gp.setLongitude(longitude);
-                        gp.setId(id);
-                        gp.setLocation(location);
-                        gp.setStatus(status);
+                        tree_point = new TreePoint();
+                        tree_point.setLatitude(latitude);
+                        tree_point.setLongitude(longitude);
+                        tree_point.setId(id);
+                        tree_point.setLocation(location);
+                        tree_point.setStatus(status);
 
                         int drawable = R.drawable.p_amarillo;
 
@@ -456,17 +474,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             String image = points.getString("image");
                             String profile = points.getString("profile_pic");
                             Date date = java.sql.Date.valueOf(points.getString("date"));
-                            gp.setUsername(user);
-                            gp.setTreeType(type);
-                            gp.setHeight(String.valueOf(height));
-                            gp.setDate(date);
-                            gp.setImage(image);
-                            gp.setProfileImage(profile);
+                            tree_point.setUsername(user);
+                            tree_point.setTreeType(type);
+                            tree_point.setHeight(String.valueOf(height));
+                            tree_point.setDate(date);
+                            tree_point.setImage(image);
+                            tree_point.setProfileImage(profile);
                         } else if (status == 0){
                             String type = points.getString("type");
                             String user = points.getString("username");
-                            gp.setUsername(user);
-                            gp.setTreeType(type);
+                            tree_point.setUsername(user);
+                            tree_point.setTreeType(type);
                         }
 
                         switch (status){
@@ -483,6 +501,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 drawable = R.drawable.p_verde;
                                 break;
                         }
+
+                        // Scales the bitmap that will be used as the Marker icon
                         BitmapDrawable color = (BitmapDrawable) getResources().getDrawable(drawable);
                         Bitmap color_scaled = Bitmap
                                 .createScaledBitmap(color.getBitmap(), WIDTH, HEIGHT, false);
@@ -491,10 +511,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .icon(BitmapDescriptorFactory.fromBitmap(color_scaled))
                                 .anchor(0.5f, 0.4f)
                         );
-                        m.setTag(gp);
+                        m.setTag(tree_point);
                     }
                 } else {
-                    Toast.makeText(MapsActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
                 }
             }catch (JSONException e) {
                 e.printStackTrace();
@@ -579,13 +599,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Custom infoWindow that will be used for the markers
+     * The developer can customize the infoWindow content and the Bubble layout of the marker
+     * Implements the interface InfoWindowAdapter
+     */
     private class PointWindow implements GoogleMap.InfoWindowAdapter{
 
+        /**
+         * Implements the getInfoWindow method of the interface
+         * Sets the custom infoWindow for the marker provided
+         * @param marker the host of the infoWindow who contains the window information to display
+         * @return window the view that represents custom infoWindow
+         * In case of customizing just the content in the window but no the default bubble layout
+         * this method just have to return null and the getInfoContent method have to be override
+         */
         @Override
         public View getInfoWindow(Marker marker) {
             View window;
 
-            GreenPoint point = (GreenPoint) marker.getTag();
+            TreePoint point = (TreePoint) marker.getTag();
             assert point != null;
             String m_location = point.getLocation();
             m_status = point.getStatus();
@@ -634,7 +667,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Picasso.with(context).load(m_image).into(tree,new MarkerCallback(marker));
                     Picasso.with(context).load(m_profile).into(profile,new MarkerCallback(marker));
                 } else {
-                    Picasso.with(MapsActivity.this).load(m_image).into(tree);
+                    Picasso.with(MapActivity.this).load(m_image).into(tree);
                     Picasso.with(context).load(m_profile).into(profile);
                 }
 
@@ -661,11 +694,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return window;
         }
 
+        /**
+         * Implements the getInfoContent method of the interface
+         * Sets the custom Content for the marker provided
+         * @param marker the host of the infoWindow who contains the window information to display
+         * @return window the view that represents custom infoWindow
+         * In case of customizing the content and the default bubble layout
+         * this method just have to return null and the getInfowWindow method have to be override
+         */
         @Override
         public View getInfoContents(Marker marker) {
             return null;
         }
     }
+
+    /**
+     * Callback Interface of the Picasso Library that manage the result after executing the load
+     * method
+     */
     private static class MarkerCallback implements Callback {
         private Marker markerToRefresh;
 
@@ -673,11 +719,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             this.markerToRefresh = markerToRefresh;
         }
 
+        /**
+         * If the request ends in success reloads the infoWindow to display the lasted content
+         */
         @Override
         public void onSuccess() {
+            markerToRefresh.hideInfoWindow();
             markerToRefresh.showInfoWindow();
         }
 
+        /**
+         * Overrides the method onError in case the request fails
+         */
         @Override
         public void onError() {}
     }

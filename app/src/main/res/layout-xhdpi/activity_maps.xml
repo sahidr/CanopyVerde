@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="com.idbcgroup.canopyverde.MapsActivity">
+    tools:context="com.idbcgroup.canopyverde.MapActivity">
 
     <fragment
         android:id="@+id/map"
