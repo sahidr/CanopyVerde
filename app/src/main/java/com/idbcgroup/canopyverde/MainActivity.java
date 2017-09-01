@@ -11,10 +11,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SharedPreferences pref_tour;
-    private SharedPreferences pref_session;
-    private Boolean visited;
-    private Boolean logged;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,11 +22,11 @@ public class MainActivity extends AppCompatActivity {
                 .build()
         );
 
-        pref_tour = getSharedPreferences("Tour", 0);
-        visited  = pref_tour.getBoolean("visited",false);
+        SharedPreferences pref_tour = getSharedPreferences("Tour", 0);
+        Boolean visited = pref_tour.getBoolean("visited", false);
 
-        pref_session = getSharedPreferences("Session", 0);
-        logged  = pref_session.getBoolean("logged",false);
+        SharedPreferences pref_session = getSharedPreferences("Session", 0);
+        Boolean logged = pref_session.getBoolean("logged", false);
 
         if (visited) {
 

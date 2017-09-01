@@ -15,15 +15,15 @@ import java.util.ArrayList;
  * references [https://jarroba.com/listview-o-listado-en-android/]
  */
 
-public abstract class ListAdapter extends BaseAdapter {
+abstract class ListAdapter extends BaseAdapter {
 
     /*  This will declare the global and basic variables that will use in the adapter.
     Note: the handler variables will not declared in this class, because the idea is make a general
     adapter that will work for any type of elements format.
      */
-    private ArrayList<?> entries;
-    private int idListLayout;
-    private Context context;
+    private final ArrayList<?> entries;
+    private final int idListLayout;
+    private final Context context;
 
     /*  Method that create the ListAdapter's object(constructor).
            @date[22/06/2017]

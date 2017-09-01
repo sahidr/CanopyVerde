@@ -40,11 +40,13 @@ public class TreePointRegisterActivity extends AppCompatActivity {
     private static final int MAX_LINES = 2;
 
     private ImageView photoCapture;
-    Bitmap thumbnail;
+    private Bitmap thumbnail;
     private ProgressBar progressBar;
+    private Spinner canopySize, heightSpinner, stemSize, treeType;
     private String location, city;
     private int id;
-    double latitude, longitude;
+    private double latitude;
+    private double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,11 @@ public class TreePointRegisterActivity extends AppCompatActivity {
         );
 
         progressBar = (ProgressBar) findViewById(R.id.load);
+
+        canopySize = (Spinner) findViewById(R.id.canopySize);
+        heightSpinner = (Spinner) findViewById(R.id.height);
+        stemSize = (Spinner) findViewById(R.id.stemSize);
+        treeType = (Spinner) findViewById(R.id.treeType);
 
         SharedPreferences pref_session = getSharedPreferences("Session", 0);
         id = pref_session.getInt("id",0);
@@ -74,10 +81,11 @@ public class TreePointRegisterActivity extends AppCompatActivity {
             thumbnail = (Bitmap) getIntent().getExtras().get("data");
         }
         Geocoder geocoder = new Geocoder(this);
-        List<Address> addresses = null;
+        List<Address> addresses;
 
         try {
 
+            // Get the address of the marker
             addresses = geocoder.getFromLocation(latitude, longitude, MAX_LINES);
             String address = addresses.get(0).getAddressLine(0);
             // If any additional address line present than only,
@@ -97,6 +105,10 @@ public class TreePointRegisterActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Shows a preview of the image took by the camera
+     * @param view the eye button of the view
+     */
     public void imagePreview (View view){
 
         final Dialog dialog = new Dialog(TreePointRegisterActivity.this);
@@ -125,11 +137,20 @@ public class TreePointRegisterActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Method that calls the Camera App of the device
+     */
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 0);
     }
 
+    /**
+     * Result of the camera app
+     * @param requestCode identifies who's calling the Intent
+     * @param resultCode identifies the result of the called Intent
+     * @param data the data retrieved from the called Intent
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
@@ -139,18 +160,15 @@ public class TreePointRegisterActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method that takes the data from the form and compress the image took by the camera
+     * @param view the register button of the view
+     */
     public void yellowPointRegister(View view){
 
-        Spinner canopySize = (Spinner) findViewById(R.id.canopySize);
         String canopy  = (String) canopySize.getSelectedItem();
-
-        Spinner heightSpinner = (Spinner) findViewById(R.id.height);
         String height = (String) heightSpinner.getSelectedItem();
-
-        Spinner stemSize = (Spinner) findViewById(R.id.stemSize);
         String stem  = (String) stemSize.getSelectedItem();
-
-        Spinner treeType = (Spinner) findViewById(R.id.treeType);
         String type  = (String) treeType.getSelectedItem();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -160,20 +178,61 @@ public class TreePointRegisterActivity extends AppCompatActivity {
         // Encode Image to String
         String encodedString = Base64.encodeToString(byte_arr, 0);
 
-        PostYellowPoint p = new PostYellowPoint();
-        p.execute(String.valueOf(latitude),String.valueOf(longitude),canopy,stem,height,type,location,
-                String.valueOf(UNVERIFIED), String.valueOf(id), encodedString, city);
+        boolean canopy_valid = !canopy.equals(getString(R.string.canopy));
+        boolean height_valid = !height.equals(getString(R.string.height_aprox));
+        boolean stem_valid = !stem.equals(getString(R.string.stem_size));
+        boolean type_valid = !type.equals(getString(R.string.tree_type));
+        boolean verified  = verifyFields(canopy_valid,height_valid,stem_valid,type_valid);
 
+        if (verified){
+            PostTree tree = new PostTree();
+            tree.execute(String.valueOf(latitude),String.valueOf(longitude),canopy,stem,height,type,
+                    location, String.valueOf(UNVERIFIED), String.valueOf(id), encodedString, city);
+        }
     }
 
+    /**
+     * Method for the validations of the user data
+     * @param canopy_field boolean that represent if the canopy size is valid
+     * @param height_field boolean that represent if the height is valid
+     * @param stem_field boolean that represent if the stem size is valid
+     * @param type_field boolean that represent if the type is valid
+     * @return boolean that represent if all of the fields are valid or invalid
+     */
+    private boolean verifyFields(boolean canopy_field, boolean height_field, boolean stem_field,
+                                 boolean type_field) {
+        if (!canopy_field) {
+            canopySize.setBackgroundResource(R.drawable.first_field_error);
+        } else
+            canopySize.setBackgroundResource(R.drawable.first_field);
+        if(!height_field) {
+            heightSpinner.setBackgroundResource(R.drawable.field_error);
+        } else
+            heightSpinner.setBackgroundResource(R.drawable.field);
+        if (!stem_field){
+            stemSize.setBackgroundResource(R.drawable.field_error);
+        } else
+            stemSize.setBackgroundResource(R.drawable.field);
+        if(!type_field) {
+            treeType.setBackgroundResource(R.drawable.field_error);
+        }else
+            treeType.setBackgroundResource(R.drawable.field);
+        return (canopy_field &&  height_field && stem_field && type_field);
+    }
+
+    /**
+     * Method of the Calligraphy Library to insert the font family in the context of the Activity
+     * @param newBase the new base context of the Activity
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    // AsyncTask. Sends Log In's data to the server's API and process the response.
-
-    public class PostYellowPoint extends AsyncTask<String, Integer, Integer> {
+    /**
+     * AsyncTask. Sends the Login's data to the server's API and process the response.
+     */
+    private class PostTree extends AsyncTask<String, Integer, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -182,9 +241,9 @@ public class TreePointRegisterActivity extends AppCompatActivity {
 
         @Override
         protected Integer doInBackground(String... strings) {
-            JSONObject apiResponse = new JSONObject();
+
             URL url;
-            HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection;
             Integer result = 0;
             try {
                 url = new URL("http://192.168.1.85:8000/greenpoint/");
@@ -213,7 +272,6 @@ public class TreePointRegisterActivity extends AppCompatActivity {
                 writer.flush();
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection,true);
 
-
                 if (response != null) {
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {
                         Log.d("OK","ok");
@@ -221,7 +279,6 @@ public class TreePointRegisterActivity extends AppCompatActivity {
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
                         Log.d("BAD","BAD");
-                        Log.d("BODY", String.valueOf(response.getBody()));
                         result = 1;
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
@@ -239,28 +296,31 @@ public class TreePointRegisterActivity extends AppCompatActivity {
             return result;
         }
 
-        // Process doInBackground() results
+        /**
+         * Process the int result of the doInBackground
+         * @param result the result of the response
+         */
         @Override
-        protected void onPostExecute(Integer anInt) {
-            String message;
+        protected void onPostExecute(Integer result) {
+            int message;
             Intent i = getIntent();
-            switch (anInt) {
+            switch (result) {
                 case (-1):
-                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    message = R.string.error;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     setResult(RESULT_CANCELED, i);
                     finish();
                     progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
-                    message = "¡Yellow Point Added!";
+                    message = R.string.tree_added;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     setResult(RESULT_OK, i);
                     finish();
                     progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
-                    message = "Invalid data";
+                    message = R.string.invalid_data;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     setResult(RESULT_CANCELED, i);
                     finish();

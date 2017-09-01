@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="country_array">
         <item>País</item>
     </string-array>
@@ -9,7 +10,7 @@
     </string-array>
 
     <string-array name="canopy_array">
-        <item>Tamaño de Copa</item>
+        <item>@string/canopy</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -21,7 +22,7 @@
     </string-array>
 
     <string-array name="stem_array">
-        <item>Tamaño de Tronco</item>
+        <item>@string/stem_size</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -33,7 +34,7 @@
     </string-array>
 
     <string-array name="height_array">
-        <item>Altura Aproximada</item>
+        <item>@string/height_aprox</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -45,7 +46,7 @@
     </string-array>
 
     <string-array name="type_array">
-        <item>Tipo de Árbol</item>
+        <item>@string/tree_type</item>
         <item>Araguaney</item>
         <item>Caobo</item>
         <item>Bonsai</item>

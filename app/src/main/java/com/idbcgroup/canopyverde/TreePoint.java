@@ -4,7 +4,7 @@ import android.widget.ImageView;
 
 import java.sql.Date;
 
-public class TreePoint {
+class TreePoint {
 
     private int id;
     private String location;

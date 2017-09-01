@@ -35,14 +35,13 @@ import java.util.Locale;
 public class UserProfileReportFragment extends Fragment {
 
     private ListView reportList;
-    private SharedPreferences pref_session;
     private int user_id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        pref_session = this.getActivity().getSharedPreferences("Session", 0);
+        SharedPreferences pref_session = this.getActivity().getSharedPreferences("Session", 0);
         user_id = pref_session.getInt("id",0);
         // Inflate the layout for this fragment
         View reportView = inflater.inflate(R.layout.fragment_user_profile_report, container, false);
@@ -54,12 +53,12 @@ public class UserProfileReportFragment extends Fragment {
         return reportView;
     }
 
-    public class GetReport extends AsyncTask<String, Integer, JSONObject> {
+    private class GetReport extends AsyncTask<String, Integer, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
             JSONObject apiResponse = new JSONObject();
             URL url;
-            HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection;
 
             try {
                 url = new URL("http://192.168.1.85:8000/report/"+user_id+"/");
@@ -96,7 +95,7 @@ public class UserProfileReportFragment extends Fragment {
 
             try {
                 //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));
-                ArrayList<Report> data = new ArrayList<Report>();
+                ArrayList<Report> data = new ArrayList<>();
                 if (response.getInt("status") == 0) {
                     JSONArray reportArray = response.getJSONArray("body");
                     JSONObject userReport;

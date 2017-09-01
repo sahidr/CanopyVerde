@@ -15,7 +15,7 @@ class MapStateManager {
     private static final String MAPTYPE = "MAPTYPE";
     private static final String PREFS_NAME ="mapCameraState";
 
-    private SharedPreferences mapStatePrefs;
+    private final SharedPreferences mapStatePrefs;
 
     MapStateManager(Context context) {
         mapStatePrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

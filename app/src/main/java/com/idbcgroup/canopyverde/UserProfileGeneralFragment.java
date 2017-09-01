@@ -11,7 +11,6 @@ import android.widget.EditText;
 public class UserProfileGeneralFragment extends Fragment {
 
     private EditText fullname, emailprofile, password,country, city;
-    private SharedPreferences pref_session;
 
     public EditText[] getFields() {
         return new EditText[]{this.fullname,this.emailprofile,this.password,this.country,this.city};
@@ -29,7 +28,7 @@ public class UserProfileGeneralFragment extends Fragment {
         country = (EditText) view.findViewById(R.id.countryDisplayRow);
         city = (EditText) view.findViewById(R.id.cityDisplayRow);
 
-        pref_session = this.getActivity().getSharedPreferences("Session", 0);
+        SharedPreferences pref_session = this.getActivity().getSharedPreferences("Session", 0);
         String email = pref_session.getString("email",null);
         String fullnameText = pref_session.getString("fullname",null);
 

@@ -13,23 +13,23 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
 
-public class JSONResponseController {
+class JSONResponseController {
 
     /**
      *
-     * @param connection
-     * @param is_JSONobject represents the data type of the response
+     * @param connection the HttpURLConnection
+     * @param is_JSONObject represents the data type of the response
      *                      true if it's a JSONObject
      *                      false if it's a JSONArray
-     * @return
-     * @throws IOException
-     * @throws JSONException
+     * @return Petition's response in the type of APIResponse
+     * @throws IOException Exception at the time of the connection
+     * @throws JSONException Exception at the time of parsing JSON
      */
-    public static APIResponse getJsonResponse(HttpURLConnection connection, boolean is_JSONobject) throws IOException, JSONException {
+    public static APIResponse getJsonResponse(HttpURLConnection connection, boolean is_JSONObject) throws IOException, JSONException {
 
-        /**
-         * Initializes an APIResponse instance with the connection's response code in order to check
-         * whether the request is valid or not.
+        /*
+          Initializes an APIResponse instance with the connection's response code in order to check
+          whether the request is valid or not.
          */
         APIResponse response;
         try {
@@ -38,9 +38,9 @@ public class JSONResponseController {
 
             if ((response.getStatus() == HttpURLConnection.HTTP_OK) ||
                     (response.getStatus() == HttpURLConnection.HTTP_CREATED)) {
-                /**
-                 * If valid, sets the APIResponse's body (JSON) after processing response body.
-                 * Finally, a valid APIResponse is returned.
+                /*
+                  If valid, sets the APIResponse's body (JSON) after processing response body.
+                  Finally, a valid APIResponse is returned.
                  */
                 InputStream in = new BufferedInputStream(connection.getInputStream());
                 BufferedReader reader = new BufferedReader(new InputStreamReader((in)));
@@ -50,7 +50,7 @@ public class JSONResponseController {
                     responseBody.append(line);
                 }
 
-                if (is_JSONobject) {
+                if (is_JSONObject) {
                     response.setBody(new JSONObject(responseBody.toString()));
                 } else {
                     response.setBody(new JSONArray(responseBody.toString()));
@@ -61,9 +61,9 @@ public class JSONResponseController {
                     (response.getStatus() == HttpURLConnection.HTTP_UNAUTHORIZED) ||
                     (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND)
                     ) {
-                /**
-                 * If invalid, sets the APIResponse's error body (JSON) after processing response body.
-                 * Finally, an invalid APIResponse is returned.
+                /*
+                  If invalid, sets the APIResponse's error body (JSON) after processing response body.
+                  Finally, an invalid APIResponse is returned.
                  */
                 InputStream in = new BufferedInputStream(connection.getErrorStream());
                 BufferedReader reader = new BufferedReader(new InputStreamReader((in)));
@@ -78,8 +78,8 @@ public class JSONResponseController {
 
             } else {
 
-                /**
-                 * If there was an error during communication (e.g. +500 errors), null is returned.
+                /*
+                  If there was an error during communication (e.g. +500 errors), null is returned.
                  */
                 response = new APIResponse(-2);
                 return response;

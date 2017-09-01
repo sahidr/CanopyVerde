@@ -90,11 +90,11 @@ public class TourActivity extends AppCompatActivity {
         private ImageView img;
         private TextView title;
         private TextView description;
-        private Integer[] tour_imgs = {R.drawable.tour_01, R.drawable.tour_02,
+        private final Integer[] tour_imgs = {R.drawable.tour_01, R.drawable.tour_02,
                 R.drawable.tour_03, R.drawable.tour_04};
-        private Integer[] tour_titles = {R.string.title_tour_1, R.string.title_tour_2,
+        private final Integer[] tour_titles = {R.string.title_tour_1, R.string.title_tour_2,
                 R.string.title_tour_3, R.string.title_tour_4};
-        private Integer[] tour_desc = {R.string.desc_tour_1, R.string.desc_tour_2,
+        private final Integer[] tour_desc = {R.string.desc_tour_1, R.string.desc_tour_2,
                 R.string.desc_tour_3, R.string.desc_tour_4};
 
         /**

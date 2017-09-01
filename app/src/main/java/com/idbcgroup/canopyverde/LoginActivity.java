@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -35,10 +34,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -50,27 +47,20 @@ import java.util.Arrays;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-
 public class LoginActivity extends AppCompatActivity {
 
-    // Normal Sign In
+    // Server Sign In
     private EditText email,password;
-    private boolean email_field, password_field;
-    private boolean verified;
 
     // Google Sign in
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
-    private Button googleBtn;
 
-    // Facebook Sign in
-    private Button fb;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
 
     // Firebase
-
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressBar progressBar;
@@ -94,10 +84,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(
                 "public_profile", "email", "user_birthday", "user_friends"));
-        fb = (Button) findViewById(R.id.facebookSignIn);
+        Button fb = (Button) findViewById(R.id.facebookSignIn);
 
         //Firebase
-
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -117,7 +106,6 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
 
@@ -146,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Google
 
-        googleBtn = (Button) findViewById(R.id.googleSignIn);
+        Button googleBtn = (Button) findViewById(R.id.googleSignIn);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -172,8 +160,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //Facebook Handler
-
+    /**
+     * Facebook Handler
+     * @param token
+     */
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
@@ -198,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
                             String personEmail=task.getResult().getUser().getEmail();
                             Uri personPhoto =task.getResult().getUser().getPhotoUrl();
 
-                            String[] emailParts = personEmail.split("@");
+                            String[] emailParts = personEmail != null ? personEmail.split("@") : new String[0];
                             String username =  emailParts[0];
 
                             Log.w("DATAAA", personName+personEmail+personId+personPhoto);
@@ -211,15 +201,14 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("photo", String.valueOf(personPhoto));
                             editor.apply();
                         }
-
-
-                        // ...
                     }
                 });
     }
 
-    // Google Handler
-
+    /**
+     * Google Handler
+     * @param account
+     */
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
@@ -241,8 +230,12 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    // Login Result
-
+    /**
+     * Login Result
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -261,7 +254,7 @@ public class LoginActivity extends AppCompatActivity {
                 String personId = account.getId();
                 Uri personPhoto = account.getPhotoUrl();
 
-                String[] emailParts = personEmail.split("@");
+                String[] emailParts = personEmail != null ? personEmail.split("@") : new String[0];
                 String username =  emailParts[0];
 
                 SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
@@ -273,8 +266,6 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("photo", String.valueOf(personPhoto));
                 editor.apply();
 
-            } else {
-                // Google Sign In failed, update UI appropriately
             }
         } else {
             // Facebook Sign In
@@ -282,12 +273,18 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
 
+    /**
+     *
+     */
     @Override
     public void onStop() {
         super.onStop();
@@ -296,22 +293,29 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    /**
+     *
+     * @param view
+     */
     public void login(View view){
 
         String email_text,password_text;
         email_text = email.getText().toString();
         password_text = password.getText().toString();
 
-        email_field = email_text.length() != 0
+        boolean email_field = email_text.length() != 0
                 && android.util.Patterns.EMAIL_ADDRESS.matcher(email_text).matches();
-        password_field = password_text.length() >= 8;
+        boolean password_field = password_text.length() >= 8;
 
-        verified = verifyFields(email_field, password_field);
+        boolean verified = verifyFields(email_field, password_field);
 
         if (verified) {
             AttemptLogin l = new AttemptLogin();
@@ -319,7 +323,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public boolean verifyFields(boolean email_field, boolean password_field){
+    /**
+     *
+     * @param email_field
+     * @param password_field
+     * @return
+     */
+    private boolean verifyFields(boolean email_field, boolean password_field){
         if(!email_field) {
             email.setError(getString(R.string.email_valid));
             email.setBackgroundResource(R.drawable.first_field_error);
@@ -333,24 +343,42 @@ public class LoginActivity extends AppCompatActivity {
         return (email_field && password_field);
     }
 
+    /**
+     *
+     * @param view
+     */
     public void fb_login(View view){
         loginButton.performClick();
     }
 
+    /**
+     * This method calls the intent of the PasswordRestoreActivity
+     * @param view textview of the view
+     */
     public void restore(View view){
         startActivity(new Intent(LoginActivity.this,PasswordRestoreActivity.class));
     }
 
+    /**
+     *
+     * @param view
+     */
     public void register(View view){
         startActivity(new Intent(LoginActivity.this,UserRegisterActivity.class));
     }
 
+    /**
+     *
+     * @param newBase
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+
     // AsyncTask. Sends Log In's data to the server's API and process the response.
-    public class AttemptLogin extends AsyncTask<String, Integer, Integer> {
+    private class AttemptLogin extends AsyncTask<String, Integer, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -425,29 +453,27 @@ public class LoginActivity extends AppCompatActivity {
         // Process doInBackground() results
         @Override
         protected void onPostExecute(Integer anInt) {
-            String message;
+            int message;
             switch (anInt) {
                 case (-1):
-                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    message = R.string.error;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
                     Intent intent = new Intent(getBaseContext(), MapActivity.class);
-                    message = "¡Bienvenido!";
+                    message = R.string.suscessful_login;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     finish();
-                    progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
-                    message = "Nombre de usuario y/o contraseña inválidos";
+                    message = R.string.invalid_data;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
                     break;
                 default:
                     break;
             }
+            progressBar.setVisibility(View.GONE);
         }
     }
 

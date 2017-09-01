@@ -64,7 +64,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public class PasswordChangeTask extends AsyncTask<String, Integer, Integer> {
+    private class PasswordChangeTask extends AsyncTask<String, Integer, Integer> {
 
         @Override
         protected void onPreExecute() {

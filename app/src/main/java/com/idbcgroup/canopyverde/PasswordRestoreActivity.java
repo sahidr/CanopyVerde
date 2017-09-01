@@ -57,7 +57,7 @@ public class PasswordRestoreActivity extends AppCompatActivity {
     }
 
 
-    public class PasswordRestore extends AsyncTask<String, Integer, Integer> {
+    private class PasswordRestore extends AsyncTask<String, Integer, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -90,7 +90,6 @@ public class PasswordRestoreActivity extends AppCompatActivity {
                 if (response != null){
 
                     if (response.getStatus()==HttpURLConnection.HTTP_OK) {
-                        JSONObject response_body = response.getBody();
                         result = 0;
                         Log.d("OK", "OK");
                         return 0;

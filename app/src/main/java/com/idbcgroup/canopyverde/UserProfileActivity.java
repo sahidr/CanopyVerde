@@ -77,28 +77,24 @@ public class UserProfileActivity extends AppCompatActivity {
     private static final int SELECT_FILE = 1;
     private static final int REQUEST_CAMERA = 0;
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private TabLayout tabLayout;
-    private ViewPager mViewPager;
     private TextView badge;
     private PorterShapeImageView profilePic;
-    private TextView profileFullname, profileEmail, profileUsername;
+    private TextView profileFullname;
     private Context context;
-    private SharedPreferences pref_session;
     private ToggleButton edit;
     private ImageView camera;
     private int id;
     private String imageName;
-    private String username, email;
+    private String username;
     private Bitmap image;
     private ProgressBar progressBar;
 
 //    private boolean enable;
-    UserProfileGeneralFragment general;
+private UserProfileGeneralFragment general;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,29 +111,28 @@ public class UserProfileActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         profilePic = (PorterShapeImageView) findViewById(R.id.profilepic);
         profileFullname = (TextView) findViewById(R.id.fullNameDisplay);
-        profileEmail = (TextView) findViewById(R.id.emailDisplay);
-        profileUsername = (TextView) findViewById(R.id.usernameDisplay);
+        TextView profileEmail = (TextView) findViewById(R.id.emailDisplay);
+        TextView profileUsername = (TextView) findViewById(R.id.usernameDisplay);
         badge = (TextView) findViewById(R.id.badgeName);
         edit = (ToggleButton) findViewById(R.id.edit);
         camera = (ImageView) findViewById(R.id.cameraLogo);
 
-
         // User
-        GetUser g = new GetUser();
-        g.execute();
+        GetUser profile = new GetUser();
+        profile.execute();
 
-        pref_session = getSharedPreferences("Session", 0);
+        SharedPreferences pref_session = getSharedPreferences("Session", 0);
 
-        email = pref_session.getString("email",null);
+        String email = pref_session.getString("email", null);
         username = pref_session.getString("username",null);
         String fullname = pref_session.getString("fullname",null);
-        final String profilepic = pref_session.getString("photo",null);
+        final String user_pic = pref_session.getString("photo",null);
         Integer game_points = pref_session.getInt("game_points",0);
         String badge_name = pref_session.getString("badge",null);
 
         id = pref_session.getInt("id",0);
-        if (profilepic!=null) {
-            Uri photo = Uri.parse(profilepic);
+        if (user_pic!=null) {
+            Uri photo = Uri.parse(user_pic);
             Picasso.with(context).load(photo).into(profilePic);
         }
         profileFullname.setText(fullname);
@@ -152,17 +147,17 @@ public class UserProfileActivity extends AppCompatActivity {
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         edit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 final EditText[] fields = getFragment().getFields();
-                final ArrayList<String> data = new ArrayList<String>();
+                final ArrayList<String> data = new ArrayList<>();
 
                 if (isChecked) {
                     // Edit enable
@@ -229,7 +224,6 @@ public class UserProfileActivity extends AppCompatActivity {
                         }
                     });
                     dialog.show();
-
                 }
             }
         });
@@ -237,9 +231,11 @@ public class UserProfileActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         changeTabsFont();
-
     }
 
+    /**
+     *
+     */
     private void changeTabsFont() {
         Typeface tf = Typeface.createFromAsset(UserProfileActivity.this.getAssets(), "fonts/TitilliumWeb-Regular.ttf");
         ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
@@ -256,6 +252,9 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
     private void galleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -263,12 +262,21 @@ public class UserProfileActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
     }
 
+    /**
+     *
+     */
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
+    /**
+     * Result of the Camera app or Successful point Register or Update
+     * @param requestCode identifies who's calling the Intent
+     * @param resultCode identifies the result of the called Intent
+     * @param data the data retrieved from the called Intent
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
@@ -281,21 +289,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void onCaptureImageResult(Intent data) {
         image = (Bitmap) data.getExtras().get("data");
-        /*ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        assert thumbnail != null;
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        */
         profilePic.setImageBitmap(image);
-/*
-        image = BitmapFactory.decodeFile(
-                Environment.getExternalStorageDirectory()+
-                        "/CanopyVerde/profile"+imageName);
-        profilePic.setImageBitmap(image);
-        //Uri image = () data.getStringExtra(MediaStore.EXTRA_OUTPUT);
-        //data.getClipData()
-        //Uri image = data.getExtras().get(EXTRA_);
-        //Picasso.with(context).load(image).into(profilePic);
-*/
     }
 
     private void onSelectFromGalleryResult(Intent data) {
@@ -331,13 +325,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
     public void backToMap(View view){
         onBackPressed();
-    }
-
-    public void editProfile (View view){
-        //Intent i = new Intent(UserProfileActivity.this, EditProfileActivity.class);
-        //startActivity(i);
-        //edit.setImageResource(android.R.drawable.ic_menu_save);
-
     }
 
     public void gameProfile(View view){
@@ -398,7 +385,7 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-    public UserProfileGeneralFragment getFragment() {
+    private UserProfileGeneralFragment getFragment() {
         return general;
     }
 
@@ -420,7 +407,7 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(String... strings) {
             URL url;
-            HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection;
             Integer result = -1;
 
             try {
@@ -457,16 +444,16 @@ public class UserProfileActivity extends AppCompatActivity {
                         result = 0;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
                         Log.d("BAD", "BAD");
-                        Log.d("OK", response.getBody().toString());
-                        result = 1;
+                        if (response.getBody().getString("code").equals("email"))
+                            result = 1;
+                        else
+                            result = 2;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
                         Log.d("NOT", "FOUND");
                         Log.d("OK", response.getBody().toString());
                         result = -1;
                     }
                 }
-
-
             } catch (Exception e) {
                 return result;
             }
@@ -476,35 +463,34 @@ public class UserProfileActivity extends AppCompatActivity {
         // Process doInBackground() results
         @Override
         protected void onPostExecute(Integer anInt) {
-            String message;
+            int message;
             switch (anInt) {
                 case (-1):
-                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    message = R.string.error;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    finish();
-                    progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
-
-                    message = "¡User Updated!";
+                    message = R.string.user_updated;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     finish();
-                    progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
-                    message = "Invalid Data";
+                    message = R.string.invalid_email;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
-                    finish();
-                    progressBar.setVisibility(View.GONE);
+                    break;
+                case (2):
+                    message = R.string.invalid_password;
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     break;
                 default:
                     break;
             }
+            progressBar.setVisibility(View.GONE);
         }
     }
 
 
-    public class GetUser extends AsyncTask<String, Integer, JSONObject> {
+    private class GetUser extends AsyncTask<String, Integer, JSONObject> {
 
         @Override
         protected void onPreExecute(){
@@ -515,7 +501,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected JSONObject doInBackground(String... params) {
             JSONObject response_body = new JSONObject();
             URL url;
-            HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection;
             try {
                 url = new URL("http://192.168.1.85:8000/profile/"+id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();

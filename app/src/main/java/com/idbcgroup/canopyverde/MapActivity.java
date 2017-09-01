@@ -17,6 +17,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -118,7 +119,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     /**
-     *
+     * in case of the application enters in the onPause, the Map state is save
      */
     @Override
     protected void onPause() {
@@ -132,7 +133,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     /**
-     *
+     * In case of empty Map onResume, Map is configured again
      */
     @Override
     protected void onResume() {
@@ -203,7 +204,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                     @Override
                     protected String doInBackground(LatLng... params) {
                         Geocoder geocoder = new Geocoder(context);
-                        List<Address> addresses = null;
+                        List<Address> addresses;
                         String currentCity = lastCity;
                         try {
                             addresses = geocoder.getFromLocation(params[0].latitude,
@@ -365,7 +366,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
      * Result of the Camera app or Successful point Register or Update
      * @param requestCode identifies who's calling the Intent
      * @param resultCode identifies the result of the called Intent
-     * @param data the data retireved from the called Intent
+     * @param data the data retrieved from the called Intent
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -530,7 +531,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         protected JSONObject doInBackground(String... params) {
             JSONObject response_body = new JSONObject();
             URL url;
-            HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection;
             try {
                 String city = URLEncoder.encode(params[0], "UTF-8");
                 url = new URL("http://192.168.1.85:8000/city/?search="+city);
@@ -589,9 +590,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         populationDensity.setText(density);
 
                         reportedTrees.setText(String.valueOf(reported_trees));
-
                     }
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -679,15 +678,19 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 location.setText(m_location);
                 user.setText("@"+ m_username);
 
-                if (m_size.equals("Altura Aproximada"))
+                if (m_size.equals(getString(R.string.height_aprox)))
                     size.setText("Undefined");
                 else size.setText(m_size +"m");
 
                 if (m_status == UNVERIFIED) {
-                    status.setTextColor(getResources().getColor(R.color.yellow));
+                    int yellow = ResourcesCompat.getColor(getResources(), R.color.yellow, null);
+                    //status.setTextColor(getResources().getColor(R.color.yellow));
+                    status.setTextColor(yellow);
                     status.setText(getString(R.string.not_verified));
                 } else if (m_status == VERIFIED){
-                    status.setTextColor(getResources().getColor(R.color.colorCanopy));
+                    int green = ResourcesCompat.getColor(getResources(), R.color.colorCanopy, null);
+                    status.setTextColor(green);
+                    //status.setTextColor(getResources().getColor(R.color.colorCanopy));
                     status.setText(getString(R.string.verified));
                 }
             }
@@ -713,7 +716,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
      * method
      */
     private static class MarkerCallback implements Callback {
-        private Marker markerToRefresh;
+        private final Marker markerToRefresh;
 
         private MarkerCallback(Marker markerToRefresh) {
             this.markerToRefresh = markerToRefresh;

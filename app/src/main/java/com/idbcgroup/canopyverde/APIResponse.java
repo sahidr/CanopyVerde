@@ -8,7 +8,7 @@ import org.json.JSONObject;
  */
 public class APIResponse {
 
-    int status;
+    private int status;
     private JSONObject body;
     private JSONArray bodyArray; // If the response is an JSONArray
 

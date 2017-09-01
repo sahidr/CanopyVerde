@@ -32,8 +32,6 @@ public class RedPointRegisterActivity extends AppCompatActivity {
     private String location;
     private Float lat, lng;
     private Spinner treeType;
-    private TextView location_form;
-    private SharedPreferences pref_session;
     private ProgressBar progressBar;
 
     @Override
@@ -46,7 +44,7 @@ public class RedPointRegisterActivity extends AppCompatActivity {
                 .build()
         );
 
-        pref_session = getSharedPreferences("Session", 0);
+        SharedPreferences pref_session = getSharedPreferences("Session", 0);
         user_id = pref_session.getInt("id",0);
         treeType = (Spinner) findViewById(R.id.treeType);
         rp_id = getIntent().getExtras().getInt("id");
@@ -54,7 +52,7 @@ public class RedPointRegisterActivity extends AppCompatActivity {
         lat = getIntent().getExtras().getFloat("latitude");
         lng = getIntent().getExtras().getFloat("longitude");
 
-        location_form = (TextView) findViewById(R.id.location);
+        TextView location_form = (TextView) findViewById(R.id.location);
         location_form.setText(location);
         progressBar = (ProgressBar) findViewById(R.id.load);
 
@@ -77,7 +75,7 @@ public class RedPointRegisterActivity extends AppCompatActivity {
 
     // AsyncTask. Sends Log In's data to the server's API and process the response.
 
-    public class PutRedPoint extends AsyncTask<String, Integer, Integer> {
+    private class PutRedPoint extends AsyncTask<String, Integer, Integer> {
 
         @Override
         protected void onPreExecute() {
