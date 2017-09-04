@@ -246,7 +246,7 @@ public class TreePointRegisterActivity extends AppCompatActivity {
             HttpURLConnection urlConnection;
             Integer result = 0;
             try {
-                url = new URL("http://192.168.1.85:8000/greenpoint/");
+                url = new URL("http://192.168.1.85:8000/treepoint/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setRequestProperty("Content-Type", "application/json");

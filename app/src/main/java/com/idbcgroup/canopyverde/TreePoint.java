@@ -4,6 +4,9 @@ import android.widget.ImageView;
 
 import java.sql.Date;
 
+/**
+ * Class that provides the data of the trees reported
+ */
 class TreePoint {
 
     private int id;

@@ -68,6 +68,10 @@ public class RedPointRegisterActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Method of the Calligraphy Library to insert the font family in the context of the Activity
+     * @param newBase the new base context of the Activity
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -88,7 +92,7 @@ public class RedPointRegisterActivity extends AppCompatActivity {
             HttpURLConnection urlConnection = null;
             Integer result = 0;
             try {
-                url = new URL("http://192.168.1.85:8000/greenpoint/"+rp_id+"/");
+                url = new URL("http://192.168.1.85:8000/treepoint/"+rp_id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setRequestMethod("PUT");

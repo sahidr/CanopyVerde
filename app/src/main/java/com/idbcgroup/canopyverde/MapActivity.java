@@ -414,7 +414,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             HttpURLConnection urlConnection;
 
             try {
-                url = new URL("http://192.168.1.85:8000/greenpoint/");
+                url = new URL("http://192.168.1.85:8000/treepoint/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 

@@ -50,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Method of the Calligraphy Library to insert the font family in the context of the Activity
+     * @param newBase the new base context of the Activity
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));

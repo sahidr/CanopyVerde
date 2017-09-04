@@ -53,6 +53,9 @@ public class UserProfileReportFragment extends Fragment {
         return reportView;
     }
 
+    /**
+     * Async Task who provides the user's reports of the app
+     */
     private class GetReport extends AsyncTask<String, Integer, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {

@@ -161,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Facebook Handler
+     * This method handle the Facebook Access token
      * @param token
      */
     private void handleFacebookAccessToken(AccessToken token) {
@@ -396,7 +396,7 @@ public class LoginActivity extends AppCompatActivity {
             Integer result = -1;
             try {
                 // Defining and initializing server's communication's variables
-                String credentials = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                String credentials = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
                 credentials += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
 
                 URL url = new URL("http://192.168.1.85:8000/api-token-auth/");

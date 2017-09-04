@@ -199,7 +199,7 @@ private UserProfileGeneralFragment general;
                                     String password = data.get(2);
 
                                     if (password.length()< 8)
-                                        password = "1234";
+                                        password = "user_default_password_key";
 
                                     String country = data.get(3);
                                     String city = data.get(4);
@@ -217,10 +217,7 @@ private UserProfileGeneralFragment general;
                         @Override
                         public void onClick(DialogInterface dialogInterface, int paramInt) {
                             dialogInterface.dismiss();
-
                             finish();
-                            //startActivity(getIntent());
-
                         }
                     });
                     dialog.show();
@@ -335,8 +332,8 @@ private UserProfileGeneralFragment general;
     public void logout(View view){
         SharedPreferences.Editor session_preferences = getSharedPreferences("Session", 0).edit().clear();
         session_preferences.apply();
-        //MapStateManager map_preferences = new MapStateManager(getBaseContext());
-        //map_preferences.deletePreferences();
+        MapStateManager map_preferences = new MapStateManager(getBaseContext());
+        map_preferences.deletePreferences();
         Intent i = new Intent(UserProfileActivity.this,MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -424,7 +421,6 @@ private UserProfileGeneralFragment general;
                 user.put("username", username);
                 user.put("email", strings[1]);
                 user.put("password", strings[2]);
-
                 profile.put("fk_user", user);
                 profile.put("fullname", strings[0]);
                 profile.put("country", strings[3]);
@@ -443,7 +439,7 @@ private UserProfileGeneralFragment general;
                         Log.d("OK", response.getBody().toString());
                         result = 0;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.d("BAD", "BAD");
+                        Log.d("BAD", response.getBody().toString());
                         if (response.getBody().getString("code").equals("email"))
                             result = 1;
                         else

@@ -161,7 +161,12 @@ public class GameProfileActivity extends AppCompatActivity {
             return apiResponse;
         }
 
-        // Process doInBackground() results
+
+        /**
+         * This method process the Array of game reports contained in the APIResponse
+         * @param response the body of the request's response that contains a status and the array
+         *                 of game reports
+         */
         @Override
         protected void onPostExecute(JSONObject response) {
 
