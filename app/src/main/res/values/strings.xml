@@ -142,10 +142,10 @@
     <string name="snippet">Fecha: 22/12/17\nTipo: Araguaney\nTamaño: Mediano\nStatus: Verified</string>
     <string name="s_ubication">Av. Principal de\nlos Cortijos</string>
 
-    <!--    Permissions    -->
+    <!--    Permissions    >
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
     <string name="location_permission_denied">This sample requires location permission to enable the \'my location\' layer. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
-    <string name="permission_required_toast">Location permission is required for this demo.</string>
+    <string name="permission_required_toast">Location permission is required for this demo.</string-->
 
     <!--    Facebook    -->
     <string name="facebook_app_id">1453933398031719</string>
@@ -169,5 +169,8 @@
     <string name="invalid_email">El email ya fue registrado</string>
     <string name="invalid_password">La constraseña es menor a 8 caracteres</string>
     <string name="user_updated">¡Perfil actualizado exitosamente!</string>
-
+    <string name="email_confirmation">Se ha enviado un correo de confirmación a tu cuenta</string>
+    <string name="user_account_doesnt_exists">No existe una cuenta asociada a este correo</string>
+    <string name="password_restored">Se ha restaurado la contraseña</string>
+    <string name="password_match">Contraseñas deben ser iguales y de al menos 8 caracteres</string>
 </resources>

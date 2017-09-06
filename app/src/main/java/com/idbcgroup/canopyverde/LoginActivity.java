@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
 
+    // Facebook Sign in
     private LoginButton loginButton;
     private CallbackManager callbackManager;
 
@@ -84,7 +85,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(
                 "public_profile", "email", "user_birthday", "user_friends"));
-        Button fb = (Button) findViewById(R.id.facebookSignIn);
 
         //Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -162,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * This method handle the Facebook Access token
-     * @param token
+     * @param token user's access token
      */
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
@@ -206,8 +206,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Google Handler
-     * @param account
+     * This method authenticate a Google user account with Firebase
+     * @param account the Google account who will be authenticated
      */
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
@@ -230,11 +230,11 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     * Login Result
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     /**
+     * Manage the result of the Intent
+     * @param requestCode identifies who's calling the Intent
+     * @param resultCode identifies the result of the called Intent
+     * @param data the data retrieved from the called Intent
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -294,7 +294,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Invokes the Google Sign in Method
      */
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -302,8 +302,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param view
+     * Execute the login of the Django Server
+     * @param view the button to login
      */
     public void login(View view){
 
@@ -324,10 +324,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param email_field
-     * @param password_field
-     * @return
+     * Shows the user if the filled fields are syntactically correct and
+     * @param email_field if the email is valid
+     * @param password_field if the password is valid
+     * @return boolean that represents if all the fields are valid
      */
     private boolean verifyFields(boolean email_field, boolean password_field){
         if(!email_field) {
@@ -344,8 +344,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param view
+     * The login with Facebook via custom button using the method of the button provided by Facebook
+     * @param view the custom facebook button
      */
     public void fb_login(View view){
         loginButton.performClick();
@@ -360,16 +360,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param view
+     * Calls an Intent to UserRegisterActivity
+     * @param view the register button of the view
      */
     public void register(View view){
         startActivity(new Intent(LoginActivity.this,UserRegisterActivity.class));
     }
 
     /**
-     *
-     * @param newBase
+     * Method of the Calligraphy Library to insert the font family in the context of the Activity
+     * @param newBase the new base context of the Activity
      */
     @Override
     protected void attachBaseContext(Context newBase) {

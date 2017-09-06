@@ -4,11 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceGroup;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -58,14 +55,15 @@ public class RedPointRegisterActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Method that takes the user form and send it to the server
+     * @param view the register button of the view
+     */
     public void redPointRegister(View view){
-
         String type = (String) treeType.getSelectedItem();
-
         PutRedPoint p = new PutRedPoint();
         p.execute(String.valueOf(lat), String.valueOf(lng), type, location,
                 String.valueOf(REQUESTED), String.valueOf(user_id));
-
     }
 
     /**
@@ -78,7 +76,6 @@ public class RedPointRegisterActivity extends AppCompatActivity {
     }
 
     // AsyncTask. Sends Log In's data to the server's API and process the response.
-
     private class PutRedPoint extends AsyncTask<String, Integer, Integer> {
 
         @Override
@@ -89,7 +86,7 @@ public class RedPointRegisterActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(String... strings) {
             URL url;
-            HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection;
             Integer result = 0;
             try {
                 url = new URL("http://192.168.1.85:8000/treepoint/"+rp_id+"/");
@@ -139,21 +136,21 @@ public class RedPointRegisterActivity extends AppCompatActivity {
         // Process doInBackground() results
         @Override
         protected void onPostExecute(Integer anInt) {
-            String message;
+            int message;
             Intent i = getIntent();
             switch (anInt) {
                 case (-1):
-                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    message = R.string.error;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     break;
                 case (0):
-                    message = "¡Red Point Registered!";
+                    message = R.string.successful_register;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     setResult(RESULT_OK, i);
                     finish();
                     break;
                 case (1):
-                    message = "Invalid Data";
+                    message = R.string.invalid_data;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                     break;
                 default:

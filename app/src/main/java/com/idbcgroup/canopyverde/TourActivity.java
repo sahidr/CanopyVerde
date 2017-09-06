@@ -31,7 +31,7 @@ public class TourActivity extends AppCompatActivity {
                 .build()
         );
 
-        //
+
         /*
          * Create the adapter that will return a fragment for each of the three
            primary sections of the activity.

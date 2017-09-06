@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -120,7 +121,8 @@
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/ciudad_pin"
                 android:layout_alignTop="@+id/location"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/location"
@@ -145,6 +147,7 @@
         android:layout_height="25dp"
         android:layout_below="@+id/infoWindow"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/triangle"/>
+        android:background="@drawable/triangle"
+        tools:ignore="ContentDescription" />
 
 </RelativeLayout>

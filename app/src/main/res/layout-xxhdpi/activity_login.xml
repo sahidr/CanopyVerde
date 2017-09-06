@@ -14,7 +14,8 @@
         android:background="@drawable/logo_gris"
         android:layout_alignStart="@+id/email"
         android:layout_marginStart="19dp"
-        android:layout_alignEnd="@+id/email" />
+        android:layout_alignEnd="@+id/email"
+        tools:ignore="ContentDescription" />
 
     <ProgressBar
         android:id="@+id/load"
@@ -109,7 +110,8 @@
         android:background="@drawable/fb_icon"
         android:elevation="2dp"
         android:layout_above="@+id/googleSignIn"
-        android:layout_toStartOf="@+id/register" />
+        android:layout_toStartOf="@+id/register"
+        tools:ignore="ContentDescription" />
 
 
     <Button
@@ -133,7 +135,8 @@
         android:elevation="2dp"
         android:layout_marginBottom="10dp"
         android:layout_alignBottom="@+id/googleSignIn"
-        android:layout_alignEnd="@+id/fb_icon" />
+        android:layout_alignEnd="@+id/fb_icon"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/register"

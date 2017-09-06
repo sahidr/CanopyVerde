@@ -59,7 +59,8 @@
             android:layout_marginTop="13dp"
             android:src="@drawable/ciudad_pin"
             android:layout_alignTop="@+id/location_holder"
-            android:layout_alignStart="@+id/drop" />
+            android:layout_alignStart="@+id/drop"
+            tools:ignore="ContentDescription" />
 
         <Spinner
             android:id="@+id/treeType"
@@ -80,7 +81,8 @@
             android:layout_marginStart="11dp"
             android:layout_below="@+id/location_holder"
             android:layout_toEndOf="@+id/entry"
-            android:layout_marginTop="15dp" />
+            android:layout_marginTop="15dp"
+            tools:ignore="ContentDescription" />
 
 
     <Button
@@ -102,6 +104,7 @@
             android:id="@+id/expanded_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>

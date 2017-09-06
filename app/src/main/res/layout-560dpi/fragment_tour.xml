@@ -10,7 +10,8 @@
         android:layout_height="525dp"
         android:background="@drawable/tour_01"
         android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/titleTour"
@@ -28,7 +29,8 @@
         android:layout_height="5dp"
         android:background="@drawable/green_bar"
         android:layout_marginTop="70dp"
-        android:layout_gravity="center_horizontal|center_vertical" />
+        android:layout_gravity="center_horizontal|center_vertical"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/description"

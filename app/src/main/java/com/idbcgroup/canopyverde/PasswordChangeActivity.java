@@ -18,9 +18,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -49,16 +46,23 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Attemps to change the password using the data provided by the user
+     * @param view the change password button of the view
+     */
     public void passwordChange (View view){
 
         String user_password = password.getText().toString();
         String user_confirm = confirm_password.getText().toString();
-
         PasswordChangeTask passwordChange = new PasswordChangeTask();
         passwordChange.execute(String.valueOf(data),user_password,user_confirm);
 
     }
 
+    /**
+     * Method of the Calligraphy Library to insert the font family in the context of the Activity
+     * @param newBase the new base context of the Activity
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -132,14 +136,14 @@ public class PasswordChangeActivity extends AppCompatActivity {
         // Process doInBackground() results
         @Override
         protected void onPostExecute(Integer anInt) {
-            String message;
+            int message;
             switch (anInt) {
                 case (-1):
-                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    message = R.string.error;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     break;
                 case (0):
-                    message = "¡Password Restored!";
+                    message = R.string.password_restored;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(PasswordChangeActivity.this,LoginActivity.class)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -148,7 +152,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
                     finish();
                     break;
                 case (1):
-                    message = "Contraseñas deben ser iguales y de al menos 8 caracteres";
+                    message = R.string.password_match;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
 
                     break;

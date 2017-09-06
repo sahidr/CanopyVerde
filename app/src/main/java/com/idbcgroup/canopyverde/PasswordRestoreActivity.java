@@ -1,21 +1,16 @@
 package com.idbcgroup.canopyverde;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -45,18 +40,28 @@ public class PasswordRestoreActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.load);
     }
 
+    /**
+     * This Method takes the email provided by the user and attempt the pasword restore process
+     * @param view the restore password button of the view
+     */
     public void newPassword (View view){
         String user_email = String.valueOf(email.getText());
         PasswordRestore passwordRestore = new PasswordRestore();
         passwordRestore.execute(user_email);
     }
 
+    /**
+     * Method of the Calligraphy Library to insert the font family in the context of the Activity
+     * @param newBase the new base context of the Activity
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-
+    /**
+     * Async Task that takes the email and send it to the server
+     */
     private class PasswordRestore extends AsyncTask<String, Integer, Integer> {
 
         @Override
@@ -116,23 +121,21 @@ public class PasswordRestoreActivity extends AppCompatActivity {
         // Process doInBackground() results
         @Override
         protected void onPostExecute(Integer anInt) {
-            String message;
+            int message;
             switch (anInt) {
                 case (-1):
-                    message = "Ha habido un problema conectando con el servidor, intente de nuevo más tarde";
+                    message = R.string.error;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     break;
                 case (0):
-                    //Intent intent = new Intent(getBaseContext(), MapActivity.class);
-                    message = "Email Confirmation Sended";
+                    message = R.string.email_confirmation;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                    //startActivity(intent);
                     finish();
                     progressBar.setVisibility(View.GONE);
                     break;
                 case (1):
-                    message = "Account Doesn't Exists";
+                    message = R.string.user_account_doesnt_exists;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     break;

@@ -1,7 +1,5 @@
 package com.idbcgroup.canopyverde;
 
-import android.widget.ImageView;
-
 import java.sql.Date;
 
 /**

@@ -27,8 +27,8 @@
     </style>
 
     <style name="CanopyVerde" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:navigationBarColor">@color/colorCanopy</item>
-        <item name="android:statusBarColor">@color/colorCanopy</item>
+        <!--item name="android:navigationBarColor">@color/colorCanopy</item>
+        <item name="android:statusBarColor">@color/colorCanopy</item-->
         <item name="android:colorForeground">@android:color/white</item>
         <item name="android:textColorPrimary">@color/fontColor</item>
         <item name="colorPrimary">@color/colorCanopy</item>

@@ -15,7 +15,8 @@
         android:background="@drawable/logo_gris"
         android:layout_alignStart="@+id/username"
         android:layout_marginStart="23dp"
-        android:layout_alignEnd="@+id/username" />
+        android:layout_alignEnd="@+id/username"
+        tools:ignore="ContentDescription" />
 
     <ProgressBar
         android:id="@+id/load"
@@ -112,7 +113,8 @@
         android:layout_marginTop="20dp"
         android:src="@drawable/seleccionar"
         android:layout_below="@+id/password"
-        android:layout_alignEnd="@+id/logo" />
+        android:layout_alignEnd="@+id/logo"
+        tools:ignore="ContentDescription" />
 
     <Spinner
         android:id="@+id/city"
@@ -133,7 +135,8 @@
         android:layout_marginTop="20dp"
         android:src="@drawable/seleccionar"
         android:layout_below="@+id/country"
-        android:layout_alignStart="@+id/drop" />
+        android:layout_alignStart="@+id/drop"
+        tools:ignore="ContentDescription" />
 
     <Button
         android:id="@+id/signup"

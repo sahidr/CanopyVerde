@@ -65,7 +65,8 @@
         android:layout_marginTop="17dp"
         android:src="@drawable/ciudad_pin"
         android:layout_alignTop="@+id/location"
-        android:layout_alignStart="@+id/drop" />
+        android:layout_alignStart="@+id/drop"
+        tools:ignore="ContentDescription" />
 
     <Spinner
         android:id="@+id/canopySize"
@@ -86,7 +87,8 @@
         android:layout_below="@+id/location"
         android:layout_alignEnd="@+id/canopySize"
         android:layout_marginEnd="10dp"
-        android:layout_marginTop="14dp" />
+        android:layout_marginTop="14dp"
+        tools:ignore="ContentDescription" />
 
     <Spinner
         android:id="@+id/stemSize"
@@ -106,7 +108,8 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/seleccionar"
         android:layout_below="@+id/canopySize"
-        android:layout_alignStart="@+id/drop" />
+        android:layout_alignStart="@+id/drop"
+        tools:ignore="ContentDescription" />
 
     <Spinner
         android:id="@+id/height"
@@ -126,7 +129,8 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/seleccionar"
         android:layout_below="@+id/stemSize"
-        android:layout_alignStart="@+id/drop_4" />
+        android:layout_alignStart="@+id/drop_4"
+        tools:ignore="ContentDescription" />
 
     <Spinner
         android:id="@+id/treeType"
@@ -146,7 +150,8 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/seleccionar"
         android:layout_below="@+id/height"
-        android:layout_alignStart="@+id/drop" />
+        android:layout_alignStart="@+id/drop"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/image"
@@ -168,7 +173,8 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/ojo_big"
         android:layout_below="@+id/treeType"
-        android:layout_alignStart="@+id/drop" />
+        android:layout_alignStart="@+id/drop"
+        tools:ignore="ContentDescription" />
 
     <Button
         android:id="@+id/yellowPointRegister"
@@ -189,7 +195,8 @@
         android:id="@+id/expanded_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        tools:ignore="ContentDescription" />
 
 
 </RelativeLayout>

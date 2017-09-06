@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="10dp"
-    android:paddingLeft="13dp"
+    android:paddingEnd="13dp"
+    android:paddingStart="1dp"
     tools:context="com.idbcgroup.canopyverde.UserProfileGeneralFragment">
 
 
@@ -13,7 +14,8 @@
         android:layout_height="35dp"
         android:background="@drawable/nombre"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        tools:ignore="ContentDescription" />
 
     <EditText
         android:id="@+id/fullNameDisplayRow"
@@ -34,7 +36,8 @@
         android:background="@drawable/email"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/profileRow"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        tools:ignore="ContentDescription" />
 
     <EditText
         android:id="@+id/emailDisplayRow"
@@ -55,7 +58,8 @@
         android:background="@drawable/password"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/emailRow"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        tools:ignore="ContentDescription" />
 
     <EditText
         android:id="@+id/passwordDisplayRow"
@@ -68,7 +72,8 @@
         android:layout_marginStart="23dp"
         android:layout_above="@+id/countryRow"
         android:layout_toEndOf="@+id/passwordRow"
-        android:background="@color/colorTransparent"/>
+        android:background="@color/colorTransparent"
+        tools:ignore="HardcodedText" />
 
     <ImageView
         android:id="@+id/countryRow"
@@ -77,7 +82,8 @@
         android:background="@drawable/pais_location"
         android:layout_below="@+id/passwordRow"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        tools:ignore="ContentDescription" />
 
     <EditText
         android:id="@+id/countryDisplayRow"
@@ -98,7 +104,8 @@
         android:background="@drawable/ciudad_pin"
         android:layout_below="@+id/countryRow"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        tools:ignore="ContentDescription" />
 
     <EditText
         android:id="@+id/cityDisplayRow"

@@ -12,6 +12,11 @@ public class UserProfileGeneralFragment extends Fragment {
 
     private EditText fullname, emailprofile, password,country, city;
 
+    /**
+     * Gets the EditTexts of the view, with this method the Activity can obtain the texts
+     * of the views
+     * @return An array of EditText of the view
+     */
     public EditText[] getFields() {
         return new EditText[]{this.fullname,this.emailprofile,this.password,this.country,this.city};
     }

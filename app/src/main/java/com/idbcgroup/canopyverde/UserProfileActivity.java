@@ -5,16 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -24,53 +19,34 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import com.facebook.login.LoginManager;
-import com.github.siyamed.shapeimageview.CircularImageView;
 import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -88,7 +64,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private ToggleButton edit;
     private ImageView camera;
     private int id;
-    private String imageName;
     private String username;
     private Bitmap image;
     private ProgressBar progressBar;
@@ -140,6 +115,7 @@ private UserProfileGeneralFragment general;
         profileUsername.setText("@"+username);
 
         String userData = this.getResources().getString(R.string.badge_name, formatter.format(game_points), badge_name);
+        // The fromHtml method is used to process the underlined text of the string resource
         CharSequence styledText = Html.fromHtml(userData);
         badge.setText(styledText);
 
@@ -231,7 +207,10 @@ private UserProfileGeneralFragment general;
     }
 
     /**
-     *
+     * Method that changes the font family of the text in the tabs
+     * Makes an iteration in the tabs of the tab layout
+     * then takes the view child of the tabs and cast it into a TextView
+     * and applies the new font
      */
     private void changeTabsFont() {
         Typeface tf = Typeface.createFromAsset(UserProfileActivity.this.getAssets(), "fonts/TitilliumWeb-Regular.ttf");
@@ -250,7 +229,7 @@ private UserProfileGeneralFragment general;
     }
 
     /**
-     *
+     * Obtains a picture of the device's gallery
      */
     private void galleryIntent() {
         Intent intent = new Intent();
@@ -260,7 +239,7 @@ private UserProfileGeneralFragment general;
     }
 
     /**
-     *
+     * Method that calls the Camera App of the device
      */
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -284,13 +263,20 @@ private UserProfileGeneralFragment general;
         }
     }
 
+    /**
+     * Cast the data of the intent as a Bitmap and put it onto a ImageView
+     * @param data the bitmap result taken by the camera
+     */
     private void onCaptureImageResult(Intent data) {
         image = (Bitmap) data.getExtras().get("data");
         profilePic.setImageBitmap(image);
     }
 
+    /**
+     * Cast the data of the intent as a Bitmap and put it onto a ImageView
+     * @param data the data obtained by the gallery
+     */
     private void onSelectFromGalleryResult(Intent data) {
-
         if (data != null) {
             try {
                 image = MediaStore.Images.Media.getBitmap(getApplicationContext()
@@ -302,6 +288,10 @@ private UserProfileGeneralFragment general;
         }
     }
 
+    /**
+     * Builds an Alert dialog that allows the user to choose an image the camera or the gallery
+     * @param view the profile picture as a PortableShapeImageView
+     */
     public void editProfilePicture(View view){
         CharSequence uploadType[] = new CharSequence[] {
                 getString(R.string.picture),getString(R.string.gallery) };
@@ -319,16 +309,27 @@ private UserProfileGeneralFragment general;
         builder.show();
     }
 
-
+    /**
+     * Returns to the MapActivity
+     * @param view the map button of the view
+     */
     public void backToMap(View view){
         onBackPressed();
     }
 
+    /**
+     * Go to the User's Game Profile
+     * @param view the link with the user's accumulated points
+     */
     public void gameProfile(View view){
         Intent i = new Intent(UserProfileActivity.this, GameProfileActivity.class);
         startActivity(i);
     }
 
+    /**
+     * Close the session of the user and delete all the data in the Shared Preferences
+     * @param view the logout button of the view
+     */
     public void logout(View view){
         SharedPreferences.Editor session_preferences = getSharedPreferences("Session", 0).edit().clear();
         session_preferences.apply();
@@ -348,17 +349,16 @@ private UserProfileGeneralFragment general;
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
             switch (position){
-                case 0 : general = new UserProfileGeneralFragment(); //UserProfileGeneralFragment.newInstance(enable);
-                //general.setArguments(args);
+                case 0 : general = new UserProfileGeneralFragment();
                 return general;
                 case 1 : return new UserProfileReportFragment();
             }
@@ -382,18 +382,24 @@ private UserProfileGeneralFragment general;
         }
     }
 
+    /**
+     * Obtains the User's Profile Fragment for future processing of the Views
+     * @return The fragment of the UserProfileGeneral
+     */
     private UserProfileGeneralFragment getFragment() {
         return general;
     }
 
+    /**
+     * Method of the Calligraphy Library to insert the font family in the context of the Activity
+     * @param newBase the new base context of the Activity
+     */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     // AsyncTask. Sends Log In's data to the server's API and process the response.
-
-
     private class PutUser extends AsyncTask<String, Integer, Integer> {
 
         @Override
@@ -486,6 +492,9 @@ private UserProfileGeneralFragment general;
     }
 
 
+    /**
+     * Obtains the User's profile data
+     */
     private class GetUser extends AsyncTask<String, Integer, JSONObject> {
 
         @Override
@@ -532,8 +541,11 @@ private UserProfileGeneralFragment general;
                     String badge_j = response.getString("badge");
                     String pic = response.getString("profile_pic");
                     String name = response.getString("fullname");
+
+                    //In case of Latin American format of the numbers use the Locate Italian
                     NumberFormat formatter = NumberFormat.getNumberInstance(Locale.ITALIAN);
                     String userData = getResources().getString(R.string.badge_name, formatter.format(points_j), badge_j);
+
                     CharSequence styledText = Html.fromHtml(userData);
                     badge.setText(styledText);
                     profileFullname.setText(name);

@@ -27,7 +27,8 @@
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/logo_blanco" />
+            android:background="@drawable/logo_blanco"
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>
 
@@ -39,7 +40,8 @@
         android:onClick="profileView"
         android:layout_alignParentTop="true"
         android:layout_marginTop="16dp"
-        android:layout_alignStart="@+id/currentLocation" />
+        android:layout_alignStart="@+id/currentLocation"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/locator"
@@ -48,7 +50,8 @@
         android:background="@drawable/locator"
         android:layout_above="@+id/currentLocation"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="134dp" />
+        android:layout_marginBottom="134dp"
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:id="@+id/currentLocation"
@@ -59,7 +62,8 @@
         android:layout_marginBottom="25dp"
         android:layout_above="@+id/locationBar"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginEnd="10dp"
+        tools:ignore="ContentDescription" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -76,7 +80,8 @@
             android:background="@drawable/btn_locate"
             android:onClick="cameraView"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            tools:ignore="ContentDescription" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -120,7 +125,8 @@
             android:layout_marginEnd="7dp"
             android:layout_above="@+id/view3"
             android:layout_marginBottom="2dp"
-            android:layout_toStartOf="@+id/greenViewIndexPercent" />
+            android:layout_toStartOf="@+id/greenViewIndexPercent"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/greenViewIndexPercent"

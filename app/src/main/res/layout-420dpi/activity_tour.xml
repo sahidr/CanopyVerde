@@ -29,27 +29,31 @@
             android:layout_width="12dp"
             android:layout_height="8dp"
             android:layout_marginEnd="5dp"
-            app:srcCompat="@drawable/dot_active" />
+            app:srcCompat="@drawable/dot_active"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/page1"
             android:layout_width="12dp"
             android:layout_height="8dp"
             android:layout_marginEnd="5dp"
-            app:srcCompat="@drawable/dot_inactive" />
+            app:srcCompat="@drawable/dot_inactive"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/page2"
             android:layout_width="12dp"
             android:layout_height="8dp"
             android:layout_marginEnd="5dp"
-            app:srcCompat="@drawable/dot_inactive" />
+            app:srcCompat="@drawable/dot_inactive"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/page3"
             android:layout_width="12dp"
             android:layout_height="8dp"
-            app:srcCompat="@drawable/dot_inactive" />
+            app:srcCompat="@drawable/dot_inactive"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
 
@@ -76,6 +80,7 @@
         app:srcCompat="@drawable/seguir"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="30dp"
-        android:layout_marginStart="85dp"/>
+        android:layout_marginStart="85dp"
+        tools:ignore="ContentDescription" />
 
 </android.support.design.widget.CoordinatorLayout>

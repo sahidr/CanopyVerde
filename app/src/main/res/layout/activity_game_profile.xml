@@ -23,7 +23,8 @@
             android:layout_marginStart="11dp"
             android:layout_alignBottom="@+id/logo"
             android:layout_alignParentStart="true"
-            android:onClick="backToProfile" />
+            android:onClick="backToProfile"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/logo"
@@ -31,7 +32,8 @@
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/logo_blanco" />
+            android:background="@drawable/logo_blanco"
+            tools:ignore="ContentDescription" />
 
         <ImageButton
             android:id="@+id/map"
@@ -41,7 +43,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/profile"
             android:layout_marginEnd="10dp"
-            android:onClick="goToMap"/>
+            android:onClick="goToMap"
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>
 
@@ -97,7 +100,8 @@
                 android:layout_height="20dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="5dp"
-                app:srcCompat="@drawable/puntos" />
+                app:srcCompat="@drawable/puntos"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/badgeName"
