@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:paddingTop="10dp"
     android:paddingEnd="13dp"
-    android:paddingStart="1dp"
+    android:paddingStart="5dp"
     tools:context="com.idbcgroup.canopyverde.UserProfileGeneralFragment">
 
 

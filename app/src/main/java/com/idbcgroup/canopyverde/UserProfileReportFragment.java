@@ -54,7 +54,7 @@ public class UserProfileReportFragment extends Fragment {
             HttpURLConnection urlConnection;
 
             try {
-                url = new URL("http://192.168.1.85:8000/report/"+user_id+"/");
+                url = new URL("http://192.168.1.217:8000/report/"+user_id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 

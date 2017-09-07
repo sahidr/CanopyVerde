@@ -414,7 +414,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             HttpURLConnection urlConnection;
 
             try {
-                url = new URL("http://192.168.1.85:8000/treepoint/");
+                url = new URL("http://192.168.1.217:8000/treepoint/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 
@@ -534,7 +534,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             HttpURLConnection urlConnection;
             try {
                 String city = URLEncoder.encode(params[0], "UTF-8");
-                url = new URL("http://192.168.1.85:8000/city/?search="+city);
+                url = new URL("http://192.168.1.217:8000/city/?search="+city);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 

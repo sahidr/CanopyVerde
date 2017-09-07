@@ -67,7 +67,6 @@ public class GameProfileActivity extends AppCompatActivity {
         String badge_name = pref_session.getString("badge",null);
         user_id = pref_session.getInt("id",0);
 
-
         GetUserGameProfile game_profile = new GetUserGameProfile();
         game_profile.execute();
 
@@ -83,7 +82,6 @@ public class GameProfileActivity extends AppCompatActivity {
         String gameReport = getResources().getString(R.string.badge_name_example, formatter.format(game_points),
                 badge_name);
         badge.setText(gameReport);
-
     }
 
     /**
@@ -132,7 +130,7 @@ public class GameProfileActivity extends AppCompatActivity {
 
             try {
                 //  The URL must contain the user id of the profile requested
-                url = new URL("http://192.168.1.85:8000/game/"+user_id+"/");
+                url = new URL("http://192.168.1.217:8000/game/"+user_id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 
@@ -223,12 +221,10 @@ public class GameProfileActivity extends AppCompatActivity {
                                 } else {
                                     pointStatus.setImageResource( R.drawable.p_verde);
                                 }
-
                                 reportType.setText(type);
                                 reportPoints.setText("+"+gameReport);
                                 reportDay.setText(day);
                                 reportDate.setText(month);
-
                             }
                         }
                     });
