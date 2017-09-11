@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context="com.idbcgroup.canopyverde.MapActivity">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentStart="true"
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/actionBarTheme">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="145dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/logo_blanco"
+            tools:ignore="ContentDescription" />
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/userProfile"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/profile"
+        android:onClick="profileView"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:layout_alignStart="@+id/currentLocation"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/locator"
+        android:layout_width="33dp"
+        android:layout_height="45dp"
+        android:background="@drawable/locator"
+        android:layout_above="@+id/currentLocation"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="134dp"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/currentLocation"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/crosseye"
+        android:onClick="currentLocation"
+        android:layout_marginBottom="25dp"
+        android:layout_above="@+id/locationBar"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        tools:ignore="ContentDescription" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:background="@color/bar"
+        android:id="@+id/locationBar"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <ImageButton
+            android:id="@+id/pointRegister"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:background="@drawable/btn_locate"
+            android:onClick="cameraView"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/stats"
+        android:layout_width="187dp"
+        android:layout_height="110dp"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/stat_bar"
+        android:layout_below="@+id/toolbar"
+        android:layout_toStartOf="@+id/locator">
+
+        <TextView
+            android:id="@+id/city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/treepediaGreen"
+            android:text="@string/city_example"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/greenViewIndex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/green_view_index"
+            android:textSize="11sp"
+            android:textColor="@color/colorGray"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/city"
+            android:layout_alignStart="@+id/city" />
+
+        <ImageView
+            android:id="@+id/greenView"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/circle_statbar"
+            android:layout_marginEnd="7dp"
+            android:layout_above="@+id/view3"
+            android:layout_marginBottom="2dp"
+            android:layout_toStartOf="@+id/greenViewIndexPercent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/greenViewIndexPercent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/percent"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:layout_above="@+id/view3"
+            android:layout_alignParentEnd="true" />
+
+        <View android:layout_height="0.5dp"
+            android:layout_width="170dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/colorGray"
+            android:layout_alignStart="@+id/greenViewIndex"
+            android:layout_alignEnd="@+id/greenViewIndexPercent"
+            android:layout_below="@id/greenViewIndex"
+            android:id="@+id/view3" />
+
+        <TextView
+            android:id="@+id/populationDensity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/population_density"
+            android:textSize="11sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorGray"
+            android:layout_below="@+id/greenViewIndex"
+            android:layout_alignStart="@+id/greenViewIndex" />
+
+        <TextView
+            android:id="@+id/populationDensityUnits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:text="@string/density"
+            android:layout_above="@+id/view2"
+            android:layout_alignParentEnd="true" />
+
+        <View android:layout_height="0.5dp"
+            android:layout_width="150dp"
+            android:background="@color/colorGray"
+            android:layout_marginTop="3dp"
+            android:layout_below="@id/populationDensity"
+            android:id="@+id/view2"
+            android:layout_alignEnd="@+id/populationDensityUnits"
+            android:layout_alignStart="@+id/populationDensity" />
+
+        <TextView
+            android:id="@+id/reportedTrees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reported_trees"
+            android:textSize="11sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorGray"
+            android:layout_below="@+id/populationDensity"
+            android:layout_alignStart="@+id/greenViewIndex" />
+
+        <TextView
+            android:id="@+id/reportedTreesUnits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:layout_above="@+id/view4"
+            android:layout_alignParentEnd="true" />
+
+        <View android:layout_height="0.5dp"
+            android:layout_width="150dp"
+            android:background="@color/colorGray"
+            android:layout_marginTop="3dp"
+            android:layout_below="@id/reportedTrees"
+            android:id="@+id/view4"
+            android:layout_alignEnd="@+id/reportedTreesUnits"
+            android:layout_alignStart="@+id/reportedTrees" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

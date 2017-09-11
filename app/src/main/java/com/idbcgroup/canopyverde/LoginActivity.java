@@ -94,13 +94,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Intent i = new Intent(LoginActivity.this,MapActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                    finish();
+                    String id_token = user.getUid();
+                    String email = user.getEmail();
+                    String fullname = user.getDisplayName();
+                    String photo = String.valueOf(user.getPhotoUrl());
+                    AttemptLogin l = new AttemptLogin();
+                    l.execute(email,id_token, String.valueOf(true),fullname,photo);
 
                 } else {
                     // User is signed out
@@ -110,7 +109,6 @@ public class LoginActivity extends AppCompatActivity {
         };
 
         // Facebook
-
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -129,11 +127,9 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "facebook:onError", error);
                 progressBar.setVisibility(View.INVISIBLE);
             }
-
         });
 
         // Google
-
         Button googleBtn = (Button) findViewById(R.id.googleSignIn);
 
         // Configure Google Sign In
@@ -183,23 +179,6 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Log.w("TASK", String.valueOf(task.getResult().getUser()));
-                            String personId =task.getResult().getUser().getUid();
-                            String personName=task.getResult().getUser().getDisplayName();
-                            String personEmail=task.getResult().getUser().getEmail();
-                            Uri personPhoto =task.getResult().getUser().getPhotoUrl();
-
-                            String[] emailParts = personEmail != null ? personEmail.split("@") : new String[0];
-                            String username =  emailParts[0];
-
-                            Log.w("DATAAA", personName+personEmail+personId+personPhoto);
-                            SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
-                            editor.putBoolean("logged",true);
-                            editor.putString("name",personName);
-                            editor.putString("email",personEmail);
-                            editor.putString("id",personId);
-                            editor.putString("username","@"+username);
-                            editor.putString("photo", String.valueOf(personPhoto));
-                            editor.apply();
                         }
                     }
                 });
@@ -248,24 +227,6 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                assert account != null;
-                String personName = account.getDisplayName();
-                String personEmail = account.getEmail();
-                String personId = account.getId();
-                Uri personPhoto = account.getPhotoUrl();
-
-                String[] emailParts = personEmail != null ? personEmail.split("@") : new String[0];
-                String username =  emailParts[0];
-
-                SharedPreferences.Editor editor = getSharedPreferences("Session", 0).edit();
-                editor.putBoolean("logged",true);
-                editor.putString("name",personName);
-                editor.putString("email",personEmail);
-                editor.putString("id",personId);
-                editor.putString("username","@"+username);
-                editor.putString("photo", String.valueOf(personPhoto));
-                editor.apply();
-
             }
         } else {
             // Facebook Sign In
@@ -319,7 +280,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (verified) {
             AttemptLogin l = new AttemptLogin();
-            l.execute(email_text,password_text);
+            l.execute(email_text,password_text, String.valueOf(false));
         }
     }
 
@@ -376,7 +337,6 @@ public class LoginActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-
     // AsyncTask. Sends Log In's data to the server's API and process the response.
     private class AttemptLogin extends AsyncTask<String, Integer, Integer> {
 
@@ -398,12 +358,21 @@ public class LoginActivity extends AppCompatActivity {
                 // Defining and initializing server's communication's variables
                 String credentials = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
                 credentials += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
+                credentials += "&" + URLEncoder.encode("is_social", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
+                Log.w("estoy aque",strings[2]);
+                if (strings[2].equals("true")){
+                    Log.w("estoy aque",strings[2]);
+                    credentials += "&" + URLEncoder.encode("fullname", "UTF-8") + "=" + URLEncoder.encode(strings[3], "UTF-8");
+                    credentials += "&" + URLEncoder.encode("photo", "UTF-8") + "=" + URLEncoder.encode(strings[4], "UTF-8");
+                }
 
                 URL url = new URL("http://192.168.1.217:8000/api-token-auth/");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");
                 connection.setConnectTimeout(10000);
+
+                Log.w("CREDENTIAlS",credentials);
 
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
                 writer.write(credentials);
@@ -432,7 +401,7 @@ public class LoginActivity extends AppCompatActivity {
                         return 0;
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.d("BAD", "BAD");
+                        Log.d("BAD", String.valueOf(response.getBody()));
                         result = 1;
                     } else {
                         Log.d("NOT", "FOUND");
