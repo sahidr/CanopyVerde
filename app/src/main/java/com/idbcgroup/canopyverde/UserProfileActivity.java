@@ -21,7 +21,6 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -156,7 +155,7 @@ private UserProfileGeneralFragment general;
                     for (EditText field : fields) {
                         field.setEnabled(false);
                         data.add(String.valueOf(field.getText()));
-                        Log.d("DATA FIELDS", field.getText().toString());
+
                     }
 
 
@@ -399,7 +398,7 @@ private UserProfileGeneralFragment general;
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    // AsyncTask. Sends Log In's data to the server's API and process the response.
+    // AsyncTask. get user's data to the server's API and process the response.
     private class PutUser extends AsyncTask<String, Integer, Integer> {
 
         @Override
@@ -442,17 +441,15 @@ private UserProfileGeneralFragment general;
 
                 if (response != null) {
                     if (response.getStatus() == HttpURLConnection.HTTP_OK || response.getStatus() == HttpURLConnection.HTTP_CREATED) {
-                        Log.d("OK", response.getBody().toString());
+
                         result = 0;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.d("BAD", response.getBody().toString());
+
                         if (response.getBody().getString("code").equals("email"))
                             result = 1;
                         else
                             result = 2;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
-                        Log.d("NOT", "FOUND");
-                        Log.d("OK", response.getBody().toString());
                         result = -1;
                     }
                 }
@@ -515,7 +512,6 @@ private UserProfileGeneralFragment general;
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection,true);
 
                 if (response != null) {
-                    Log.w("RESPONSE", String.valueOf(response.getBody()));
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {
                         response_body = response.getBody();
                         response_body.put("status",0);
@@ -533,8 +529,6 @@ private UserProfileGeneralFragment general;
         // Process doInBackground() results
         @Override
         protected void onPostExecute(JSONObject response) {
-                //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));
-
             try {
                 if (response.getInt("status") == 0) {
                     int points_j =  response.getInt("game_points");

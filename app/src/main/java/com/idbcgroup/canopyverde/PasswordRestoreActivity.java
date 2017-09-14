@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -69,7 +68,7 @@ public class PasswordRestoreActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
         }
 
-        // Sends validated Log In's data to the server's API and process the response. Returns an
+        // Sends validated email to the server's API and process the response. Returns an
         // integer value ([-1..1):
         // * -1, if an error occurred during the communication
         // * 0, if everything went OK (redirecting to MainActivity and updating SharedPreferences afterwards)
@@ -96,14 +95,11 @@ public class PasswordRestoreActivity extends AppCompatActivity {
 
                     if (response.getStatus()==HttpURLConnection.HTTP_OK) {
                         result = 0;
-                        Log.d("OK", "OK");
                         return 0;
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.d("BAD", "BAD");
                         result = 1;
                     } else {
-                        Log.d("NOT", "FOUND");
                         result = -1;
                     }
                 }

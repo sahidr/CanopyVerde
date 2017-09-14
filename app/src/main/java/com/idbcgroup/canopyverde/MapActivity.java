@@ -19,7 +19,6 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -304,7 +303,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         } catch (Exception ex) {
-            Log.d("NETWORK", "Connection Error");
+
         }
 
         if (!gps_enabled && !network_enabled) {
@@ -335,7 +334,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
                 mMap.animateCamera(cameraUpdate);
             } catch (Exception e) {
-                Log.d("GPS", "Location Error");
+
             }
         }
     }

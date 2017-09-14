@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -103,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 } else {
                     // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+
                 }
             }
         };
@@ -112,19 +111,19 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "facebook:onCancel");
+
                 progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(TAG, "facebook:onError", error);
+
                 progressBar.setVisibility(View.INVISIBLE);
             }
         });
@@ -161,24 +160,24 @@ public class LoginActivity extends AppCompatActivity {
      * @param token user's access token
      */
     private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
+
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
 
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
+
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            Log.w("TASK", String.valueOf(task.getResult().getUser()));
+
                         }
                     }
                 });
@@ -189,19 +188,19 @@ public class LoginActivity extends AppCompatActivity {
      * @param account the Google account who will be authenticated
      */
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
+
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
+
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -337,7 +336,7 @@ public class LoginActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    // AsyncTask. Sends Log In's data to the server's API and process the response.
+    // AsyncTask. Sends
     private class AttemptLogin extends AsyncTask<String, Integer, Integer> {
 
         @Override
@@ -345,7 +344,7 @@ public class LoginActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
         }
 
-        // Sends validated Log In's data to the server's API and process the response. Returns an
+        // Sends validated
         // integer value ([-1..1):
         // * -1, if an error occurred during the communication
         // * 0, if everything went OK (redirecting to MainActivity and updating SharedPreferences afterwards)
@@ -401,13 +400,9 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("badge",response_body.getString("badge"));
                         editor.putInt("game_points",response_body.getInt("points"));
                         editor.apply();
-
-                        Log.d("OK", "OK");
                         return 0;
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.d("BAD", String.valueOf(response.getBody()));
-
                         JSONObject response_body = response.getBody();
                         int error = response_body.getInt("error");
                         if (error == 430)
@@ -415,7 +410,7 @@ public class LoginActivity extends AppCompatActivity {
                         else
                             result = 1;
                     } else {
-                        Log.d("NOT", String.valueOf(response.getBody()));
+
                         result = -1;
                     }
                 }

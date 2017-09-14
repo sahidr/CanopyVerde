@@ -75,7 +75,7 @@ public class RedPointRegisterActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    // AsyncTask. Sends Log In's data to the server's API and process the response.
+    // Request a red point and update its data
     private class PutRedPoint extends AsyncTask<String, Integer, Integer> {
 
         @Override

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -75,7 +74,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
         }
 
-        // Sends validated Log In's data to the server's API and process the response. Returns an
+        // Sends validated passwords In's data to the server's API and process the response. Returns an
         // integer value ([-1..1):
         // * -1, if an error occurred during the communication
         // * 0, if everything went OK (redirecting to MainActivity and updating SharedPreferences afterwards)
@@ -106,7 +105,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
                     if (response.getStatus()==HttpURLConnection.HTTP_OK) {
                         JSONObject response_body = response.getBody();
-                        Log.d("OK", response_body.toString());
                         int status = response_body.getInt("status");
                         if (status == 200)
                             result = 0;
@@ -115,10 +113,9 @@ public class PasswordChangeActivity extends AppCompatActivity {
                         return result;
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.d("BAD", "BAD");
                         result = 1;
                     } else {
-                        Log.d("NOT", "FOUND");
+
                         result = -1;
                     }
                 }

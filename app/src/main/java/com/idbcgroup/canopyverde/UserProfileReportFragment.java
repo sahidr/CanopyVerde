@@ -10,11 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Date;
@@ -87,7 +85,7 @@ public class UserProfileReportFragment extends Fragment {
         protected void onPostExecute(JSONObject response) {
 
             try {
-                //Log.d("RESPONSE POST",String.valueOf(response.getInt("status")));
+
                 ArrayList<Report> data = new ArrayList<>();
                 if (response.getInt("status") == 0) {
                     JSONArray reportArray = response.getJSONArray("body");

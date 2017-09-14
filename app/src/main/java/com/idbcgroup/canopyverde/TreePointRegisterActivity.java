@@ -13,7 +13,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -23,14 +22,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -274,17 +271,14 @@ public class TreePointRegisterActivity extends AppCompatActivity {
 
                 if (response != null) {
                     if (response.getStatus() == HttpURLConnection.HTTP_OK) {
-                        Log.d("OK","ok");
                         result = 0;
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.d("BAD","BAD");
                         result = 1;
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
                         JSONObject jsonResponse = response.getBody();
                         String responseMessage = jsonResponse.getString("detail");
-                        Log.d("NOTFOUND", responseMessage);
                         if (responseMessage.equals("Not found.")) {
                             result = -1;
                         }

@@ -6,7 +6,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -321,15 +320,11 @@ public class UserRegisterActivity extends AppCompatActivity {
                 APIResponse response = JSONResponseController.getJsonResponse(urlConnection, true);
 
                 if (response != null) {
-                    Log.w("RESPONSE BODY REQUEST",response.getBody().toString());
                     if (response.getStatus() == HttpURLConnection.HTTP_CREATED) {
-                        Log.d("OK", response.getBody().toString());
                         result = 0;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                        Log.d("BAD",response.getBody().toString());
                         result = 1;
                     } else if (response.getStatus() == HttpURLConnection.HTTP_NOT_FOUND) {
-                        Log.d("NOT", "FOUND");
                         result = -1;
                     }
                 }
