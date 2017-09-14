@@ -246,7 +246,7 @@ public class TreePointRegisterActivity extends AppCompatActivity {
             HttpURLConnection urlConnection;
             Integer result = 0;
             try {
-                url = new URL("http://192.168.1.217:8000/treepoint/");
+                url = new URL("https://canopy-verde.herokuapp.com/treepoint/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setRequestProperty("Content-Type", "application/json");

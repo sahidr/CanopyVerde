@@ -89,7 +89,7 @@ public class RedPointRegisterActivity extends AppCompatActivity {
             HttpURLConnection urlConnection;
             Integer result = 0;
             try {
-                url = new URL("http://192.168.1.217:8000/treepoint/"+rp_id+"/");
+                url = new URL("https://canopy-verde.herokuapp.com/treepoint/"+rp_id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setRequestMethod("PUT");

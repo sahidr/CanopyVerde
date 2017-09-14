@@ -356,26 +356,31 @@ public class LoginActivity extends AppCompatActivity {
             Integer result = -1;
             try {
                 // Defining and initializing server's communication's variables
-                String credentials = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
-                credentials += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
-                credentials += "&" + URLEncoder.encode("is_social", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
-                Log.w("estoy aque",strings[2]);
-                if (strings[2].equals("true")){
-                    Log.w("estoy aque",strings[2]);
-                    credentials += "&" + URLEncoder.encode("fullname", "UTF-8") + "=" + URLEncoder.encode(strings[3], "UTF-8");
-                    credentials += "&" + URLEncoder.encode("photo", "UTF-8") + "=" + URLEncoder.encode(strings[4], "UTF-8");
-                }
 
-                URL url = new URL("http://192.168.1.217:8000/api-token-auth/");
+                JSONObject user = new JSONObject();
+                user.put("email",strings[0]);
+                user.put("password",strings[1]);
+                user.put("is_social",strings[2]);
+                JSONObject profile = new JSONObject();
+                if (strings[2].equals("true")) {
+                    profile.put("fullname",strings[3]);
+                    profile.put("photo",strings[4]);
+
+                }
+                else {
+                    profile.put("not_social","not_social");
+                }
+                user.put("social",profile);
+
+                URL url = new URL("https://canopy-verde.herokuapp.com/api-token-auth/");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
                 connection.setConnectTimeout(10000);
 
-                Log.w("CREDENTIAlS",credentials);
-
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-                writer.write(credentials);
+                writer.write(String.valueOf(user));
                 writer.flush();
                 APIResponse response = JSONResponseController.getJsonResponse(connection,true);
 
@@ -402,9 +407,15 @@ public class LoginActivity extends AppCompatActivity {
 
                     } else if (response.getStatus() == HttpURLConnection.HTTP_BAD_REQUEST) {
                         Log.d("BAD", String.valueOf(response.getBody()));
-                        result = 1;
+
+                        JSONObject response_body = response.getBody();
+                        int error = response_body.getInt("error");
+                        if (error == 430)
+                            result = 2;
+                        else
+                            result = 1;
                     } else {
-                        Log.d("NOT", "FOUND");
+                        Log.d("NOT", String.valueOf(response.getBody()));
                         result = -1;
                     }
                 }
@@ -438,6 +449,10 @@ public class LoginActivity extends AppCompatActivity {
                 case (1):
                     message = R.string.invalid_data;
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                    break;
+                case (2):
+                    message = 12345;
+                    Toast.makeText(getBaseContext(), "usuario existente", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;

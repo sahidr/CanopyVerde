@@ -10,7 +10,7 @@ import android.widget.EditText;
 
 public class UserProfileGeneralFragment extends Fragment {
 
-    private EditText fullname, emailprofile, password,country, city;
+    private EditText fullname, email, password,country, city;
 
     /**
      * Gets the EditTexts of the view, with this method the Activity can obtain the texts
@@ -18,7 +18,7 @@ public class UserProfileGeneralFragment extends Fragment {
      * @return An array of EditText of the view
      */
     public EditText[] getFields() {
-        return new EditText[]{this.fullname,this.emailprofile,this.password,this.country,this.city};
+        return new EditText[]{this.fullname,this.email,this.password,this.country,this.city};
     }
 
     @Override
@@ -28,17 +28,22 @@ public class UserProfileGeneralFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_profile_general, container, false);
 
         fullname = (EditText) view.findViewById(R.id.fullNameDisplayRow);
-        emailprofile = (EditText) view.findViewById(R.id.emailDisplayRow);
+        email = (EditText) view.findViewById(R.id.emailDisplayRow);
         password = (EditText) view.findViewById(R.id.passwordDisplayRow);
         country = (EditText) view.findViewById(R.id.countryDisplayRow);
         city = (EditText) view.findViewById(R.id.cityDisplayRow);
 
         SharedPreferences pref_session = this.getActivity().getSharedPreferences("Session", 0);
-        String email = pref_session.getString("email",null);
-        String fullnameText = pref_session.getString("fullname",null);
+        String email_profile = pref_session.getString("email",null);
+        String fullname_profile = pref_session.getString("fullname",null);
+        String country_profile = pref_session.getString("country",getString(R.string.country));
+        String city_profile = pref_session.getString("city",getString(R.string.city));
 
-        fullname.setText(fullnameText);
-        emailprofile.setText(email);
+        fullname.setText(fullname_profile);
+
+        email.setText(email_profile);
+        country.setText(country_profile);
+        city.setText(city_profile);
 
         return view;
     }

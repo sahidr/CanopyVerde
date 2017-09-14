@@ -130,7 +130,7 @@ public class GameProfileActivity extends AppCompatActivity {
 
             try {
                 //  The URL must contain the user id of the profile requested
-                url = new URL("http://192.168.1.217:8000/game/"+user_id+"/");
+                url = new URL("https://canopy-verde.herokuapp.com/game/"+user_id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 

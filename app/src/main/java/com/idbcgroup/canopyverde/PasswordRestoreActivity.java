@@ -81,7 +81,7 @@ public class PasswordRestoreActivity extends AppCompatActivity {
             try {
                 // Defining and initializing server's communication's variables
                 String email_change = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
-                URL url = new URL("http://192.168.1.217:8000/reset/password_reset");
+                URL url = new URL("https://canopy-verde.herokuapp.com/reset/password_reset");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");

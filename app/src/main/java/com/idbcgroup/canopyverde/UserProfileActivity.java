@@ -415,7 +415,7 @@ private UserProfileGeneralFragment general;
 
             try {
 
-                url = new URL("http://192.168.1.217:8000/profile/"+id+"/");
+                url = new URL("https://canopy-verde.herokuapp.com/profile/"+id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setDoOutput(true);
@@ -508,7 +508,7 @@ private UserProfileGeneralFragment general;
             URL url;
             HttpURLConnection urlConnection;
             try {
-                url = new URL("http://192.168.1.217:8000/profile/"+id+"/");
+                url = new URL("https://canopy-verde.herokuapp.com/profile/"+id+"/");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setConnectTimeout(10000);
 

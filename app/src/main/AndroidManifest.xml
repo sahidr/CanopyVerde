@@ -94,10 +94,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="192.168.1.127"
+                    android:host="canopy-verde.herokuapp.com"
                     android:pathPrefix="/reset/"
-                    android:port="8000"
-                    android:scheme="http" />
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
