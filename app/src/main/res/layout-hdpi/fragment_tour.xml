@@ -6,21 +6,11 @@
 
     <ImageView
         android:id="@+id/app_img"
-        android:layout_width="350dp"
-        android:layout_height="475dp"
+        android:layout_width="268dp"
+        android:layout_height="412dp"
         android:background="@drawable/tour_01"
         android:layout_gravity="center_horizontal"
         tools:ignore="ContentDescription" />
-
-    <TextView
-        android:id="@+id/titleTour"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:textAlignment="center"
-        android:layout_marginTop="40dp"
-        android:text="@string/title_tour_1"
-        android:textSize="25sp" />
 
     <ImageView
         android:id="@+id/greenBar"
@@ -39,6 +29,16 @@
         android:layout_marginTop="115dp"
         android:textAlignment="center"
         android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/titleTour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_marginTop="40dp"
+        android:text="@string/title_tour_1"
+        android:textAlignment="center"
+        android:textSize="25sp" />
 
 
 </FrameLayout>

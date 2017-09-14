@@ -8,15 +8,13 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="65dp"
+        android:layout_width="230dp"
+        android:layout_height="50dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="19dp"
         android:background="@drawable/logo_gris"
-        android:layout_alignStart="@+id/username"
-        android:layout_marginStart="19dp"
-        android:layout_alignEnd="@+id/username"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <ProgressBar
         android:id="@+id/load"
@@ -24,59 +22,67 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        android:translationZ="2dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignTop="@+id/email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp" />
 
     <EditText
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:background="@drawable/first_field"
         android:hint="@string/username"
+        android:background="@drawable/first_field"
         android:inputType="text"
-        android:layout_marginTop="20dp"
+        android:ems="8"
+        android:textSize="15sp"
         android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignStart="@+id/logo"
+        android:layout_marginTop="24dp"
+        android:layout_alignEnd="@+id/logo" />
 
     <EditText
         android:id="@+id/fullName"
         android:background="@drawable/field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:ems="8"
+        android:textSize="15sp"
         android:hint="@string/full_name"
         android:inputType="textCapWords"
         android:layout_below="@+id/username"
-        android:layout_alignStart="@+id/username" />
+        android:layout_alignStart="@+id/username"
+        android:layout_alignEnd="@+id/username" />
 
     <EditText
         android:id="@+id/email"
         android:background="@drawable/field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:ems="8"
+        android:textSize="15sp"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:layout_below="@+id/fullName"
-        android:layout_alignStart="@+id/fullName" />
+        android:layout_alignStart="@+id/fullName"
+        android:layout_alignEnd="@+id/fullName" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:id="@+id/password"
         app:passwordToggleEnabled="true"
         app:hintEnabled="false"
+        android:textSize="15sp"
         app:passwordToggleTint="@color/black_overlay"
         app:passwordToggleDrawable="@drawable/ojo"
         android:layout_below="@+id/email"
-        android:layout_alignStart="@+id/email">
+        android:layout_alignStart="@+id/email"
+        android:layout_alignEnd="@+id/email">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/passwordedit"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="55dp"
             android:layout_alignStart="@+id/email"
             android:layout_below="@+id/email"
             android:background="@drawable/field"
@@ -88,7 +94,7 @@
     <Spinner
         android:id="@+id/country"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:layout_alignEnd="@+id/email"
         android:layout_below="@+id/password"
         android:spinnerMode="dropdown"
@@ -112,7 +118,7 @@
         android:id="@+id/city"
         android:background="@drawable/last_field"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:entries="@array/city_array"
         android:spinnerMode="dropdown"
         android:layout_below="@+id/country"
@@ -132,17 +138,16 @@
     <Button
         android:id="@+id/signup"
         android:layout_width="300dp"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:background="@drawable/btn_ppal"
         android:text="@string/sign_up"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:onClick="userRegister"
         android:layout_marginBottom="15dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/city" />
-
-
+        android:layout_alignStart="@+id/city"
+        android:layout_alignEnd="@+id/city" />
 
 </RelativeLayout>
